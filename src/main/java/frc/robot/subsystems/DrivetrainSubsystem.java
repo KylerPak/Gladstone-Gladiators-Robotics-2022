@@ -16,14 +16,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final Talon leftDriveBack = new Talon(3); 
   private final Talon rightDriveFront = new Talon(2); 
   private final Talon rightDriveBack = new Talon(4); 
-  private final MotorController leftMotor = new MotorControllerGroup(leftDriveFront, leftDriveBack);
   private final MotorController rightMotor = new MotorControllerGroup(rightDriveFront, rightDriveBack);
   public double speed;
   public double rotation;
   
   public void setPower(double leftPower, double rightPower) {
-    leftMotor.set(rightPower);
-    rightMotor.set(leftPower);
+    leftDriveFront.set(leftPower);
+    leftDriveBack.set(-leftPower);
+    rightMotor.set(-rightPower);
   } 
  
   @Override
