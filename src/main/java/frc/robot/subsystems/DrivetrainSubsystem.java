@@ -6,16 +6,18 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
  
 public class DrivetrainSubsystem extends SubsystemBase {
-  private final Talon leftDriveFront = new Talon(1); 
-  private final Talon leftDriveBack = new Talon(3); 
-  private final Talon rightDriveFront = new Talon(2); 
-  private final Talon rightDriveBack = new Talon(4); 
+  private final WPI_TalonSRX leftDriveFront = new WPI_TalonSRX(Constants.leftDriveFrontCANID); 
+  private final WPI_TalonSRX leftDriveBack = new WPI_TalonSRX(Constants.leftDriveBackCANID);
+  private final WPI_VictorSPX rightDriveFront = new WPI_VictorSPX(Constants.rightDriveFrontCANID); 
+  private final WPI_TalonSRX rightDriveBack = new WPI_TalonSRX(Constants.rightDriveBackCANID); 
   private final MotorController rightMotor = new MotorControllerGroup(rightDriveFront, rightDriveBack);
   public double speed;
   public double rotation;
