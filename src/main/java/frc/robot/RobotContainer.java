@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -24,7 +23,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final DrivetrainSubsystem m_driveTrainSubsystem = new DrivetrainSubsystem();
-  private final Autonomous m_autonomousCommand = null;
+  public final Autonomous m_autoCommand;
   private final XboxController m_controller = new XboxController(0);
   private final JoystickButton aButton = new JoystickButton(m_controller, 1);
 
@@ -34,6 +33,8 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_driveTrainSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveTrainSubsystem, m_controller));
+
+    m_autoCommand = new Autonomous(m_driveTrainSubsystem);
     // Configure the button bindings
     configureButtonBindings();
   }  
@@ -54,9 +55,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  /*public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autonomousCommand;
-  }
-
+    return m_autoCommand;
+  }*/
 }

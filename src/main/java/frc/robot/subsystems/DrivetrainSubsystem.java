@@ -34,7 +34,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     leftDriveFront.set(leftPower);
     leftDriveBack.set(-leftPower);
     rightMotor.set(-rightPower);
-  } 
+  }
+  
   public Encoder getLeftEncoder() {
     return(m_leftEncoder.clone());
   }
