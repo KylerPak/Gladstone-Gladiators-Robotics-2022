@@ -23,9 +23,20 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final DrivetrainSubsystem m_driveTrainSubsystem = new DrivetrainSubsystem();
+  private final FeedMotorSubsystem m_feedMotorSubsystem = new FeedMotorSubsystem();
+  private final BallShooterSubsystem m_ballShooterSubsystem = new BallShooterSubsystem();
   public final Autonomous m_autoCommand;
+  public final BallShooterCommand m_ballShooterCommand;
+  public final DriveForDistanceCommand m_forDistanceCommand;
   private final XboxController m_controller = new XboxController(0);
   private final JoystickButton aButton = new JoystickButton(m_controller, 1);
+  private final JoystickButton bButton = new JoystickButton(m_controller, 2);
+  //private final JoystickButton xButton = new JoystickButton(m_controller, 3);
+  //private final JoystickButton yButton = new JoystickButton(m_controller, 4);
+  //private final JoystickButton leftBumper = new JoystickButton(m_controller, 5);
+  private final JoystickButton rightBumper = new JoystickButton(m_controller, 6);
+  //private final JoystickButton leftMiddleButton = new JoystickButton(m_controller, 7);
+  //private final JoystickButton rightMiddleButton = new JoystickButton(m_controller, 8);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -35,10 +46,12 @@ public class RobotContainer {
     m_driveTrainSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveTrainSubsystem, m_controller));
 
     m_autoCommand = new Autonomous(m_driveTrainSubsystem);
+    m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
+    m_forDistanceCommand = new DriveForDistanceCommand(m_driveTrainSubsystem, 0.75, 4000); //robot testing code
     // Configure the button bindings
     configureButtonBindings();
-  }  
-
+  }
+  
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -46,7 +59,9 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoysticpixyLightskButton}.
    */
   private void configureButtonBindings() {
-    aButton.whenPressed(new Autonomous(m_driveTrainSubsystem));
+    aButton.whenPressed(m_autoCommand);
+    bButton.whenPressed(m_forDistanceCommand);
+    rightBumper.whenHeld(m_ballShooterCommand);
   }
 
 

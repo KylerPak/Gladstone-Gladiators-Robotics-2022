@@ -22,11 +22,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final MotorController rightMotor = new MotorControllerGroup(rightDriveFront, rightDriveBack);
   private Encoder m_rightEncoder = new Encoder(0, 1);
   private Encoder m_leftEncoder = new Encoder(2, 3);
-  public double speed;
-  public double rotation;
+  //public double speed;
+  //public double rotation;
 
   public DrivetrainSubsystem() {
-
 
   }
   
@@ -37,11 +36,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
   
   public Encoder getLeftEncoder() {
-    return(m_leftEncoder.clone());
+    m_leftEncoder.reset();
+    return m_leftEncoder;
   }
 
   public Encoder getRightEncoder() {
-    return(m_rightEncoder.clone());
+    m_rightEncoder.reset();
+    return m_leftEncoder;
   }
 
   @Override

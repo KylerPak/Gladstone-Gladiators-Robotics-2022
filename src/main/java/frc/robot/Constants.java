@@ -19,5 +19,6 @@ public final class Constants {
     public static int rightDriveFrontCANID = 3;
     public static int rightDriveBackCANID = 4;
     public static int ShooterCANID = 5;
-    public static int ClimberCANID = 6;
+    public static int IntakeCANID = 6;
+    public static int FeedMotorCANID = 7;
 }
