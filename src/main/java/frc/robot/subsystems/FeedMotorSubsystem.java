@@ -6,14 +6,13 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
 public class FeedMotorSubsystem extends SubsystemBase {
-  public WPI_TalonSRX feedMotor = new WPI_TalonSRX(Constants.FeedMotorCANID);
+  public WPI_TalonFX feedMotor = new WPI_TalonFX(Constants.FeedMotorCANID);
   private Boolean running = false;
   public FeedMotorSubsystem() {
     SendableRegistry.setName(feedMotor, "feedMotor");

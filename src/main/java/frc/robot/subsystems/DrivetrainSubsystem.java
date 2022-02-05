@@ -7,7 +7,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -17,9 +16,10 @@ import frc.robot.Constants;
 public class DrivetrainSubsystem extends SubsystemBase {
   public WPI_TalonSRX leftDriveFront = new WPI_TalonSRX(Constants.leftDriveFrontCANID); 
   public WPI_TalonSRX leftDriveBack = new WPI_TalonSRX(Constants.leftDriveBackCANID);
-  public WPI_VictorSPX rightDriveFront = new WPI_VictorSPX(Constants.rightDriveFrontCANID); 
+  public WPI_TalonSRX rightDriveFront = new WPI_TalonSRX(Constants.rightDriveFrontCANID); 
   public WPI_TalonSRX rightDriveBack = new WPI_TalonSRX(Constants.rightDriveBackCANID); 
-  private final MotorController rightMotor = new MotorControllerGroup(rightDriveFront, rightDriveBack);
+  private final MotorController frontMotor = new MotorControllerGroup(leftDriveFront, rightDriveFront);
+  private final MotorController backMotor = new MotorControllerGroup(leftDriveBack, rightDriveBack);
   private Encoder m_rightEncoder = new Encoder(0, 1);
   private Encoder m_leftEncoder = new Encoder(2, 3);
   //public double speed;
@@ -29,10 +29,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   }
   
-  public void setPower(double leftPower, double rightPower) {
-    leftDriveFront.set(leftPower);
-    leftDriveBack.set(-leftPower);
-    rightMotor.set(-rightPower);
+  public void setPower(double frontPower, double backPower) {
+    leftDriveFront.set(frontPower);
+    rightDriveFront.set(-frontPower);
+    backMotor.set(-backPower);
   }
   
   public Encoder getLeftEncoder() {

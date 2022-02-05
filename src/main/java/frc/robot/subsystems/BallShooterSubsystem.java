@@ -6,14 +6,14 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
 public class BallShooterSubsystem extends SubsystemBase {
-  public WPI_TalonSRX ballShooter = new WPI_TalonSRX(Constants.ShooterCANID);
+  public WPI_TalonFX ballShooter = new WPI_TalonFX(Constants.ShooterCANID);
   private Boolean isshooting = false;
   public BallShooterSubsystem() {
     SendableRegistry.setName(ballShooter, "ballShooter");
