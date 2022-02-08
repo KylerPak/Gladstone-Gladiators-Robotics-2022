@@ -1,13 +1,10 @@
 {
   "SysId": {
     "Analysis Type": "Drivetrain",
-    "Logger": {
-      "window": {
-        "visible": false
-      }
-    },
     "NetworkTables Settings": {
       "serverTeam": "3131"
-    }
+    },
+    "mode": "Client",
+    "serverTeam": "3131"
   }
 }

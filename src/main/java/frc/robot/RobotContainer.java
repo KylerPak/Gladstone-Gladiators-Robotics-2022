@@ -27,10 +27,9 @@ public class RobotContainer {
   private final BallShooterSubsystem m_ballShooterSubsystem = new BallShooterSubsystem();
   public final Autonomous m_autoCommand;
   public final BallShooterCommand m_ballShooterCommand;
-  public final DriveForDistanceCommand m_forDistanceCommand;
   private final XboxController m_controller = new XboxController(0);
   private final JoystickButton aButton = new JoystickButton(m_controller, 1);
-  private final JoystickButton bButton = new JoystickButton(m_controller, 2);
+  //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
   //private final JoystickButton xButton = new JoystickButton(m_controller, 3);
   //private final JoystickButton yButton = new JoystickButton(m_controller, 4);
   //private final JoystickButton leftBumper = new JoystickButton(m_controller, 5);
@@ -47,7 +46,6 @@ public class RobotContainer {
 
     m_autoCommand = new Autonomous(m_driveTrainSubsystem);
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
-    m_forDistanceCommand = new DriveForDistanceCommand(m_driveTrainSubsystem, 0.75, 4000); //robot testing code
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -60,7 +58,6 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     aButton.whenPressed(m_autoCommand);
-    bButton.whenPressed(m_forDistanceCommand);
     rightBumper.whenHeld(m_ballShooterCommand);
   }
 

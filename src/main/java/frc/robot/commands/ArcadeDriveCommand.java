@@ -45,7 +45,7 @@ public class ArcadeDriveCommand extends CommandBase {
     x = Math.abs(x) * x;
     y = Math.abs(y) * y;
 
-    m_subsystem.setPower(y + x, y - x);
+    m_subsystem.tankDriveVolts(y + x, y - x);
   }
  
   // Called once the command ends or is interrupted.
