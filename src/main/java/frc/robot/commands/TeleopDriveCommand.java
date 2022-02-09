@@ -7,57 +7,55 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.*;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
- 
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import java.util.Map;
+
 /**
  * An example command that uses an example subsystem.
  */
-public class ArcadeDriveCommand extends CommandBase {
+public class TeleopDriveCommand extends CommandBase {
+  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DrivetrainSubsystem m_subsystem;
   private XboxController m_controller = new XboxController(0);
-
+  public double speed;
   /**
-   * Creates a new ArcadeDriveCommand.
+   * Creates a new ExampleCommand.
+   *
+   * @param subsystem The subsystem used by this command.
    */
-  public ArcadeDriveCommand(DrivetrainSubsystem subsystem, XboxController controller) {
-
+  public TeleopDriveCommand(DrivetrainSubsystem subsystem, XboxController controller) {
     m_subsystem = subsystem;
     m_controller = controller;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_subsystem);
+    addRequirements(subsystem);
   }
 
-// Called when the command is initially scheduled.
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     
   }
- 
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void execute() { 
+      m_subsystem.arcadeDrive(m_controller.getLeftY(), m_controller.getLeftX());
+    } 
 
-    double y = m_controller.getLeftY();
-    double x = m_controller.getLeftX();
-
-    x = Math.abs(x) * x;
-    y = Math.abs(y) * y;
-
-    m_subsystem.tankDriveVolts(y + x, y - x);
-  }
- 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
   }
- 
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
     return false;
   }
 }

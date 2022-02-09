@@ -46,7 +46,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
 
-    m_driveTrainSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveTrainSubsystem, m_controller));
+    m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
 
     m_autoCommand = new Autonomous(m_driveTrainSubsystem);
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
