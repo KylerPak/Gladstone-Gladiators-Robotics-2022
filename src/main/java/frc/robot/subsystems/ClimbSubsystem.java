@@ -1,39 +1,43 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
+
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
- 
-public class FeedMotorSubsystem extends SubsystemBase {
-  public WPI_TalonFX feedMotor = new WPI_TalonFX(Constants.feedMotorCANID);
-  private Boolean running = false;
-  public FeedMotorSubsystem() {
-    SendableRegistry.setName(feedMotor, "feedMotor");
+
+public class ClimbSubsystem extends SubsystemBase {
+  private final WPI_TalonSRX climbMotor;
+  private boolean running = false;
+  public ClimbSubsystem() {
+    climbMotor = new WPI_TalonSRX(Constants.climbMotorCANID);
+    SendableRegistry.setName(climbMotor, "climbMotor");
   }
 
-  public void start() {
+  public void climb(){
     running = true;
   }
-
-  public void stop() {
+  public void stop(){
     running = false;
+  }
+  public void reverse(){
+    climbMotor.set(-1);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     if(running == true){
-      feedMotor.set(-1);
-    }
-    else {
-      feedMotor.set(0);
+      climbMotor.set(1);
+    } else{
+      climbMotor.set(0);
     }
   }
 }

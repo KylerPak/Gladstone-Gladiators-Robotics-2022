@@ -25,8 +25,11 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_driveTrainSubsystem = new DrivetrainSubsystem();
   private final FeedMotorSubsystem m_feedMotorSubsystem = new FeedMotorSubsystem();
   private final BallShooterSubsystem m_ballShooterSubsystem = new BallShooterSubsystem();
+  private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
   public final Autonomous m_autoCommand;
   public final BallShooterCommand m_ballShooterCommand;
+  private final ClimbCommand m_climbCommand;
+  private final ClimbReverseCommand m_climbReverse;
   private final XboxController m_controller = new XboxController(0);
   private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
@@ -36,6 +39,7 @@ public class RobotContainer {
   private final JoystickButton rightBumper = new JoystickButton(m_controller, 6);
   //private final JoystickButton leftMiddleButton = new JoystickButton(m_controller, 7);
   //private final JoystickButton rightMiddleButton = new JoystickButton(m_controller, 8);
+  private DirectionalPad dPad = new DirectionalPad(m_controller);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -46,6 +50,8 @@ public class RobotContainer {
 
     m_autoCommand = new Autonomous(m_driveTrainSubsystem);
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
+    m_climbCommand = new ClimbCommand(m_climbSubsystem);
+    m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -59,6 +65,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     aButton.whenPressed(m_autoCommand);
     rightBumper.whenHeld(m_ballShooterCommand);
+    dPad.up.toggleWhenActive(m_climbCommand);
+    dPad.down.toggleWhenActive(m_climbReverse);
   }
 
 

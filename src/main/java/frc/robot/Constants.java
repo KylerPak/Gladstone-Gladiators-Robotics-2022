@@ -20,9 +20,10 @@ public final class Constants {
     public static int leftDriveBackCANID = 2;
     public static int rightDriveFrontCANID = 3;
     public static int rightDriveBackCANID = 4;
-    public static int ShooterCANID = 5;
-    public static int IntakeCANID = 6;
-    public static int FeedMotorCANID = 7;
+    public static int shooterCANID = 5;
+    public static int intakeCANID = 6;
+    public static int feedMotorCANID = 7;
+    public static int climbMotorCANID = 8;
 
     //Encoder Values
     public static final double ksVolts = 0.22; //subject to change

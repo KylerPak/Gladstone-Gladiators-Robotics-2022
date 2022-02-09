@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
 public class BallShooterSubsystem extends SubsystemBase {
-  public WPI_TalonFX ballShooter = new WPI_TalonFX(Constants.ShooterCANID);
+  public WPI_TalonFX ballShooter = new WPI_TalonFX(Constants.shooterCANID);
   private Boolean isshooting = false;
   public BallShooterSubsystem() {
     SendableRegistry.setName(ballShooter, "ballShooter");
