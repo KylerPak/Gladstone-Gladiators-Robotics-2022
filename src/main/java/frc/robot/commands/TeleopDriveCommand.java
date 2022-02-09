@@ -8,14 +8,8 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.*;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.Map;
 
 /**
  * An example command that uses an example subsystem.
@@ -44,8 +38,13 @@ public class TeleopDriveCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() { 
-      m_subsystem.arcadeDrive(m_controller.getLeftY(), m_controller.getLeftX());
+  public void execute() {
+      double y = m_controller.getLeftY();
+      double x = m_controller.getLeftX();
+
+      x = Math.abs(x) * x;
+      y = Math.abs(y) * y;
+      m_subsystem.arcadeDrive(y + x, y - x);
     } 
 
   // Called once the command ends or is interrupted.
