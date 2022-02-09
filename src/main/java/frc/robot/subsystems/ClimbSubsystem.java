@@ -7,18 +7,16 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.util.sendable.Sendable;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClimbSubsystem extends SubsystemBase {
-  private final WPI_TalonSRX climbMotor;
+
+  public WPI_VictorSPX climbMotor = new WPI_VictorSPX(Constants.climbMotorCANID); 
   private boolean running = false;
   public ClimbSubsystem() {
-    climbMotor = new WPI_TalonSRX(Constants.climbMotorCANID);
     SendableRegistry.setName(climbMotor, "climbMotor");
   }
 
@@ -29,13 +27,13 @@ public class ClimbSubsystem extends SubsystemBase {
     running = false;
   }
   public void reverse(){
-    climbMotor.set(-1);
+    climbMotor.set(-0.2);
   }
 
   @Override
   public void periodic() {
     if(running == true){
-      climbMotor.set(1);
+      climbMotor.set(0.2);
     } else{
       climbMotor.set(0);
     }
