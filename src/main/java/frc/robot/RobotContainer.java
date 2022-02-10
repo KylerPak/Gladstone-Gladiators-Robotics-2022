@@ -7,10 +7,24 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -76,7 +90,26 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   /*public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    var autoVoltageConstraint =
+      new DifferentialDriveVoltageConstraint(
+        new SimpleMotorFeedforward(
+          Constants.ksVolts,
+          Constants.kvVoltSecondsPerMeter,
+          Constants.kaVoltSecondsSquaredPerMeter),
+          Constants.kDriveKinematics,
+          10);
+
+    // Create config for trajectory
+    TrajectoryConfig config =
+      new TrajectoryConfig(
+        Constants.kMaxSpeedMetersPerSecond,
+        Constants.kMaxAccelerationMetersPerSecondSquared)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(Constants.kDriveKinematics)
+        // Apply the voltage constraint
+        .addConstraint(autoVoltageConstraint);
+    return m_chooser.getSelected();
   }*/
 }
