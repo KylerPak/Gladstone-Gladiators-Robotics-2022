@@ -21,12 +21,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final MotorController m_leftMotors = new MotorControllerGroup(leftDriveFront, rightDriveFront);
   private final MotorController m_rightMotors = new MotorControllerGroup(rightDriveFront, rightDriveBack);
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+  public double speed;
+  public double rotation;
 
   private final Encoder m_leftEncoder = new Encoder(0, 1);
   private final Encoder m_rightEncoder = new Encoder(2, 3);
-
   private final Gyro m_gyro = new ADXRS450_Gyro();
-
   private final DifferentialDriveOdometry m_odometry;
 
   private static final double whd = 6; //wheel count
@@ -88,8 +88,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param fwd the commanded forward movement
    * @param rot the commanded rotation
    */
-  public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(fwd, rot);
+  public void arcadeDrive(double speed, double rotation) {
+    m_drive.arcadeDrive(speed, rotation);
   }
 
   /**
