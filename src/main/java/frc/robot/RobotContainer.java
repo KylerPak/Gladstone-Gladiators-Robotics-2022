@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -26,12 +27,13 @@ public class RobotContainer {
   private final FeedMotorSubsystem m_feedMotorSubsystem = new FeedMotorSubsystem();
   private final BallShooterSubsystem m_ballShooterSubsystem = new BallShooterSubsystem();
   private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
-  public final Autonomous m_autoCommand;
+  public final SequentialCommandGroup autoCommand;
   public final BallShooterCommand m_ballShooterCommand;
+  public final LimelightAimCommand m_limeLight;
   private final ClimbCommand m_climbCommand;
   private final ClimbReverseCommand m_climbReverse;
   private final XboxController m_controller = new XboxController(0);
-  private final JoystickButton aButton = new JoystickButton(m_controller, 1);
+  //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
   //private final JoystickButton xButton = new JoystickButton(m_controller, 3);
   //private final JoystickButton yButton = new JoystickButton(m_controller, 4);
@@ -48,10 +50,12 @@ public class RobotContainer {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
 
-    m_autoCommand = new Autonomous(m_driveTrainSubsystem);
+    m_limeLight = new LimelightAimCommand(m_driveTrainSubsystem, m_controller);
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
+    autoCommand = new SequentialCommandGroup(new LimelightAimCommand(m_driveTrainSubsystem, m_controller),
+      new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -63,22 +67,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoysticpixyLightskButton}.
    */
   private void configureButtonBindings() {
-    aButton.whenPressed(m_autoCommand);
     rightBumper.whenHeld(m_ballShooterCommand);
     dPad.up.toggleWhenActive(m_climbCommand);
     dPad.down.toggleWhenActive(m_climbReverse);
   }
-
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  /*public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return autoCommand;
-  }*/
-
-
 }
