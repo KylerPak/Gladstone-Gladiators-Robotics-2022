@@ -99,7 +99,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param rightVolts the commanded right output
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    m_leftMotors.setVoltage(leftVolts);
+    leftDriveFront.setVoltage(leftVolts);
+    leftDriveBack.setVoltage(-leftVolts);
     m_rightMotors.setVoltage(rightVolts);
     m_drive.feed();
   }

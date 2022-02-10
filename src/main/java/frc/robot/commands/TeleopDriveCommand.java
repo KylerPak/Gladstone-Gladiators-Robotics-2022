@@ -42,9 +42,9 @@ public class TeleopDriveCommand extends CommandBase {
       double y = m_controller.getLeftY();
       double x = m_controller.getLeftX();
 
-      x = Math.abs(x) * x;
-      y = Math.abs(y) * y;
-      m_subsystem.arcadeDrive(y + x, y - x);
+      x = x * x * x;
+      y = y * y * y;
+      m_subsystem.tankDriveVolts(y + x, y - x);
     } 
 
   // Called once the command ends or is interrupted.
