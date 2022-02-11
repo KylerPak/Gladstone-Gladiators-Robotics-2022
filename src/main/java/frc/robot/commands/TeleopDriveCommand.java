@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -18,6 +19,7 @@ public class TeleopDriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DrivetrainSubsystem m_subsystem;
   private XboxController m_controller = new XboxController(0);
+  private JoystickButton leftJoystickButton = new JoystickButton(m_controller, 9);
   public double speed;
   /**
    * Creates a new ExampleCommand.
@@ -33,19 +35,21 @@ public class TeleopDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-      double y = m_controller.getLeftY();
-      double x = m_controller.getLeftX();
-
-      x = x * x * x;
-      y = y * y * y;
-      m_subsystem.tankDriveVolts(y + x, y - x);
+  public void execute() { 
+    if(leftJoystickButton.get()){
+      m_subsystem.speed = -m_controller.getLeftY();
+      m_subsystem.rotation = -m_controller.getLeftX();
     } 
+    else{
+      m_subsystem.speed = 0.6 * m_controller.getLeftY();
+      m_subsystem.rotation = 0.6 * m_controller.getLeftX();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
