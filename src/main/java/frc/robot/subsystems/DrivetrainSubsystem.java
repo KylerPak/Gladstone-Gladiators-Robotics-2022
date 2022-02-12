@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -21,9 +24,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final MotorController m_leftMotors = new MotorControllerGroup(leftDriveFront, rightDriveFront);
   private final MotorController m_rightMotors = new MotorControllerGroup(rightDriveFront, rightDriveBack);
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
-  public double speed;
-  public double rotation;
-
+  private final PIDController leftPID = new PIDController(1, 1, 0);
+  private final PIDController rightPID = new PIDController(1, 1, 0);
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(1.0, 3.0);
   private final Encoder m_leftEncoder = new Encoder(0, 1);
   private final Encoder m_rightEncoder = new Encoder(2, 3);
   private final Gyro m_gyro = new ADXRS450_Gyro();
@@ -31,14 +34,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private static final double whd = 6; //wheel count
   private static final double cpr = 64; //counts per revolution
-
+  public double speed;
+  public double rotation;
   /** Creates a new DriveSubsystem. */
   public DrivetrainSubsystem() {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_rightMotors.setInverted(true);
-
+    leftDriveBack.setInverted(true);
     // Sets the distance per pulse for the encoders
     m_leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
     m_rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);
@@ -85,8 +89,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   /**
    * Drives the robot using arcade controls.
    *
-   * @param fwd the commanded forward movement
-   * @param rot the commanded rotation
+   * @param speed the commanded forward movement
+   * @param rotation the commanded rotation
    */
   public void arcadeDrive(double speed, double rotation) {
     m_drive.arcadeDrive(speed, rotation);
@@ -98,10 +102,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param leftVolts the commanded left output
    * @param rightVolts the commanded right output
    */
-  public void tankDriveVolts(double leftVolts, double rightVolts) {
-    leftDriveFront.setVoltage(leftVolts);
-    leftDriveBack.setVoltage(-leftVolts);
-    m_rightMotors.setVoltage(rightVolts);
+  public void tankDriveVolts(double leftVelocitySetpoint, double rightVelocitySetpoint) {
+    m_leftMotors.setVoltage(feedforward.calculate(leftVelocitySetpoint)
+      + leftPID.calculate(m_leftEncoder.getRate(), leftVelocitySetpoint));
+    m_rightMotors.setVoltage(feedforward.calculate(rightVelocitySetpoint)
+      + rightPID.calculate(m_rightEncoder.getRate(), rightVelocitySetpoint)); 
     m_drive.feed();
   }
 

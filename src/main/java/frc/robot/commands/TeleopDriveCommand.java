@@ -35,19 +35,18 @@ public class TeleopDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
     if(leftJoystickButton.get()){
-      m_subsystem.speed = -m_controller.getLeftY();
-      m_subsystem.rotation = -m_controller.getLeftX();
+      m_subsystem.arcadeDrive(m_controller.getLeftY(), -m_controller.getLeftX());
     } 
     else{
-      m_subsystem.speed = 0.6 * m_controller.getLeftY();
-      m_subsystem.rotation = 0.6 * m_controller.getLeftX();
+      m_subsystem.tankDriveVolts(2 * m_controller.getLeftY(), 2 * m_controller.getLeftY());
+      m_subsystem.rotation = -m_controller.getLeftX();
     }
   }
 
