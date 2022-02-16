@@ -17,32 +17,41 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
+  //Left Side Motors
   public WPI_TalonSRX leftDriveFront = new WPI_TalonSRX(Constants.leftDriveFrontCANID); 
   public WPI_TalonSRX leftDriveBack = new WPI_TalonSRX(Constants.leftDriveBackCANID);
+  private final MotorController m_leftMotors = new MotorControllerGroup(leftDriveFront, leftDriveBack);
+  //Right Side Motors
   public WPI_TalonSRX rightDriveFront = new WPI_TalonSRX(Constants.rightDriveFrontCANID); 
   public WPI_TalonSRX rightDriveBack = new WPI_TalonSRX(Constants.rightDriveBackCANID); 
-  private final MotorController m_leftMotors = new MotorControllerGroup(leftDriveFront, rightDriveFront);
   private final MotorController m_rightMotors = new MotorControllerGroup(rightDriveFront, rightDriveBack);
+  //Robot Drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+  //Encoders
+  private final Encoder m_leftEncoder = new Encoder(0, 1);
+  private final Encoder m_rightEncoder = new Encoder(2, 3);
+  //Gyro Sensor
+  private final Gyro m_gyro = new ADXRS450_Gyro();
+  //Odometry
+  private final DifferentialDriveOdometry m_odometry;
+  //PID Controller
   private final PIDController leftPID = new PIDController(1, 1, 0);
   private final PIDController rightPID = new PIDController(1, 1, 0);
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(1.0, 3.0);
-  private final Encoder m_leftEncoder = new Encoder(0, 1);
-  private final Encoder m_rightEncoder = new Encoder(2, 3);
-  private final Gyro m_gyro = new ADXRS450_Gyro();
-  private final DifferentialDriveOdometry m_odometry;
-
+  //Encoder Constants
   private static final double whd = 6; //wheel count
   private static final double cpr = 64; //counts per revolution
+  //Constants for UniversalDriveTrain
   public double speed;
   public double rotation;
+
   /** Creates a new DriveSubsystem. */
   public DrivetrainSubsystem() {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_rightMotors.setInverted(true);
-    leftDriveBack.setInverted(true);
+    
     // Sets the distance per pulse for the encoders
     m_leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
     m_rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);

@@ -68,7 +68,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     rightBumper.whenHeld(m_ballShooterCommand);
-    dPad.up.toggleWhenActive(m_climbCommand);
-    dPad.down.toggleWhenActive(m_climbReverse);
+    dPad.up.whenHeld(m_climbCommand);
+    dPad.down.whenHeld(m_climbReverse);
   }
 }

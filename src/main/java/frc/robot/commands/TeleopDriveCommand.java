@@ -43,10 +43,16 @@ public class TeleopDriveCommand extends CommandBase {
   public void execute() { 
     if(leftJoystickButton.get()){
       m_subsystem.arcadeDrive(m_controller.getLeftY(), -m_controller.getLeftX());
-    } 
-    else{
+    }
+    else if(Math.abs(m_controller.getLeftY()) > 0.08){
+      m_subsystem.setMaxOutput(10);
       m_subsystem.tankDriveVolts(2 * m_controller.getLeftY(), 2 * m_controller.getLeftY());
-      m_subsystem.rotation = -m_controller.getLeftX();
+    }
+    if(m_controller.getLeftX() > m_controller.getLeftY() && m_controller.getLeftX() > 0 && Math.abs(m_controller.getLeftX()) > 0.4){
+      m_subsystem.arcadeDrive(m_controller.getLeftY(), -m_controller.getLeftX());
+    }
+    else if(m_controller.getLeftX() < 0 && m_controller.getLeftX() < m_controller.getLeftY() && Math.abs(m_controller.getLeftX()) > 0.4){
+      m_subsystem.arcadeDrive(m_controller.getLeftY(), -m_controller.getLeftX());
     }
   }
 

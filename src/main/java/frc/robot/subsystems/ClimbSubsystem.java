@@ -16,6 +16,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public WPI_VictorSPX climbMotor = new WPI_VictorSPX(Constants.climbMotorCANID); 
   private boolean running = false;
+
   public ClimbSubsystem() {
     SendableRegistry.setName(climbMotor, "climbMotor");
   }
@@ -27,13 +28,13 @@ public class ClimbSubsystem extends SubsystemBase {
     running = false;
   }
   public void reverse(){
-    climbMotor.set(-0.2);
+    climbMotor.set(0.15);
   }
 
   @Override
   public void periodic() {
     if(running == true){
-      climbMotor.set(0.2);
+      climbMotor.set(-0.5);
     } else{
       climbMotor.set(0);
     }
