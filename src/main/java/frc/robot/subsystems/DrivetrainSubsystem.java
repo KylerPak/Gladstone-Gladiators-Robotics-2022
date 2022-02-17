@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
@@ -35,21 +36,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
   //Odometry
   private final DifferentialDriveOdometry m_odometry;
   //PID Controller
-  private final PIDController leftPID = new PIDController(1, 1, 0);
-  private final PIDController rightPID = new PIDController(1, 1, 0);
-  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(1.0, 3.0);
+  private final PIDController leftPID = new PIDController(3.38, 0, 0);
+  private final PIDController rightPID = new PIDController(3.38, 0, 0);
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
+    Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
   //Encoder Constants
   private static final double whd = 6; //wheel count
   private static final double cpr = 64; //counts per revolution
   //Constants for UniversalDriveTrain
   public double speed;
   public double rotation;
+  //Extra variables needed
+  public Pose2d pose;
 
   /** Creates a new DriveSubsystem. */
   public DrivetrainSubsystem() {
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
+    // We need to invert one side of the drivetrain so that positive voltages for both sides to move forward
     m_rightMotors.setInverted(true);
     
     // Sets the distance per pulse for the encoders
@@ -57,14 +59,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);
 
     resetEncoders();
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    m_odometry = new DifferentialDriveOdometry(getHeading());
   }
 
   @Override
   public void periodic() {
-    // Update the odometry in the periodic block
-    m_odometry.update(
-        m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+    // Update the odometry in the periodic block and updates the pose
+    pose = m_odometry.update(
+      m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
   }
 
   /**
@@ -111,7 +113,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param leftVolts the commanded left output
    * @param rightVolts the commanded right output
    */
-  public void tankDriveVolts(double leftVelocitySetpoint, double rightVelocitySetpoint) {
+  public void VoltageDrive(double leftVelocitySetpoint, double rightVelocitySetpoint) {
     m_leftMotors.setVoltage(feedforward.calculate(leftVelocitySetpoint)
       + leftPID.calculate(m_leftEncoder.getRate(), leftVelocitySetpoint));
     m_rightMotors.setVoltage(feedforward.calculate(rightVelocitySetpoint)
@@ -171,8 +173,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    *
    * @return the robot's heading in degrees, from -180 to 180
    */
-  public double getHeading() {
-    return m_gyro.getRotation2d().getDegrees();
+  public Rotation2d getHeading() {
+    return Rotation2d.fromDegrees(m_gyro.getAngle());
   }
 
   /**
@@ -182,5 +184,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return -m_gyro.getRate();
+  }
+
+  //Return the feedforward of the robot
+  public SimpleMotorFeedforward getFeedForward(){
+    return feedforward;
+  }
+
+  //Return leftPID
+  public PIDController getLeftPidController(){
+    return getLeftPidController();
+  }
+
+  //Return RightPID
+  public PIDController getRightPidController(){
+    return getRightPidController();
   }
 }
