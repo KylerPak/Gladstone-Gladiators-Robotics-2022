@@ -6,28 +6,47 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
-public class ShooterDirectionSubsystem extends SubsystemBase {
-  public WPI_TalonSRX shooterDirection = new WPI_TalonSRX(Constants.shooterDirectionCANID);
-  public double turnCW;
+public class IntakeSubsystem extends SubsystemBase {
+  public WPI_TalonFX intakeMotor = new WPI_TalonFX(Constants.intakeCANID);
+  private Boolean running = false;
+  private Boolean reverse = false;
+  public IntakeSubsystem() {
+    SendableRegistry.setName(intakeMotor, "intakeMotor");
+  }
 
-  public ShooterDirectionSubsystem(){
-    SendableRegistry.setName(shooterDirection, "shooterDirection");
+  public void forward() {
+    running = true;
+    reverse = false;
+  }
+
+  public void stop() {
+    running = false;
+    reverse = false;
+  }
+
+  public void reverse(){
+    reverse = true;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(turnCW > 0.1){
-      shooterDirection.set(-0.2);
+    if(running == true){
+      intakeMotor.set(-1);
     }
-    if(turnCW < -0.1){
-      shooterDirection.set(0.2);
+    else {
+      intakeMotor.set(0);
+    }
+    if(reverse == true){
+      intakeMotor.set(1);
+    }
+    else {
+      intakeMotor.set(0);
     }
   }
 }
