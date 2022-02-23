@@ -16,7 +16,7 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-      // This method will be called once per scheduler run
+    // This method will be called once per scheduler run
     if(turnCW > 0.1){
       shooterDirection.set(-0.2);
     }

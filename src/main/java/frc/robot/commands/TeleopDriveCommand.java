@@ -46,13 +46,13 @@ public class TeleopDriveCommand extends CommandBase {
     }
     else if(Math.abs(m_controller.getLeftY()) > 0.08){
       m_subsystem.setMaxOutput(10);
-      m_subsystem.VoltageDrive(2 * m_controller.getLeftY(), 2 * m_controller.getLeftY());
+      m_subsystem.VoltageDrive(1.75 * m_controller.getLeftY(), 1.75 * m_controller.getLeftY());
     }
-    if(m_controller.getLeftX() > m_controller.getLeftY() && m_controller.getLeftX() > 0 && Math.abs(m_controller.getLeftX()) > 0.4){
-      m_subsystem.arcadeDrive(m_controller.getLeftY(), -m_controller.getLeftX());
+    if(m_controller.getLeftX() > m_controller.getLeftY() && m_controller.getLeftX() > 0 && Math.abs(m_controller.getLeftX()) > 0.15){
+      m_subsystem.arcadeDrive(m_controller.getLeftY(), 0.75 * -m_controller.getLeftX());
     }
-    else if(m_controller.getLeftX() < 0 && m_controller.getLeftX() < m_controller.getLeftY() && Math.abs(m_controller.getLeftX()) > 0.4){
-      m_subsystem.arcadeDrive(m_controller.getLeftY(), -m_controller.getLeftX());
+    else if(m_controller.getLeftX() < 0 && m_controller.getLeftX() < m_controller.getLeftY() && Math.abs(m_controller.getLeftX()) > 0.15){
+      m_subsystem.arcadeDrive(m_controller.getLeftY(), 0.75 * -m_controller.getLeftX());
     }
   }
 

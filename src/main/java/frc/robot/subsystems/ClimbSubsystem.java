@@ -28,13 +28,13 @@ public class ClimbSubsystem extends SubsystemBase {
     running = false;
   }
   public void reverse(){
-    climbMotor.set(0.15);
+    climbMotor.set(0.3);
   }
 
   @Override
   public void periodic() {
     if(running == true){
-      climbMotor.set(-0.5);
+      climbMotor.set(-0.75);
     } else{
       climbMotor.set(0);
     }
