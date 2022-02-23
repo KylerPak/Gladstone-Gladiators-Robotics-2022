@@ -24,6 +24,7 @@ public final class Constants {
     public static int intakeCANID = 6;
     public static int feedMotorCANID = 7;
     public static int climbMotorCANID = 8;
+    public static int shooterDirectionCANID = 9;
 
     //Encoder Values
     public static final double ksVolts = 0.22; //subject to change

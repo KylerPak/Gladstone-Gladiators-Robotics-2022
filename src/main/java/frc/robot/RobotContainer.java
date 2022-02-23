@@ -27,6 +27,7 @@ public class RobotContainer {
   private final FeedMotorSubsystem m_feedMotorSubsystem = new FeedMotorSubsystem();
   private final BallShooterSubsystem m_ballShooterSubsystem = new BallShooterSubsystem();
   private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
+  private final ShooterDirectionSubsystem m_directionSubsystem = new ShooterDirectionSubsystem();
   public final SequentialCommandGroup autoCommand;
   public final BallShooterCommand m_ballShooterCommand;
   public final LimelightAimCommand m_limeLight;
@@ -49,7 +50,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
-
+    m_directionSubsystem.setDefaultCommand(new ShooterDirectionCommand(m_directionSubsystem, m_controller));
     m_limeLight = new LimelightAimCommand(m_driveTrainSubsystem, m_controller);
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
