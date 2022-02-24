@@ -20,7 +20,7 @@ public class TeleopDriveCommand extends CommandBase {
   private final DrivetrainSubsystem m_subsystem;
   private XboxController m_controller = new XboxController(0);
   private JoystickButton leftJoystickButton = new JoystickButton(m_controller, 9);
-  public double speed;
+
   /**
    * Creates a new ExampleCommand.
    *
@@ -45,7 +45,6 @@ public class TeleopDriveCommand extends CommandBase {
       m_subsystem.arcadeDrive(m_controller.getLeftY(), -m_controller.getLeftX());
     }
     else if(Math.abs(m_controller.getLeftY()) > 0.06){
-      m_subsystem.setMaxOutput(10);
       m_subsystem.VoltageDrive((1.5 * m_controller.getRightTriggerAxis()) + m_controller.getLeftY(), (1.5 * m_controller.getRightTriggerAxis()) + m_controller.getLeftY());
     }
     if(m_controller.getLeftX() > m_controller.getLeftY() && m_controller.getLeftX() > 0 && Math.abs(m_controller.getLeftX()) > 0.1){
@@ -59,6 +58,7 @@ public class TeleopDriveCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    
   }
 
   // Returns true when the command should end.

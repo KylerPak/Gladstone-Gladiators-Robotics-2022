@@ -130,8 +130,7 @@ public class LimelightAimCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrain.speed = 0;
-    driveTrain.rotation = 0;
+    driveTrain.arcadeDrive(0, 0);
   }
 
   // Returns true when the command should end.
@@ -142,14 +141,14 @@ public class LimelightAimCommand extends CommandBase {
 
 }
 
-  class RumbleStopper extends TimerTask{
-    private final XboxController controller;
-    public RumbleStopper(XboxController controller){
-      this.controller = controller;
-    }
-    @Override
-    public void run() {
-      controller.setRumble(RumbleType.kLeftRumble, 0);
-    }
+class RumbleStopper extends TimerTask{
+  private final XboxController controller;
+  public RumbleStopper(XboxController controller){
+    this.controller = controller;
   }
+  @Override
+  public void run() {
+    controller.setRumble(RumbleType.kLeftRumble, 0);
+  }
+}
  
