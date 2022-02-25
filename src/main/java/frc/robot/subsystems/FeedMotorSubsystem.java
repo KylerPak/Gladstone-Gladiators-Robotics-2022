@@ -8,11 +8,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
 public class FeedMotorSubsystem extends SubsystemBase {
   public WPI_TalonSRX feedMotor = new WPI_TalonSRX(Constants.feedMotorCANID);
+  public final AnalogInput ballSensor = new AnalogInput(1);
   private Boolean running = false;
   public FeedMotorSubsystem() {
     SendableRegistry.setName(feedMotor, "feedMotor");

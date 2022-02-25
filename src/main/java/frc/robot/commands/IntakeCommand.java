@@ -8,13 +8,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.FeedMotorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeCommand extends CommandBase {
-  private final IntakeSubsystem subsystem;
-  public IntakeCommand(IntakeSubsystem subsystem) {
-    this.subsystem = subsystem;
-    addRequirements(subsystem);
+  private final IntakeSubsystem m_intakeSubsystem;
+  private final FeedMotorSubsystem m_feedMotorSubsystem;
+  public IntakeCommand(IntakeSubsystem intakesystem, FeedMotorSubsystem feedsystem) {
+    m_intakeSubsystem = intakesystem;
+    m_feedMotorSubsystem = feedsystem;
+    addRequirements(intakesystem, feedsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -26,13 +29,20 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    subsystem.forward();
+    m_intakeSubsystem.forward();
+    if(m_feedMotorSubsystem.ballSensor.getVoltage() > 1){
+      m_feedMotorSubsystem.start();
+    }
+    else{
+      m_feedMotorSubsystem.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    subsystem.stop();
+    m_intakeSubsystem.stop();
+    m_feedMotorSubsystem.stop();
   }
 
   // Returns true when the command should end.

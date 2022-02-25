@@ -30,6 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void reverse(){
+    running = false;
     reverse = true;
   }
 

@@ -58,7 +58,7 @@ public class RobotContainer {
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
-    m_intakeCommand = new IntakeCommand(m_intakeSubsystem);
+    m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedMotorSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
     autoCommand = new SequentialCommandGroup(new LimelightAimCommand(m_driveTrainSubsystem, m_controller),
       new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem));
