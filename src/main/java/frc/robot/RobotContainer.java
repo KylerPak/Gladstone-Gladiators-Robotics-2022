@@ -36,6 +36,8 @@ public class RobotContainer {
   private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
   private final IntakeReverseCommand m_intakeReverse;
+  private final ShooterLeftCommand m_shooterLeft;
+  private final ShooterNotLeftCommand m_shooterNotLeft;
   private final XboxController m_controller = new XboxController(0);
   //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
@@ -53,14 +55,16 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
-    m_directionSubsystem.setDefaultCommand(new ShooterDirectionCommand(m_directionSubsystem, m_controller));
-    m_limeLight = new LimelightAimCommand(m_driveTrainSubsystem, m_controller);
+
+    m_limeLight = new LimelightAimCommand(m_directionSubsystem, m_controller);
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedMotorSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
-    autoCommand = new SequentialCommandGroup(new LimelightAimCommand(m_driveTrainSubsystem, m_controller),
+    m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
+    m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
+    autoCommand = new SequentialCommandGroup(new LimelightAimCommand(m_directionSubsystem, m_controller),
       new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem));
     // Configure the button bindings
     configureButtonBindings();
@@ -78,5 +82,7 @@ public class RobotContainer {
     leftMiddleButton.whenHeld(m_intakeReverse);
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);
+    dPad.left.whenHeld(m_shooterLeft);
+    dPad.right.whenHeld(m_shooterNotLeft);
   }
 }

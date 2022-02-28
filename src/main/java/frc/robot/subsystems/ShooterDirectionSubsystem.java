@@ -14,20 +14,40 @@ import frc.robot.Constants;
  
 public class ShooterDirectionSubsystem extends SubsystemBase {
   public WPI_TalonSRX shooterDirection = new WPI_TalonSRX(Constants.shooterDirectionCANID);
-  public double turnCW;
-
+  private Boolean left = false;
+  private Boolean notleft = false;
+  
   public ShooterDirectionSubsystem(){
     SendableRegistry.setName(shooterDirection, "shooterDirection");
+  }
+
+  public void left(){
+    left = true;
+    notleft = false;
+  }
+  public void stop(){
+    left = false;
+    notleft = false;
+  }
+  public void notleft(){
+    left = false;
+    notleft = true;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(turnCW > 0.1){
+    if(left == true){
       shooterDirection.set(-0.2);
     }
-    if(turnCW < -0.1){
+    else {
+      shooterDirection.set(0);
+    }
+    if(notleft == true){
       shooterDirection.set(0.2);
+    }
+    else {
+      shooterDirection.set(0);
     }
   }
 }

@@ -24,7 +24,7 @@ public class DirectionalPad extends Button {
      * 
      * @param controller
      */
-    DirectionalPad(final XboxController controller) {
+    public DirectionalPad(final XboxController controller) {
 
       /* Initialize */
       this.parent = controller;
