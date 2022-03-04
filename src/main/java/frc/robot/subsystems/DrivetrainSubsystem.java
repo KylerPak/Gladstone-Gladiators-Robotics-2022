@@ -57,6 +57,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    m_leftEncoder = leftDriveBack.getEncoder();
    m_rightEncoder = rightDriveBack.getEncoder();
    m_odometry = new DifferentialDriveOdometry(getHeading());
+   m_drive.feed();
 
   }
 
@@ -86,12 +87,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param leftVolts the commanded left output
    * @param rightVolts the commanded right output
    */
-  public void VoltageDrive(double leftVelocitySetpoint, double rightVelocitySetpoint) {
+  public void LeftDrive(double leftVelocitySetpoint) {
     m_leftMotors.setVoltage(feedforward.calculate(leftVelocitySetpoint)
       + leftPID.calculate(m_leftEncoder.getVelocity(), leftVelocitySetpoint));
+  }
+
+  public void RightDrive(double rightVelocitySetpoint){
     m_rightMotors.setVoltage(feedforward.calculate(rightVelocitySetpoint)
-      + rightPID.calculate(m_rightEncoder.getVelocity(), rightVelocitySetpoint)); 
-    m_drive.feed();
+    + rightPID.calculate(m_rightEncoder.getVelocity(), rightVelocitySetpoint)); 
   }
 
   public Rotation2d getHeading() {

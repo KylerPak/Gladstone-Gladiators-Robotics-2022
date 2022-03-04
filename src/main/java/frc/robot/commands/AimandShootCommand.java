@@ -17,20 +17,24 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.FeedMotorSubsystem;
 import frc.robot.subsystems.ShooterDirectionSubsystem;
 
 public class AimandShootCommand extends CommandBase {
   private final ShooterDirectionSubsystem shooterDirection;
-  private boolean isFinished = false;
+  private final FeedMotorSubsystem m_feedMotorSubsystem;
   private final XboxController controller;
+  private boolean isFinished = false;
+
   /**
    * Creates a new LimelightAimCommand.
    */
-  public AimandShootCommand(ShooterDirectionSubsystem shootDirection, XboxController controller) {
+  public AimandShootCommand(ShooterDirectionSubsystem shootDirection, FeedMotorSubsystem feedSystem, XboxController controller) {
     this.shooterDirection = shootDirection;
+    this.m_feedMotorSubsystem = feedSystem;
     this.controller = controller;
 
-    addRequirements(shootDirection);
+    addRequirements(shootDirection, feedSystem);
 }
 
   // Called when the command is initially scheduled.
@@ -69,6 +73,10 @@ public class AimandShootCommand extends CommandBase {
 
       if (distanceFromLimelightToGoalInches > 20){
         shooterDirection.shooterDirection.set(distanceFromLimelightToGoalInches * 0.00511 - 0.01711); //calculated from linear regression
+        m_feedMotorSubsystem.start();
+        if (m_feedMotorSubsystem.ballSensor.get()){
+          m_feedMotorSubsystem.ballFeed.set(0.3);
+        }
         try {
           TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
@@ -86,6 +94,7 @@ public class AimandShootCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooterDirection.shooterDirection.set(0);
+    m_feedMotorSubsystem.ballFeed.set(0);
   }
 
   // Returns true when the command should end.

@@ -30,10 +30,8 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     m_intakeSubsystem.forward();
-    if(m_feedMotorSubsystem.ballSensor.getVoltage() > 1){
-      m_feedMotorSubsystem.start();
-    }
-    else{
+        m_feedMotorSubsystem.start();
+    if(m_feedMotorSubsystem.ballSensor.get()){
       m_feedMotorSubsystem.stop();
     }
   }

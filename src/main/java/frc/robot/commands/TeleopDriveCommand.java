@@ -9,7 +9,6 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -19,7 +18,6 @@ public class TeleopDriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DrivetrainSubsystem m_subsystem;
   private XboxController m_controller = new XboxController(0);
-  private JoystickButton leftJoystickButton = new JoystickButton(m_controller, 9);
 
   /**
    * Creates a new ExampleCommand.
@@ -41,17 +39,11 @@ public class TeleopDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    if(leftJoystickButton.get()){
-      m_subsystem.arcadeDrive(m_controller.getLeftY(), -m_controller.getLeftX());
+    if(Math.abs(m_controller.getLeftY()) > 0.04){
+      m_subsystem.LeftDrive((1.5 * m_controller.getRightTriggerAxis()) + m_controller.getLeftY());
     }
-    else if(Math.abs(m_controller.getLeftY()) > 0.06){
-      m_subsystem.VoltageDrive((1.5 * m_controller.getRightTriggerAxis()) + m_controller.getLeftY(), (1.5 * m_controller.getRightTriggerAxis()) + m_controller.getLeftY());
-    }
-    if(m_controller.getLeftX() > m_controller.getLeftY() && m_controller.getLeftX() > 0 && Math.abs(m_controller.getLeftX()) > 0.1){
-      m_subsystem.arcadeDrive(m_controller.getLeftY(), 0.75 * -m_controller.getLeftX());
-    }
-    else if(m_controller.getLeftX() < 0 && m_controller.getLeftX() < m_controller.getLeftY() && Math.abs(m_controller.getLeftX()) > 0.1){
-      m_subsystem.arcadeDrive(m_controller.getLeftY(), 0.75 * -m_controller.getLeftX());
+    if(Math.abs(m_controller.getRightY()) > 0.04){
+      m_subsystem.RightDrive((1.5 * m_controller.getRightTriggerAxis()) + m_controller.getRightY());
     }
   }
 

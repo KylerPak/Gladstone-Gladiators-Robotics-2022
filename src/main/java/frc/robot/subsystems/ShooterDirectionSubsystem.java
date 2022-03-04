@@ -38,13 +38,13 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if(left == true){
-      shooterDirection.set(-0.2);
+      shooterDirection.set(-0.3);
     }
     else {
       shooterDirection.set(0);
     }
     if(notleft == true){
-      shooterDirection.set(0.2);
+      shooterDirection.set(0.3);
     }
     else {
       shooterDirection.set(0);

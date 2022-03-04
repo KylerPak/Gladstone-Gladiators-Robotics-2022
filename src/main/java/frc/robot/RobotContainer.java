@@ -57,7 +57,7 @@ public class RobotContainer {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
 
-    m_aimShoot = new AimandShootCommand(m_directionSubsystem, m_controller);
+    m_aimShoot = new AimandShootCommand(m_directionSubsystem, m_feedMotorSubsystem, m_controller);
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
@@ -66,7 +66,7 @@ public class RobotContainer {
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedMotorSubsystem);
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
-    autoCommand = new SequentialCommandGroup(new AimandShootCommand(m_directionSubsystem, m_controller),
+    autoCommand = new SequentialCommandGroup(new AimandShootCommand(m_directionSubsystem, m_feedMotorSubsystem, m_controller),
       new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem));
     // Configure the button bindings
     configureButtonBindings();
