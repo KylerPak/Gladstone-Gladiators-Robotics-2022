@@ -31,7 +31,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   public final SequentialCommandGroup autoCommand;
   public final BallShooterCommand m_ballShooterCommand;
-  public final LimelightAimCommand m_limeLight;
+  public final AimandShootCommand m_aimShoot;
   private final ClimbCommand m_climbCommand;
   private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
@@ -57,7 +57,7 @@ public class RobotContainer {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
 
-    m_limeLight = new LimelightAimCommand(m_directionSubsystem, m_controller);
+    m_aimShoot = new AimandShootCommand(m_directionSubsystem, m_controller);
     m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
@@ -66,7 +66,7 @@ public class RobotContainer {
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedMotorSubsystem);
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
-    autoCommand = new SequentialCommandGroup(new LimelightAimCommand(m_directionSubsystem, m_controller),
+    autoCommand = new SequentialCommandGroup(new AimandShootCommand(m_directionSubsystem, m_controller),
       new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem));
     // Configure the button bindings
     configureButtonBindings();
@@ -83,7 +83,7 @@ public class RobotContainer {
     leftBumper.whenHeld(m_intakeCommand);
     leftMiddleButton.whenHeld(m_intakeReverse);
     rightMiddleButton.whenHeld(m_feedmotorReverse);
-    yButton.whenPressed(m_limeLight);
+    yButton.whenPressed(m_aimShoot);
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);
     dPad.left.whenHeld(m_shooterLeft);
