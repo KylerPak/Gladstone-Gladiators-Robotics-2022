@@ -16,23 +16,36 @@ public class FeedMotorSubsystem extends SubsystemBase {
   public WPI_TalonSRX feedMotor = new WPI_TalonSRX(Constants.feedMotorCANID);
   public final AnalogInput ballSensor = new AnalogInput(1);
   private Boolean running = false;
+  private Boolean reverse = false;
   public FeedMotorSubsystem() {
     SendableRegistry.setName(feedMotor, "feedMotor");
   }
 
   public void start() {
     running = true;
+    reverse = false;
   }
 
   public void stop() {
     running = false;
+    reverse = false;
   }
 
+  public void reverse(){
+    running = false;
+    reverse = true;
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if(running == true){
       feedMotor.set(-1);
+    }
+    else{
+      feedMotor.set(0);
+    }
+    if(reverse == true){
+      feedMotor.set(1);
     }
     else {
       feedMotor.set(0);

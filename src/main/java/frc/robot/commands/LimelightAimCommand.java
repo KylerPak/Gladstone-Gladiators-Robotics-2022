@@ -73,7 +73,7 @@ public class LimelightAimCommand extends CommandBase {
     double ta = NetworkTableInstance.getDefault().getTable("limelight-ghs").getEntry("ta").getDouble(0);
     
     if (tv < 0.5){
-      shooterDirection.shooterDirection.set(-0.2);
+      shooterDirection.shooterDirection.set(-0.2); 
     } else if(ta < DESIRED_TARGET_AREA) {
 
     }

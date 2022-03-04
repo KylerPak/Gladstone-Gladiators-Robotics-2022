@@ -36,17 +36,18 @@ public class RobotContainer {
   private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
   private final IntakeReverseCommand m_intakeReverse;
+  private final FeedMotorReverseCommand m_feedmotorReverse;
   private final ShooterLeftCommand m_shooterLeft;
   private final ShooterNotLeftCommand m_shooterNotLeft;
   private final XboxController m_controller = new XboxController(0);
   //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
   //private final JoystickButton xButton = new JoystickButton(m_controller, 3);
-  //private final JoystickButton yButton = new JoystickButton(m_controller, 4);
+  private final JoystickButton yButton = new JoystickButton(m_controller, 4);
   private final JoystickButton leftBumper = new JoystickButton(m_controller, 5);
   private final JoystickButton rightBumper = new JoystickButton(m_controller, 6);
   private final JoystickButton leftMiddleButton = new JoystickButton(m_controller, 7);
-  //private final JoystickButton rightMiddleButton = new JoystickButton(m_controller, 8);
+  private final JoystickButton rightMiddleButton = new JoystickButton(m_controller, 8);
   private DirectionalPad dPad = new DirectionalPad(m_controller);
 
   /**
@@ -62,6 +63,7 @@ public class RobotContainer {
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedMotorSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
+    m_feedmotorReverse = new FeedMotorReverseCommand(m_feedMotorSubsystem);
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
     autoCommand = new SequentialCommandGroup(new LimelightAimCommand(m_directionSubsystem, m_controller),
@@ -80,6 +82,8 @@ public class RobotContainer {
     rightBumper.whenHeld(m_ballShooterCommand);
     leftBumper.whenHeld(m_intakeCommand);
     leftMiddleButton.whenHeld(m_intakeReverse);
+    rightMiddleButton.whenHeld(m_feedmotorReverse);
+    yButton.whenPressed(m_limeLight);
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);
     dPad.left.whenHeld(m_shooterLeft);
