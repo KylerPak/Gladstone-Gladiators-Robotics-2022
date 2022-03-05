@@ -60,10 +60,10 @@ public class AimandShootCommand extends CommandBase {
     double goalHeightInches = 104;
 
     if (tv.getDouble(0) < 0.5){ //target not in sight
-      shooterDirection.shooterDirection.set(rotate_adjust); 
+      shooterDirection.left(); 
     } else{ //target in sight, begin aiming
       rotate_adjust = Kp * heading_error;
-      shooterDirection.shooterDirection.set(rotate_adjust);
+      //shooterDirection.shooterDirection.set(rotate_adjust);
     }
 
     if (heading_error < min_rotate){ //Aiming at the target, calculating distance
@@ -72,10 +72,10 @@ public class AimandShootCommand extends CommandBase {
       double distanceFromLimelightToGoalInches = (goalHeightInches - limelightSenseHeightInches)/Math.tan(angleToGoalRadians);
 
       if (distanceFromLimelightToGoalInches > 20){
-        shooterDirection.shooterDirection.set(distanceFromLimelightToGoalInches * 0.00511 - 0.01711); //calculated from linear regression
+        //shooterDirection.shooterDirection.set(distanceFromLimelightToGoalInches * 0.00511 - 0.01711); //calculated from linear regression
         m_feedMotorSubsystem.start();
-        if (m_feedMotorSubsystem.ballSensor.get()){
-          m_feedMotorSubsystem.ballFeed.set(0.3);
+        if (m_feedMotorSubsystem.ballSensor.getVoltage() > 1){
+          //m_feedMotorSubsystem.ballFeed.set(0.3);
         }
         try {
           TimeUnit.SECONDS.sleep(2);
@@ -93,8 +93,8 @@ public class AimandShootCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterDirection.shooterDirection.set(0);
-    m_feedMotorSubsystem.ballFeed.set(0);
+    shooterDirection.stop();;
+    m_feedMotorSubsystem.stop();
   }
 
   // Returns true when the command should end.

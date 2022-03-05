@@ -11,7 +11,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
@@ -20,7 +20,7 @@ public class FeedMotorSubsystem extends SubsystemBase {
   private static final int ballFeedID = Constants.ballFeedCANID;
   private WPI_TalonFX feedMotor;
   private CANSparkMax ballFeed;
-  public final DigitalInput ballSensor;
+  public final AnalogInput ballSensor;
   private Boolean running = false;
   private Boolean reverse = false;
   public FeedMotorSubsystem() {
@@ -28,8 +28,12 @@ public class FeedMotorSubsystem extends SubsystemBase {
     feedMotor = new WPI_TalonFX(feedMotorID);
     ballFeed = new CANSparkMax(ballFeedID, MotorType.kBrushless);
 
-    ballSensor = new DigitalInput(9);
+    ballSensor = new AnalogInput(0);
     SendableRegistry.setName(feedMotor, "feedMotor");
+  }
+
+  public double getVoltage(){
+    return ballSensor.getVoltage();
   }
 
   public void start() {
@@ -50,13 +54,14 @@ public class FeedMotorSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if(running == true){
-      feedMotor.set(-1);
+      feedMotor.set(-0.4);
     }
     else{
       feedMotor.set(0);
     }
     if(reverse == true){
-      feedMotor.set(1);
+      feedMotor.set(0.4);
+      ballFeed.set(0.4);
     }
     else {
       feedMotor.set(0);
