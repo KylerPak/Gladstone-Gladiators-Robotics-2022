@@ -40,10 +40,10 @@ public class TeleopDriveCommand extends CommandBase {
   @Override
   public void execute() { 
     if(Math.abs(m_controller.getLeftY()) > 0.04){
-      m_subsystem.LeftDrive((1.5 * m_controller.getRightTriggerAxis()) + m_controller.getLeftY());
+      m_subsystem.LeftDrive(m_controller.getRightTriggerAxis() + 0.8 * m_controller.getLeftY());
     }
     if(Math.abs(m_controller.getRightY()) > 0.04){
-      m_subsystem.RightDrive((1.5 * m_controller.getRightTriggerAxis()) + m_controller.getRightY());
+      m_subsystem.RightDrive(m_controller.getRightTriggerAxis() + 0.8 * m_controller.getRightY());
     }
   }
 

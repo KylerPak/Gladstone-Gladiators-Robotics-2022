@@ -26,12 +26,15 @@ public final class Constants {
     public static int intakeMotorCANID = 8;
     public static int feedMotorCANID = 9;
     public static int climbMotorCANID = 10;
-    
+     
     //Encoder Values
     public static final double ksVolts = 0.22; //subject to change
     public static final double kvVoltSecondsPerMeter = 1.98; //subject to change
     public static final double kaVoltSecondsSquaredPerMeter = 0.2; //subject to change
     public static final double kPDriveVel = 8.5; //subject to change
+    public static final double kP = 3.38; //subject to change
+    public static final double kI = 0; //subject to change
+    public static final double kD = 0; //subject to change
 
     //DifferentialDriveKinematics
     public static final double kTrackwidthMeters = 0.603; //subject to change

@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
 public class BallShooterSubsystem extends SubsystemBase {
-  private WPI_TalonFX ballShooter = new WPI_TalonFX(Constants.shooterCANID);
+  private WPI_TalonFX ballShooter;
+  private static final int ballShooterID = Constants.shooterCANID;
   private Boolean isshooting = false;
   public BallShooterSubsystem() {
+    ballShooter = new WPI_TalonFX(ballShooterID);
     SendableRegistry.setName(ballShooter, "ballShooter");
   }
 
@@ -31,7 +33,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if(isshooting == true){
-      ballShooter.set(-1);
+      ballShooter.set(0.65);
     }
     else {
       ballShooter.set(0);

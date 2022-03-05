@@ -6,8 +6,9 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -15,12 +16,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
 public class FeedMotorSubsystem extends SubsystemBase {
-  public WPI_VictorSPX feedMotor = new WPI_VictorSPX(Constants.feedMotorCANID);
-  public WPI_TalonSRX ballFeed = new WPI_TalonSRX(Constants.ballFeedCANID);
-  public final DigitalInput ballSensor = new DigitalInput(9);
+  private static final int feedMotorID = Constants.feedMotorCANID;
+  private static final int ballFeedID = Constants.ballFeedCANID;
+  private WPI_TalonFX feedMotor;
+  private CANSparkMax ballFeed;
+  public final DigitalInput ballSensor;
   private Boolean running = false;
   private Boolean reverse = false;
   public FeedMotorSubsystem() {
+
+    feedMotor = new WPI_TalonFX(feedMotorID);
+    ballFeed = new CANSparkMax(ballFeedID, MotorType.kBrushless);
+
+    ballSensor = new DigitalInput(9);
     SendableRegistry.setName(feedMotor, "feedMotor");
   }
 
