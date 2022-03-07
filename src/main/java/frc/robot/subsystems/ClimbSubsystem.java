@@ -7,35 +7,52 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.util.sendable.SendableRegistry;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClimbSubsystem extends SubsystemBase {
-  private WPI_VictorSPX climbMotor = new WPI_VictorSPX(Constants.climbMotorCANID); 
-  private boolean running = false;
+  //CAN Constants
+  private static int leftClimbID = Constants.leftClimbMotorCANID;
+  private static int rightClimbID = Constants.rightClimbMotorCANID;
+  //Motors
+  private CANSparkMax leftClimb;
+  private CANSparkMax rightClimb;
+  //Encoders
+  private RelativeEncoder m_leftClimbEncoder;
+  private RelativeEncoder m_rightClimbEncoder;
+  //Feedforward
+  private final ElevatorFeedforward m_eFeedforward = new ElevatorFeedforward(0.11, 1.08, 2.83, 0.11);
 
   public ClimbSubsystem() {
-    SendableRegistry.setName(climbMotor, "climbMotor");
+    //Create Motors
+    leftClimb = new CANSparkMax(leftClimbID, MotorType.kBrushless);
+    rightClimb = new CANSparkMax(rightClimbID, MotorType.kBrushless);
+    //Restore factory defaults
+    leftClimb.restoreFactoryDefaults();
+    rightClimb.restoreFactoryDefaults();
+    //Create Encoders
+    m_leftClimbEncoder = leftClimb.getEncoder();
+    m_rightClimbEncoder = rightClimb.getEncoder();
+
   }
 
-  public void climb(){
-    running = true;
+  public void climb(){ 
+
   }
   public void stop(){
-    running = false;
+
   }
   public void reverse(){
-    climbMotor.set(0.3);
+
   }
 
   @Override
   public void periodic() {
-    if(running == true){
-      climbMotor.set(-0.75);
-    } else{
-      climbMotor.set(0);
-    }
+
   }
 }

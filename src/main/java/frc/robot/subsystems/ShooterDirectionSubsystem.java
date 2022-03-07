@@ -7,6 +7,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,8 +32,8 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   public void enableSoftLimit(){
     shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
     shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
-    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 100);
-    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -100);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 1000);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -1000);
   }
 
   public void left(){
@@ -43,6 +44,14 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   }
   public void notleft(){
     shootDirection.set(-0.3);
+  }
+
+  public boolean isForwardEnabled(){
+    return shootDirection.isSoftLimitEnabled(SoftLimitDirection.kForward);
+  }
+
+  public boolean isReverseEnabled(){
+    return shootDirection.isSoftLimitEnabled(SoftLimitDirection.kReverse);
   }
 
   @Override

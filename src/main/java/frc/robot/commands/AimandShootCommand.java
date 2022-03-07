@@ -24,6 +24,9 @@ public class AimandShootCommand extends CommandBase {
   private final ShooterDirectionSubsystem shooterDirection;
   private final FeedMotorSubsystem m_feedMotorSubsystem;
   private final XboxController controller;
+  private double limeLightAngle = 31;
+  private double limeLightHeightInches = 43.75;
+  private double goalHeightInches = 104;
   private boolean isFinished = false;
 
   /**
@@ -48,28 +51,23 @@ public class AimandShootCommand extends CommandBase {
   public void execute() {   
     final double Kp = -0.2; //proportional constant
     final double min_rotate = 0.05; //minimum rotation 
-    double rotate_adjust = 0.3; //standard rotation speed
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-ghs");
     NetworkTableEntry tv = table.getEntry("tv");
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry tx = table.getEntry("tx");
     double targetOffsetAngle_Vertical = ty.getDouble(0);
     double heading_error = tx.getDouble(0);
-    double limelightMountAngleDegrees = 31;
-    double limelightSenseHeightInches = 43.75;
-    double goalHeightInches = 104;
 
     if (tv.getDouble(0) < 0.5){ //target not in sight
       shooterDirection.left(); 
     } else{ //target in sight, begin aiming
-      rotate_adjust = Kp * heading_error;
       //shooterDirection.shooterDirection.set(rotate_adjust);
     }
 
     if (heading_error < min_rotate){ //Aiming at the target, calculating distance
-      double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+      double angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
       double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
-      double distanceFromLimelightToGoalInches = (goalHeightInches - limelightSenseHeightInches)/Math.tan(angleToGoalRadians);
+      double distanceFromLimelightToGoalInches = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
 
       if (distanceFromLimelightToGoalInches > 20){
         //shooterDirection.shooterDirection.set(distanceFromLimelightToGoalInches * 0.00511 - 0.01711); //calculated from linear regression
