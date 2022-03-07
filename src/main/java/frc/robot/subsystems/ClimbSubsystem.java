@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClimbSubsystem extends SubsystemBase {
-
-  public WPI_VictorSPX climbMotor = new WPI_VictorSPX(Constants.climbMotorCANID); 
+  private WPI_VictorSPX climbMotor = new WPI_VictorSPX(Constants.climbMotorCANID); 
   private boolean running = false;
 
   public ClimbSubsystem() {

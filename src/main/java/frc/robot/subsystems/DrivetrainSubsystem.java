@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -15,34 +14,31 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
-  //Talon Motors
-  private WPI_TalonSRX leftDriveFront = new WPI_TalonSRX(Constants.leftDriveFrontCANID);
-  private WPI_TalonSRX rightDriveFront = new WPI_TalonSRX(Constants.rightDriveFrontCANID);
-  //NEO Motors 
-  private CANSparkMax leftDriveBack = new CANSparkMax(Constants.leftDriveBackCANID, MotorType.kBrushless);
-  private CANSparkMax rightDriveBack = new CANSparkMax(Constants.rightDriveBackCANID, MotorType.kBrushless);
-  //Motor Controllers
-  private MotorController m_leftMotors = new MotorControllerGroup(leftDriveFront, leftDriveBack);
-  private MotorController m_rightMotors = new MotorControllerGroup(rightDriveFront, rightDriveBack);
-  //DriveTrain
-  private DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+  //Motors and ID's
+  private static final int leftDriveBackID = Constants.leftDriveBackCANID;
+  private static final int leftDriveFrontID = Constants.leftDriveFrontCANID;
+  private static final int rightDriveBackID = Constants.rightDriveBackCANID;
+  private static final int rightDriveFrontID = Constants.rightDriveFrontCANID;
+  private CANSparkMax m_leftDriveBack;
+  private CANSparkMax m_rightDriveBack;
+  private CANSparkMax m_leftDriveFront;
+  private CANSparkMax m_rightDriveFront;
+  //Differential Drive
+  private DifferentialDrive m_drive;
   //Encoders
   private RelativeEncoder m_leftEncoder;
   private RelativeEncoder m_rightEncoder;
   //Odometry and Gyro
   private DifferentialDriveOdometry m_odometry;
-  private Gyro m_gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
+  private Gyro m_gyro;
   //Feedforward and PID Controller
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.ksVolts, 
-    Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
-  private PIDController leftPID = new PIDController(3.38, 0, 0);
-  private PIDController rightPID = new PIDController(3.38, 0, 0);
+  private SimpleMotorFeedforward m_feedforward; 
+  private PIDController leftPID;
+  private PIDController rightPID;
   //Variables needed
   public Pose2d pose;
   public double speed;
@@ -51,12 +47,33 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DrivetrainSubsystem() {
-   leftDriveBack.restoreFactoryDefaults();
-   rightDriveBack.restoreFactoryDefaults();
-
-   m_leftEncoder = leftDriveBack.getEncoder();
-   m_rightEncoder = rightDriveBack.getEncoder();
-   m_odometry = new DifferentialDriveOdometry(getHeading());
+    //Create the motors
+    m_leftDriveBack = new CANSparkMax(leftDriveBackID, MotorType.kBrushless);
+    m_leftDriveFront = new CANSparkMax(leftDriveFrontID, MotorType.kBrushless);
+    m_rightDriveBack = new CANSparkMax(rightDriveBackID, MotorType.kBrushless);
+    m_rightDriveFront = new CANSparkMax(rightDriveFrontID, MotorType.kBrushless);    
+    //Back follow front motors
+    m_leftDriveBack.follow(m_leftDriveFront);
+    m_rightDriveBack.follow(m_rightDriveFront);
+    //DifferentialDrive
+    m_drive = new DifferentialDrive(m_leftDriveBack, m_rightDriveBack);
+    //Restore motor defaults
+    m_leftDriveFront.restoreFactoryDefaults();
+    m_rightDriveFront.restoreFactoryDefaults();
+    m_leftDriveBack.restoreFactoryDefaults();
+    m_rightDriveBack.restoreFactoryDefaults();
+    //Encoders
+    m_leftEncoder = m_leftDriveFront.getEncoder();
+    m_rightEncoder = m_rightDriveFront.getEncoder();
+    //Odomety and Gyro
+    m_odometry = new DifferentialDriveOdometry(getHeading());
+    m_gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
+    //Feedforward and PID
+    m_feedforward = new SimpleMotorFeedforward(Constants.ksVolts, 
+    Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
+    leftPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
+    rightPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
+    m_drive.feed();
 
   }
 
@@ -65,8 +82,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Update the odometry in the periodic block and updates the pose
     pose = m_odometry.update(
       m_gyro.getRotation2d(), 
-      m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
-      m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
+      m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
+      m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
       );
   }
 
@@ -86,12 +103,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param leftVolts the commanded left output
    * @param rightVolts the commanded right output
    */
-  public void VoltageDrive(double leftVelocitySetpoint, double rightVelocitySetpoint) {
-    m_leftMotors.setVoltage(feedforward.calculate(leftVelocitySetpoint)
+  public void LeftDrive(double leftVelocitySetpoint) {
+    m_leftDriveFront.setVoltage(m_feedforward.calculate(leftVelocitySetpoint)
       + leftPID.calculate(m_leftEncoder.getVelocity(), leftVelocitySetpoint));
-    m_rightMotors.setVoltage(feedforward.calculate(rightVelocitySetpoint)
-      + rightPID.calculate(m_rightEncoder.getVelocity(), rightVelocitySetpoint)); 
-    m_drive.feed();
+  }
+
+  public void RightDrive(double rightVelocitySetpoint){
+    m_rightDriveFront.setVoltage(m_feedforward.calculate(rightVelocitySetpoint)
+    + rightPID.calculate(m_rightEncoder.getVelocity(), rightVelocitySetpoint)); 
   }
 
   public Rotation2d getHeading() {
@@ -99,7 +118,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public SimpleMotorFeedforward getFeedforward(){
-    return feedforward;
+    return m_feedforward;
   }
 
   public PIDController getLeftPID(){
@@ -133,6 +152,4 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
-
-
 }

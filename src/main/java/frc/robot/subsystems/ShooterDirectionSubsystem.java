@@ -6,19 +6,36 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
 public class ShooterDirectionSubsystem extends SubsystemBase {
-  public WPI_TalonSRX shooterDirection = new WPI_TalonSRX(Constants.shooterDirectionCANID);
+  private static final int deviceID = Constants.shooterDirectionCANID;
+  private CANSparkMax m_shootDirection;
+  
   private Boolean left = false;
   private Boolean notleft = false;
   
   public ShooterDirectionSubsystem(){
-    SendableRegistry.setName(shooterDirection, "shooterDirection");
+    m_shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
+    m_shootDirection.restoreFactoryDefaults();
+    //Soft Limits
+    enableSoftLimit();
+    SmartDashboard.putBoolean("Forward Soft Limit Enabled", m_shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kForward));
+    SmartDashboard.putBoolean("Reverse Soft Limit Enabled", m_shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kReverse));                          
+    SmartDashboard.putNumber("Forward Soft Limit", m_shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
+    SmartDashboard.putNumber("Reverse Soft Limit", m_shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
+  }
+
+  public void enableSoftLimit(){
+    m_shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
+    m_shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
+    m_shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 100);
+    m_shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -100);
   }
 
   public void left(){
@@ -37,17 +54,18 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    enableSoftLimit();
     if(left == true){
-      shooterDirection.set(-0.2);
+      m_shootDirection.set(0.2);
     }
     else {
-      shooterDirection.set(0);
+      m_shootDirection.set(0);
     }
     if(notleft == true){
-      shooterDirection.set(0.2);
+      m_shootDirection.set(-0.3);
     }
     else {
-      shooterDirection.set(0);
+      m_shootDirection.set(0);
     }
   }
 }

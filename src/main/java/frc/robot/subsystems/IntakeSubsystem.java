@@ -12,10 +12,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
 public class IntakeSubsystem extends SubsystemBase {
-  public WPI_TalonFX intakeMotor = new WPI_TalonFX(Constants.intakeCANID);
+  private static final int intakeMotorID = Constants.intakeMotorCANID;
+  private WPI_TalonFX intakeMotor;
   private Boolean running = false;
   private Boolean reverse = false;
   public IntakeSubsystem() {
+    intakeMotor = new WPI_TalonFX(intakeMotorID);
     SendableRegistry.setName(intakeMotor, "intakeMotor");
   }
 
