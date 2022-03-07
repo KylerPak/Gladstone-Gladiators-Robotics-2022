@@ -31,11 +31,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     sendableChooser = new SendableChooser<Command>();
-<<<<<<< HEAD
     sendableChooser.setDefaultOption("Simple Auto", m_robotContainer.m_AimShoot);
-=======
-    sendableChooser.setDefaultOption("Simple Auto", m_robotContainer.m_aimShoot);
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
     SmartDashboard.putData("Autonomous", sendableChooser);
   }
 

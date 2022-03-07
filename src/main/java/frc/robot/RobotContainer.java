@@ -22,18 +22,14 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final DrivetrainSubsystem m_driveTrainSubsystem = new DrivetrainSubsystem();
-  private final FeedMotorSubsystem m_feedMotorSubsystem = new FeedMotorSubsystem();
-  private final BallShooterSubsystem m_ballShooterSubsystem = new BallShooterSubsystem();
-  private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
-  private final ShooterDirectionSubsystem m_directionSubsystem = new ShooterDirectionSubsystem();
-  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final DrivetrainSubsystem m_driveTrainSubsystem;
+  private final FeedMotorSubsystem m_feedSubsystem;
+  private final BallShooterSubsystem m_ballShooterSubsystem;
+  private final ClimbSubsystem m_climbSubsystem;
+  private final ShooterDirectionSubsystem m_directionSubsystem;
+  private final IntakeSubsystem m_intakeSubsystem;
   private final BallShooterCommand m_ballShooterCommand;
-<<<<<<< HEAD
   public final AimandShootCommand m_AimShoot;
-=======
-  public final AimandShootCommand m_aimShoot;
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
   private final ClimbCommand m_climbCommand;
   private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
@@ -57,19 +53,21 @@ public class RobotContainer {
    */
   public RobotContainer() {
 
+    m_driveTrainSubsystem = new DrivetrainSubsystem();
+    m_feedSubsystem = new FeedMotorSubsystem();
+    m_ballShooterSubsystem = new BallShooterSubsystem();
+    m_directionSubsystem = new ShooterDirectionSubsystem();
+    m_climbSubsystem = new ClimbSubsystem();
+    m_intakeSubsystem = new IntakeSubsystem();
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
 
-<<<<<<< HEAD
-    m_AimShoot = new AimandShootCommand(m_directionSubsystem, m_controller);
-=======
-    m_aimShoot = new AimandShootCommand(m_directionSubsystem, m_feedMotorSubsystem, m_controller);
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
-    m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedMotorSubsystem);
+    m_AimShoot = new AimandShootCommand(m_directionSubsystem, m_feedSubsystem, m_controller);
+    m_ballShooterCommand = new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
-    m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedMotorSubsystem);
+    m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
-    m_feedmotorReverse = new FeedMotorReverseCommand(m_feedMotorSubsystem);
+    m_feedmotorReverse = new FeedMotorReverseCommand(m_feedSubsystem);
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
     // Configure the button bindings
@@ -86,12 +84,8 @@ public class RobotContainer {
     rightBumper.whenHeld(m_ballShooterCommand);
     leftBumper.whenHeld(m_intakeCommand);
     leftMiddleButton.whenHeld(m_intakeReverse);
-<<<<<<< HEAD
-    yButton.whenPressed(m_AimShoot);
-=======
     rightMiddleButton.whenHeld(m_feedmotorReverse);
-    yButton.whenHeld(m_aimShoot);
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
+    yButton.whenPressed(m_AimShoot);
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);
     dPad.left.whenHeld(m_shooterLeft);
