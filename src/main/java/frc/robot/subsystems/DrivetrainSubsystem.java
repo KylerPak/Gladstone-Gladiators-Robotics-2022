@@ -56,7 +56,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftDriveBack.follow(m_leftDriveFront);
     m_rightDriveBack.follow(m_rightDriveFront);
     //DifferentialDrive
-    m_drive = new DifferentialDrive(m_leftDriveBack, m_rightDriveBack);
+    m_drive = new DifferentialDrive(m_leftDriveFront, m_rightDriveFront);
     //Restore motor defaults
     m_leftDriveFront.restoreFactoryDefaults();
     m_rightDriveFront.restoreFactoryDefaults();

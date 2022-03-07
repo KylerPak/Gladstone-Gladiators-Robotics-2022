@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
@@ -15,28 +16,22 @@ import frc.robot.Constants;
 public class BallShooterSubsystem extends SubsystemBase {
   private WPI_TalonFX ballShooter;
   private static final int ballShooterID = Constants.shooterCANID;
-  private Boolean isshooting = false;
   public BallShooterSubsystem() {
     ballShooter = new WPI_TalonFX(ballShooterID);
     SendableRegistry.setName(ballShooter, "ballShooter");
   }
 
-  public void shoot() {
-    isshooting = true;
+  public void shoot(double power) {
+    ballShooter.set(ControlMode.PercentOutput,power);
   }
 
   public void stop() {
-    isshooting = false;
+    ballShooter.set(ControlMode.PercentOutput, 0);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(isshooting == true){
-      ballShooter.set(0.65);
-    }
-    else {
-      ballShooter.set(0);
-    }
+
   }
 }

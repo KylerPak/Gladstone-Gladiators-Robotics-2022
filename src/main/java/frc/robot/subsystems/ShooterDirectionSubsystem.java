@@ -15,57 +15,39 @@ import frc.robot.Constants;
  
 public class ShooterDirectionSubsystem extends SubsystemBase {
   private static final int deviceID = Constants.shooterDirectionCANID;
-  private CANSparkMax m_shootDirection;
-  
-  private Boolean left = false;
-  private Boolean notleft = false;
+  private CANSparkMax shootDirection;
   
   public ShooterDirectionSubsystem(){
-    m_shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
-    m_shootDirection.restoreFactoryDefaults();
+    shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
+    shootDirection.restoreFactoryDefaults();
     //Soft Limits
     enableSoftLimit();
-    SmartDashboard.putBoolean("Forward Soft Limit Enabled", m_shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kForward));
-    SmartDashboard.putBoolean("Reverse Soft Limit Enabled", m_shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kReverse));                          
-    SmartDashboard.putNumber("Forward Soft Limit", m_shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
-    SmartDashboard.putNumber("Reverse Soft Limit", m_shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
+    SmartDashboard.putBoolean("Forward Soft Limit Enabled", shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kForward));
+    SmartDashboard.putBoolean("Reverse Soft Limit Enabled", shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kReverse));                          
+    SmartDashboard.putNumber("Forward Soft Limit", shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
+    SmartDashboard.putNumber("Reverse Soft Limit", shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
   }
 
   public void enableSoftLimit(){
-    m_shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
-    m_shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
-    m_shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 100);
-    m_shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -100);
+    shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
+    shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 100);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -100);
   }
 
   public void left(){
-    left = true;
-    notleft = false;
+    shootDirection.set(0.2);
   }
   public void stop(){
-    left = false;
-    notleft = false;
+    shootDirection.set(0);
   }
   public void notleft(){
-    left = false;
-    notleft = true;
+    shootDirection.set(-0.3);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    enableSoftLimit();
-    if(left == true){
-      m_shootDirection.set(0.2);
-    }
-    else {
-      m_shootDirection.set(0);
-    }
-    if(notleft == true){
-      m_shootDirection.set(-0.3);
-    }
-    else {
-      m_shootDirection.set(0);
-    }
+
   }
 }

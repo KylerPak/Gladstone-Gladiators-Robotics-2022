@@ -6,11 +6,11 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,50 +21,38 @@ public class FeedMotorSubsystem extends SubsystemBase {
   private WPI_TalonFX feedMotor;
   private CANSparkMax ballFeed;
   public final AnalogInput ballSensor;
-  private Boolean running = false;
-  private Boolean reverse = false;
-  public FeedMotorSubsystem() {
 
+  public FeedMotorSubsystem() {
     feedMotor = new WPI_TalonFX(feedMotorID);
     ballFeed = new CANSparkMax(ballFeedID, MotorType.kBrushless);
-
     ballSensor = new AnalogInput(0);
-    SendableRegistry.setName(feedMotor, "feedMotor");
+  }
+
+  public void start() {
+    feedMotor.set(ControlMode.PercentOutput, 0.4);
+  }
+
+  public void stop() {
+    feedMotor.set(0);
+    ballFeed.set(0);
+  }
+
+  public void ballFeed(){
+    ballFeed.set(-0.4);
+  }
+
+  public void reverse(){
+    feedMotor.set(-0.4);
+    ballFeed.set(0.4);
   }
 
   public double getVoltage(){
     return ballSensor.getVoltage();
   }
 
-  public void start() {
-    running = true;
-    reverse = false;
-  }
-
-  public void stop() {
-    running = false;
-    reverse = false;
-  }
-
-  public void reverse(){
-    running = false;
-    reverse = true;
-  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(running == true){
-      feedMotor.set(-0.4);
-    }
-    else{
-      feedMotor.set(0);
-    }
-    if(reverse == true){
-      feedMotor.set(0.4);
-      ballFeed.set(0.4);
-    }
-    else {
-      feedMotor.set(0);
-    }
+
   }
 }
