@@ -21,19 +21,19 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterDirectionSubsystem;
 
-public class LimelightAimCommand extends CommandBase {
+public class AimandShootCommand extends CommandBase {
   
+  private final ShooterDirectionSubsystem shooterDirection;
+  private final XboxController controller;
   private static NetworkTableEntry desiredTargetArea;
   private static NetworkTableEntry targetAngleX;
   private static NetworkTableEntry targetAngleY;
-  
-  private final ShooterDirectionSubsystem shooterDirection;
   private boolean isFinished = false;
-  private final XboxController controller;
+
   /**
    * Creates a new LimelightAimCommand.
    */
-  public LimelightAimCommand(ShooterDirectionSubsystem shootDirection, XboxController controller) {
+  public AimandShootCommand(ShooterDirectionSubsystem shootDirection, XboxController controller) {
     this.shooterDirection = shootDirection;
     this.controller = controller;
     final ShuffleboardTab tab = Shuffleboard.getTab("Tuning");
@@ -66,7 +66,7 @@ public class LimelightAimCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    final double DESIRED_TARGET_AREA = desiredTargetArea.getDouble(16);        // Area of the target when the robot reaches the wall            
+    double DESIRED_TARGET_AREA = desiredTargetArea.getDouble(16);      // Area of the target when the robot reaches the wall          
     double tv = NetworkTableInstance.getDefault().getTable("limelight-ghs").getEntry("tv").getDouble(0);
     double tx = NetworkTableInstance.getDefault().getTable("limelight-ghs").getEntry("tx").getDouble(0);
     double ty = NetworkTableInstance.getDefault().getTable("limelight-ghs").getEntry("ty").getDouble(0);
@@ -75,7 +75,7 @@ public class LimelightAimCommand extends CommandBase {
     if (tv < 0.5){
       shooterDirection.shooterDirection.set(-0.2);
     } else if(ta < DESIRED_TARGET_AREA) {
-
+      
     }
     if (ta >= DESIRED_TARGET_AREA && Math.abs(tx) <= targetAngleX.getDouble(2) && Math.abs(ty) <= targetAngleY.getDouble(5)){
       controller.setRumble(RumbleType.kLeftRumble, 1);
