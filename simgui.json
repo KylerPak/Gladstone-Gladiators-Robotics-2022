@@ -1,7 +1,23 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/BallShooterSubsystem": "Subsystem",
+      "/LiveWindow/ClimbSubsystem": "Subsystem",
+      "/LiveWindow/DrivetrainSubsystem": "Subsystem",
+      "/LiveWindow/FeedMotorSubsystem": "Subsystem",
+      "/LiveWindow/IntakeSubsystem": "Subsystem",
+      "/LiveWindow/ShooterDirectionSubsystem": "Subsystem",
+      "/LiveWindow/Ungrouped/ADXRS450_Gyro[0]": "Gyro",
+      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/ballShooter": "Motor Controller",
+      "/LiveWindow/Ungrouped/climbMotor": "Motor Controller",
+      "/LiveWindow/Ungrouped/feedMotor": "Motor Controller",
+      "/LiveWindow/Ungrouped/intakeMotor": "Motor Controller",
+      "/SmartDashboard/Autonomous": "String Chooser"
     }
   }
 }
