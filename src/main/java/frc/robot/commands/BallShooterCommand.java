@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
  
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.FeedMotorSubsystem;
@@ -15,44 +16,44 @@ import frc.robot.subsystems.FeedMotorSubsystem;
  * This command will drive the robot forward for a specified period of time
  */
 public class BallShooterCommand extends CommandBase {
-  private final BallShooterSubsystem m_ballsubsystem;
-  private final FeedMotorSubsystem m_feedsubsystem;
-  private int time;
+  private final BallShooterSubsystem m_ballSubsystem;
+  private final FeedMotorSubsystem m_feedSubsystem;
+  private XboxController m_controller = new XboxController(0);
   /**
    * Creates a new AutonomousCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public BallShooterCommand(BallShooterSubsystem ballsystem, FeedMotorSubsystem feedsystem) {
-    m_ballsubsystem = ballsystem;
-    m_feedsubsystem = feedsystem;
+  public BallShooterCommand(BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem, XboxController controller) {
+    m_ballSubsystem = ballSystem;
+    m_feedSubsystem = feedSystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_ballsubsystem, m_feedsubsystem);
+    addRequirements(m_ballSubsystem, m_feedSubsystem);
   }
  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    time = 0;
+
   }
  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(time < 25) {
-      m_ballsubsystem.shoot();
-      time += 1;
-    }else{
-      m_ballsubsystem.shoot();
-      m_feedsubsystem.start();
+    if(m_controller.getLeftTriggerAxis() > 0.05){ //Controller deadband
+      m_ballSubsystem.shoot(m_controller.getLeftTriggerAxis());
+      m_feedSubsystem.start();
+      if(m_feedSubsystem.getVoltage() > 1){
+        m_feedSubsystem.ballFeed();
+      }
     }
   }
- 
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ballsubsystem.stop();
-    m_feedsubsystem.stop();
+    m_ballSubsystem.stop();
+    m_feedSubsystem.stop();
   }
  
   // Returns true when the command should end.

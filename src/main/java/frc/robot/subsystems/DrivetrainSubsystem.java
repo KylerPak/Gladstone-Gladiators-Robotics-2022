@@ -34,7 +34,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private RelativeEncoder m_rightEncoder;
   //Odometry and Gyro
   private DifferentialDriveOdometry m_odometry;
-  private Gyro m_gyro;
+  private Gyro m_gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
   //Feedforward and PID Controller
   private SimpleMotorFeedforward m_feedforward; 
   private PIDController leftPID;
@@ -65,9 +65,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //Encoders
     m_leftEncoder = m_leftDriveFront.getEncoder();
     m_rightEncoder = m_rightDriveFront.getEncoder();
-    //Odomety and Gyro
+    //Odomety
     m_odometry = new DifferentialDriveOdometry(getHeading());
-    m_gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
     //Feedforward and PID
     m_feedforward = new SimpleMotorFeedforward(Constants.ksVolts, 
     Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);

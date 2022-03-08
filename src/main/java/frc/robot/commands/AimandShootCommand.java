@@ -7,37 +7,15 @@
 
 package frc.robot.commands;
 
-<<<<<<< HEAD
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-
-=======
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import edu.wpi.first.networktables.NetworkTable;
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
-<<<<<<< HEAD
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterDirectionSubsystem;
-
-public class AimandShootCommand extends CommandBase {
-  
-  private final ShooterDirectionSubsystem shooterDirection;
-  private final XboxController controller;
-  private static NetworkTableEntry desiredTargetArea;
-  private static NetworkTableEntry targetAngleX;
-  private static NetworkTableEntry targetAngleY;
-=======
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FeedMotorSubsystem;
 import frc.robot.subsystems.ShooterDirectionSubsystem;
@@ -46,37 +24,14 @@ public class AimandShootCommand extends CommandBase {
   private final ShooterDirectionSubsystem shooterDirection;
   private final FeedMotorSubsystem m_feedMotorSubsystem;
   private final XboxController controller;
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
+  private double limeLightAngle = 31;
+  private double limeLightHeightInches = 43.75;
+  private double goalHeightInches = 104;
   private boolean isFinished = false;
 
   /**
    * Creates a new LimelightAimCommand.
    */
-<<<<<<< HEADgit
-  public AimandShootCommand(ShooterDirectionSubsystem shootDirection, XboxController controller) {
-    this.shooterDirection = shootDirection;
-    this.controller = controller;
-    final ShuffleboardTab tab = Shuffleboard.getTab("Tuning");
-    if (desiredTargetArea == null) {
-      desiredTargetArea =
-        tab.addPersistent("Desired Target Area", 16)
-        .withWidget(BuiltInWidgets.kTextView)
-        .withProperties(Map.of("min", 0, "max", 25))
-        .getEntry();
-      targetAngleX = 
-        tab.addPersistent("targetAngleX", 2)
-        .withWidget(BuiltInWidgets.kTextView)
-        .withProperties(Map.of("min", 0, "max", 10))
-        .getEntry();
-      targetAngleY = 
-        tab.addPersistent("targetAngleY", 2)
-        .withWidget(BuiltInWidgets.kTextView)
-        .withProperties(Map.of("min", -5, "max", 5))
-        .getEntry();
-    }
-    addRequirements(shootDirection);
-  }
-=======
   public AimandShootCommand(ShooterDirectionSubsystem shootDirection, FeedMotorSubsystem feedSystem, XboxController controller) {
     this.shooterDirection = shootDirection;
     this.m_feedMotorSubsystem = feedSystem;
@@ -84,7 +39,6 @@ public class AimandShootCommand extends CommandBase {
 
     addRequirements(shootDirection, feedSystem);
 }
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
 
   // Called when the command is initially scheduled.
   @Override
@@ -94,56 +48,32 @@ public class AimandShootCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-<<<<<<< HEAD
-  public void execute() {
-    double DESIRED_TARGET_AREA = desiredTargetArea.getDouble(16);      // Area of the target when the robot reaches the wall          
-    double tv = NetworkTableInstance.getDefault().getTable("limelight-ghs").getEntry("tv").getDouble(0);
-    double tx = NetworkTableInstance.getDefault().getTable("limelight-ghs").getEntry("tx").getDouble(0);
-    double ty = NetworkTableInstance.getDefault().getTable("limelight-ghs").getEntry("ty").getDouble(0);
-    double ta = NetworkTableInstance.getDefault().getTable("limelight-ghs").getEntry("ta").getDouble(0);
-    
-    if (tv < 0.5){
-      shooterDirection.shooterDirection.set(-0.2);
-    } else if(ta < DESIRED_TARGET_AREA) {
-      
-    }
-    if (ta >= DESIRED_TARGET_AREA && Math.abs(tx) <= targetAngleX.getDouble(2) && Math.abs(ty) <= targetAngleY.getDouble(5)){
-      controller.setRumble(RumbleType.kLeftRumble, 1);
-      Timer timer = new Timer();
-      timer.schedule(new RumbleStopper(controller), 500);
-      isFinished = true;
-=======
   public void execute() {   
     final double Kp = -0.2; //proportional constant
     final double min_rotate = 0.05; //minimum rotation 
-    double rotate_adjust = 0.3; //standard rotation speed
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-ghs");
     NetworkTableEntry tv = table.getEntry("tv");
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry tx = table.getEntry("tx");
     double targetOffsetAngle_Vertical = ty.getDouble(0);
     double heading_error = tx.getDouble(0);
-    double limelightMountAngleDegrees = 31;
-    double limelightSenseHeightInches = 43.75;
-    double goalHeightInches = 104;
 
     if (tv.getDouble(0) < 0.5){ //target not in sight
-      shooterDirection.shooterDirection.set(rotate_adjust); 
+      shooterDirection.left(); 
     } else{ //target in sight, begin aiming
-      rotate_adjust = Kp * heading_error;
-      shooterDirection.shooterDirection.set(rotate_adjust);
+      //shooterDirection.shooterDirection.set(rotate_adjust);
     }
 
     if (heading_error < min_rotate){ //Aiming at the target, calculating distance
-      double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+      double angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
       double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
-      double distanceFromLimelightToGoalInches = (goalHeightInches - limelightSenseHeightInches)/Math.tan(angleToGoalRadians);
+      double distanceFromLimelightToGoalInches = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
 
       if (distanceFromLimelightToGoalInches > 20){
-        shooterDirection.shooterDirection.set(distanceFromLimelightToGoalInches * 0.00511 - 0.01711); //calculated from linear regression
+        //shooterDirection.shooterDirection.set(distanceFromLimelightToGoalInches * 0.00511 - 0.01711); //calculated from linear regression
         m_feedMotorSubsystem.start();
-        if (m_feedMotorSubsystem.ballSensor.get()){
-          m_feedMotorSubsystem.ballFeed.set(0.3);
+        if (m_feedMotorSubsystem.ballSensor.getVoltage() > 1){
+          //m_feedMotorSubsystem.ballFeed.set(0.3);
         }
         try {
           TimeUnit.SECONDS.sleep(2);
@@ -155,18 +85,14 @@ public class AimandShootCommand extends CommandBase {
         timer.schedule(new RumbleStopper(controller), 500);
         isFinished = true;
       }
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterDirection.shooterDirection.set(0);
-<<<<<<< HEAD
-=======
-    m_feedMotorSubsystem.ballFeed.set(0);
->>>>>>> e6b4129275fdf789bae049d36b05799729ba964e
+    shooterDirection.stop();;
+    m_feedMotorSubsystem.stop();
   }
 
   // Returns true when the command should end.

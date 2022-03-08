@@ -24,7 +24,7 @@ public class FeedMotorSubsystem extends SubsystemBase {
 
   public FeedMotorSubsystem() {
     feedMotor = new WPI_TalonFX(feedMotorID);
-    ballFeed = new CANSparkMax(ballFeedID, MotorType.kBrushless);
+    ballFeed = new CANSparkMax(ballFeedID, MotorType.kBrushless);  
     ballSensor = new AnalogInput(0);
   }
 
@@ -35,6 +35,10 @@ public class FeedMotorSubsystem extends SubsystemBase {
   public void stop() {
     feedMotor.set(0);
     ballFeed.set(0);
+  }
+
+  public void ballFeed(){
+    ballFeed.set(-0.4);
   }
 
   public void reverse(){
