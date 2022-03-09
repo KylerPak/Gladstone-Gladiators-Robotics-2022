@@ -50,7 +50,7 @@ public class AimandShootCommand extends CommandBase {
   @Override
   public void execute() {   
     final double Kp = -0.2; //proportional constant
-    final double min_rotate = 0.05; //minimum rotation 
+    final double allowed_error = 0.0005; //minimum error
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-ghs");
     NetworkTableEntry tv = table.getEntry("tv");
     NetworkTableEntry ty = table.getEntry("ty");
@@ -61,10 +61,10 @@ public class AimandShootCommand extends CommandBase {
     if (tv.getDouble(0) < 0.5){ //target not in sight
       shooterDirection.left(); 
     } else{ //target in sight, begin aiming
-      //shooterDirection.shooterDirection.set(rotate_adjust);
+      shooterDirection.aiming(Kp * heading_error);
     }
 
-    if (heading_error < min_rotate){ //Aiming at the target, calculating distance
+    if (heading_error < allowed_error){ //Aiming at the target, calculating distance
       double angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
       double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
       double distanceFromLimelightToGoalInches = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);

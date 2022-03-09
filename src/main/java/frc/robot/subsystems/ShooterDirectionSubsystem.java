@@ -46,6 +46,10 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     shootDirection.set(-0.3);
   }
 
+  public void aiming(double power){
+    shootDirection.set(power);
+  }
+
   public boolean isForwardEnabled(){
     return shootDirection.isSoftLimitEnabled(SoftLimitDirection.kForward);
   }
