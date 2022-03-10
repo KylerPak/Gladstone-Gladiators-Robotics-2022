@@ -6,6 +6,9 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -13,6 +16,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,6 +25,7 @@ import frc.robot.Constants;
 public class ShooterDirectionSubsystem extends SubsystemBase {
   private static final int deviceID = Constants.shooterDirectionCANID;
   private CANSparkMax shootDirection;
+  private XboxController m_controller = new XboxController(0);
   private final double kP; //Proportional Constant
   private final double allowed_error; //minimum error
   private double limeLightAngle;
@@ -67,10 +73,15 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     shootDirection.set(power);
   }
   public void aiming(){
-    if (isTarget < 0.5){ //target not in sight
+    if (isTarget < 0.5){                //target not in sight
       left();
-    } else{ //target in sight, begin aiming
+    } else{                             //target in sight, begin aiming
       power(kP * heading_error);
+    }
+    if (heading_error < allowed_error && heading_error != 0){
+      m_controller.setRumble(RumbleType.kLeftRumble, 1);
+      Timer timer = new Timer();
+      timer.schedule(new RumbleStopper(m_controller), 500);
     }
   }
 
@@ -79,7 +90,7 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
       double angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
       double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
       double distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
-      SmartDashboard.putNumber("Distnace", distanceToGoal);
+      SmartDashboard.putNumber("Distance", distanceToGoal);
     }
     return distanceToGoal();
   }
@@ -91,8 +102,6 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   public boolean isReverseEnabled(){
     return shootDirection.isSoftLimitEnabled(SoftLimitDirection.kReverse);
   }
-  
-
 
   @Override
   public void periodic() {
@@ -107,5 +116,16 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Heading Error", heading_error);
     SmartDashboard.putNumber("Target Offset", targetOffsetAngle_Vertical);
     SmartDashboard.putNumber("Target in Sight", isTarget);
+  }
+}
+
+class RumbleStopper extends TimerTask{
+  private final XboxController controller;
+  public RumbleStopper(XboxController controller){
+    this.controller = controller;
+  }
+  @Override
+  public void run() {
+    controller.setRumble(RumbleType.kLeftRumble, 0);
   }
 }
