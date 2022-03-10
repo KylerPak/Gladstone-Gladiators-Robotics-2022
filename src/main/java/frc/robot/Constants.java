@@ -16,17 +16,17 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
     //motors
-    public static int leftDriveBackCANID = 1;
-    public static int leftDriveFrontCANID = 2;
-    public static int rightDriveBackCANID = 3;
-    public static int rightDriveFrontCANID = 4;
-    public static int ballFeedCANID = 5;
-    public static int shooterDirectionCANID = 6;
-    public static int shooterCANID = 7;
-    public static int intakeMotorCANID = 8;
-    public static int feedMotorCANID = 9;
-    public static int leftClimbMotorCANID = 10;
-    public static int rightClimbMotorCANID = 11;
+    public static int feedMotorCANID = 2;
+    public static int intakeMotorCANID = 3;
+    public static int leftDriveFrontCANID = 4;
+    public static int leftDriveBackCANID = 5;
+    public static int rightDriveFrontCANID = 6;
+    public static int rightDriveBackCANID = 7;
+    public static int ballFeedCANID = 8;
+    public static int shooterDirectionCANID = 9;
+    public static int shooterCANID = 10;
+    public static int leftClimbMotorCANID = 11;
+    public static int rightClimbMotorCANID = 12;
      
     //Encoder Values
     public static final double ksVolts = 0.22; //subject to change

@@ -28,7 +28,8 @@ public class RobotContainer {
   private final ClimbSubsystem m_climbSubsystem;
   private final ShooterDirectionSubsystem m_directionSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
-  public final AimandShootCommand m_AimShoot;
+  public final Aim m_Aim;
+  public final BallShooterCommand m_ballShoot;
   private final ClimbCommand m_climbCommand;
   private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
@@ -39,10 +40,10 @@ public class RobotContainer {
   private final XboxController m_controller = new XboxController(0);
   //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
-  //private final JoystickButton xButton = new JoystickButton(m_controller, 3);
-  private final JoystickButton yButton = new JoystickButton(m_controller, 4);
+  private final JoystickButton xButton = new JoystickButton(m_controller, 3);
+  //private final JoystickButton yButton = new JoystickButton(m_controller, 4);
   private final JoystickButton leftBumper = new JoystickButton(m_controller, 5);
-  //private final JoystickButton rightBumper = new JoystickButton(m_controller, 6);
+  private final JoystickButton rightBumper = new JoystickButton(m_controller, 6);
   private final JoystickButton leftMiddleButton = new JoystickButton(m_controller, 7);
   private final JoystickButton rightMiddleButton = new JoystickButton(m_controller, 8);
   private DirectionalPad dPad = new DirectionalPad(m_controller);
@@ -60,9 +61,9 @@ public class RobotContainer {
     m_intakeSubsystem = new IntakeSubsystem();
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
-    m_ballShooterSubsystem.setDefaultCommand(new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem, m_controller));
 
-    m_AimShoot = new AimandShootCommand(m_directionSubsystem, m_feedSubsystem, m_controller);
+    m_Aim = new Aim(m_directionSubsystem, m_controller);
+    m_ballShoot = new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem, m_directionSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedSubsystem);
@@ -82,9 +83,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     leftBumper.whenHeld(m_intakeCommand);
+    rightBumper.whenActive(m_ballShoot);
     leftMiddleButton.whenHeld(m_intakeReverse);
     rightMiddleButton.whenHeld(m_feedmotorReverse);
-    yButton.whenPressed(m_AimShoot);
+    xButton.whenPressed(m_Aim);
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);
     dPad.left.whenHeld(m_shooterLeft);

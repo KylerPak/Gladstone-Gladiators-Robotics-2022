@@ -6,11 +6,11 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
- 
-import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.FeedMotorSubsystem;
+import frc.robot.subsystems.ShooterDirectionSubsystem;
  
 /**
  * This command will drive the robot forward for a specified period of time
@@ -18,17 +18,18 @@ import frc.robot.subsystems.FeedMotorSubsystem;
 public class BallShooterCommand extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
   private final FeedMotorSubsystem m_feedSubsystem;
-  private XboxController m_controller = new XboxController(0);
+  private final ShooterDirectionSubsystem m_shootDirection;
   /**
    * Creates a new AutonomousCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public BallShooterCommand(BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem, XboxController controller) {
+  public BallShooterCommand(BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem, ShooterDirectionSubsystem shootDirection) {
     m_ballSubsystem = ballSystem;
     m_feedSubsystem = feedSystem;
+    m_shootDirection = shootDirection;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_ballSubsystem, m_feedSubsystem);
+    addRequirements(m_ballSubsystem, m_feedSubsystem, m_shootDirection);
   }
  
   // Called when the command is initially scheduled.
@@ -40,10 +41,10 @@ public class BallShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_controller.getLeftTriggerAxis() > 0.05){ //Controller deadband
-      m_ballSubsystem.shoot(m_controller.getLeftTriggerAxis());
+    if (m_shootDirection.distanceToGoal() > 20){
+      m_ballSubsystem.shoot(m_shootDirection.distanceToGoal() * 0.00511 - 0.01711); //calculated from linear regression
       m_feedSubsystem.start();
-      if(m_feedSubsystem.getVoltage() > 1){
+      if (m_feedSubsystem.ballSensor.getVoltage() > 1){
         m_feedSubsystem.ballFeed();
       }
     }

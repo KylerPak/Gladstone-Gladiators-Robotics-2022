@@ -22,7 +22,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public void shoot(double power) {
-    ballShooter.set(ControlMode.PercentOutput,power);
+    ballShooter.set(ControlMode.PercentOutput, power);
   }
 
   public void stop() {

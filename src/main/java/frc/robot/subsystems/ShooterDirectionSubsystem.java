@@ -10,6 +10,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,10 +20,24 @@ import frc.robot.Constants;
 public class ShooterDirectionSubsystem extends SubsystemBase {
   private static final int deviceID = Constants.shooterDirectionCANID;
   private CANSparkMax shootDirection;
+  private final double kP; //Proportional Constant
+  private final double allowed_error; //minimum error
+  private double limeLightAngle;
+  private double limeLightHeightInches;
+  private double goalHeightInches;
+  private double isTarget;
+  private double targetOffsetAngle_Vertical;
+  private double heading_error;
   
   public ShooterDirectionSubsystem(){
     shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
     shootDirection.restoreFactoryDefaults();
+    //variables for limeLight
+    limeLightAngle = 13;
+    limeLightHeightInches = 44.5;
+    goalHeightInches = 104;
+    kP = -0.2;
+    allowed_error = 0.001;
     //Soft Limits
     enableSoftLimit();
     SmartDashboard.putBoolean("Forward Soft Limit Enabled", shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kForward));
@@ -46,8 +63,25 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     shootDirection.set(-0.3);
   }
 
-  public void aiming(double power){
+  public void power(double power){
     shootDirection.set(power);
+  }
+  public void aiming(){
+    if (isTarget < 0.5){ //target not in sight
+      left();
+    } else{ //target in sight, begin aiming
+      power(kP * heading_error);
+    }
+  }
+
+  public double distanceToGoal(){
+    if (heading_error < allowed_error && heading_error != 0){ //Aiming at the target, calculating distance
+      double angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
+      double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
+      double distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
+      SmartDashboard.putNumber("Distnace", distanceToGoal);
+    }
+    return distanceToGoal();
   }
 
   public boolean isForwardEnabled(){
@@ -57,10 +91,21 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   public boolean isReverseEnabled(){
     return shootDirection.isSoftLimitEnabled(SoftLimitDirection.kReverse);
   }
+  
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-ghs");
+    NetworkTableEntry tv = table.getEntry("tv");
+    NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry tx = table.getEntry("tx");
+    isTarget = tv.getDouble(0);
+    targetOffsetAngle_Vertical = ty.getDouble(0);
+    heading_error = tx.getDouble(0);
+    SmartDashboard.putNumber("Heading Error", heading_error);
+    SmartDashboard.putNumber("Target Offset", targetOffsetAngle_Vertical);
+    SmartDashboard.putNumber("Target in Sight", isTarget);
   }
 }
