@@ -8,7 +8,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -27,7 +29,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private CANSparkMax m_rightDriveBack;
   private CANSparkMax m_leftDriveFront;
   private CANSparkMax m_rightDriveFront;
-  //Differential Drive
+  //Differential Drive and Kinematics
   private DifferentialDrive m_drive;
   //Encoders
   private RelativeEncoder m_leftEncoder;
@@ -112,8 +114,34 @@ public class DrivetrainSubsystem extends SubsystemBase {
     + rightPID.calculate(m_rightEncoder.getVelocity(), rightVelocitySetpoint)); 
   }
 
+  public DifferentialDriveWheelSpeeds getSpeeds(){
+    return new DifferentialDriveWheelSpeeds(
+      m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
+      m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
+    );
+  }
+
+  public DifferentialDriveKinematics getKinematics(){
+    return Constants.kDriveKinematics;
+  }
+
   public Rotation2d getHeading() {
     return Rotation2d.fromDegrees(-m_gyro.getAngle());
+  }
+
+  public void setOutput(double leftVolts, double rightVolts){
+    m_leftDriveFront.set(leftVolts / 12);
+    m_rightDriveFront.set(rightVolts / 12);
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+  }
+
+  public void resetEncoders(){
+    m_leftEncoder.setPosition(0);
+    m_rightEncoder.setPosition(0);
   }
 
   public SimpleMotorFeedforward getFeedforward(){
@@ -149,6 +177,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return pose;
   }
 }

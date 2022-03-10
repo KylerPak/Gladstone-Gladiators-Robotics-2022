@@ -77,6 +77,9 @@ public class ClimbSubsystem extends SubsystemBase {
     m_rightClimbPID.setFF(kFF);
     m_leftClimbPID.setOutputRange(kMinOutput, kMaxOutput);
     m_rightClimbPID.setOutputRange(kMinOutput, kMaxOutput);
+    //Save variables on SparkMax
+    leftClimb.burnFlash();
+    rightClimb.burnFlash();
   }
 
   public void climb(){ 
