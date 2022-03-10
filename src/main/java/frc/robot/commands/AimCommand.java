@@ -10,13 +10,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterDirectionSubsystem;
 
-public class Aim extends CommandBase {
+public class AimCommand extends CommandBase {
   private final ShooterDirectionSubsystem shooterDirection;
 
   /**
    * Creates a new LimelightAimCommand.
    */
-  public Aim(ShooterDirectionSubsystem shootDirection) {
+  public AimCommand(ShooterDirectionSubsystem shootDirection) {
     this.shooterDirection = shootDirection;
 
     addRequirements(shootDirection);
