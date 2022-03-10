@@ -9,8 +9,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -49,6 +52,7 @@ public class RobotContainer {
   private final JoystickButton leftMiddleButton = new JoystickButton(m_controller, 7);
   private final JoystickButton rightMiddleButton = new JoystickButton(m_controller, 8);
   private DirectionalPad dPad = new DirectionalPad(m_controller);
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -75,6 +79,9 @@ public class RobotContainer {
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
 
     autoCommand = new SequentialCommandGroup(m_Aim, m_ballShoot); 
+    //SendableChooser
+    m_chooser.setDefaultOption("Aim and Shoot", autoCommand);
+    SmartDashboard.putData(m_chooser);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -95,5 +102,9 @@ public class RobotContainer {
     dPad.down.whenHeld(m_climbReverse);
     dPad.left.whenHeld(m_shooterLeft);
     dPad.right.whenHeld(m_shooterNotLeft);
+  }
+
+public Command getAutonomousCommand() {
+    return m_chooser.getSelected();
   }
 }
