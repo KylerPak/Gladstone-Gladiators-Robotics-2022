@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -30,6 +31,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem;
   public final Aim m_Aim;
   public final BallShooterCommand m_ballShoot;
+  public final SequentialCommandGroup autoCommand;
   private final ClimbCommand m_climbCommand;
   private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
@@ -71,6 +73,8 @@ public class RobotContainer {
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedSubsystem);
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
+
+    autoCommand = new SequentialCommandGroup(m_Aim, m_ballShoot); 
     // Configure the button bindings
     configureButtonBindings();
   }
