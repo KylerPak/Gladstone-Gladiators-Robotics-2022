@@ -59,8 +59,8 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   public void enableSoftLimit(){
     shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
     shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
-    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 1000);
-    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -1000);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 250);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -250);
   }
 
   public void left(){

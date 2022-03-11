@@ -53,9 +53,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftDriveBack = new CANSparkMax(leftDriveBackID, MotorType.kBrushless);
     m_leftDriveFront = new CANSparkMax(leftDriveFrontID, MotorType.kBrushless);
     m_rightDriveBack = new CANSparkMax(rightDriveBackID, MotorType.kBrushless);
-    m_rightDriveFront = new CANSparkMax(rightDriveFrontID, MotorType.kBrushless);    
+    m_rightDriveFront = new CANSparkMax(rightDriveFrontID, MotorType.kBrushless);  
+    m_leftDriveFront.setInverted(true);
     //Back follow front motors
-    m_leftDriveBack.follow(m_leftDriveFront);
+    m_leftDriveBack.follow(m_leftDriveFront, false);
     m_rightDriveBack.follow(m_rightDriveFront);
     //DifferentialDrive
     m_drive = new DifferentialDrive(m_leftDriveFront, m_rightDriveFront);
@@ -74,7 +75,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
     leftPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     rightPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
-    m_drive.feed();
 
   }
 
@@ -87,6 +87,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
       );
   }
+
 
     /**
    * Drives the robot using arcade controls.
@@ -106,12 +107,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   public void LeftDrive(double leftVelocitySetpoint) {
     m_leftDriveFront.setVoltage(m_feedforward.calculate(leftVelocitySetpoint)
-      + leftPID.calculate(m_leftEncoder.getVelocity(), leftVelocitySetpoint));
+      + leftPID.calculate(m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, 
+      leftVelocitySetpoint));
   }
 
   public void RightDrive(double rightVelocitySetpoint){
     m_rightDriveFront.setVoltage(m_feedforward.calculate(rightVelocitySetpoint)
-    + rightPID.calculate(m_rightEncoder.getVelocity(), rightVelocitySetpoint)); 
+    + rightPID.calculate(m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60,
+    rightVelocitySetpoint)); 
   }
 
   public DifferentialDriveWheelSpeeds getSpeeds(){
@@ -178,5 +181,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return pose;
+  }
+
+  public void feedMotor(){
+    m_drive.feed();
   }
 }

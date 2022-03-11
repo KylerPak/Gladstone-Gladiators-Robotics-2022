@@ -39,6 +39,7 @@ public class RobotContainer {
   private final ClimbCommand m_climbCommand;
   private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
+  private final IntakeManualCommand m_intakeManual;
   private final IntakeReverseCommand m_intakeReverse;
   private final FeedMotorReverseCommand m_feedmotorReverse;
   private final ShooterLeftCommand m_shooterLeft;
@@ -76,6 +77,7 @@ public class RobotContainer {
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
+    m_intakeManual = new IntakeManualCommand(m_intakeSubsystem, m_feedSubsystem);
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedSubsystem);
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
@@ -98,8 +100,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoysticpixyLightskButton}.
    */
   private void configureButtonBindings() {
-    leftBumper.whenHeld(m_intakeCommand);
-    rightBumper.whenActive(m_ballShoot);
+    leftBumper.whenHeld(m_intakeManual);
+    rightBumper.whenHeld(m_ballShoot);
     leftMiddleButton.whenHeld(m_intakeReverse);
     rightMiddleButton.whenHeld(m_feedmotorReverse);
     xButton.whenPressed(m_Aim);

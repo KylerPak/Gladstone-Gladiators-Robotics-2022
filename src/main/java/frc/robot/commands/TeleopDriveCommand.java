@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -18,6 +19,7 @@ public class TeleopDriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DrivetrainSubsystem m_subsystem;
   private XboxController m_controller = new XboxController(0);
+  private final JoystickButton leftJoystickButton = new JoystickButton(m_controller, 9);
 
   /**
    * Creates a new ExampleCommand.
@@ -39,12 +41,21 @@ public class TeleopDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    if(Math.abs(m_controller.getLeftY()) > 0.04){
-      m_subsystem.LeftDrive(m_controller.getRightTriggerAxis() + 0.8 * m_controller.getLeftY());
+    if(Math.abs(m_controller.getLeftY()) < 0.05){
+      m_subsystem.LeftDrive(0);
+    } else{
+      m_subsystem.LeftDrive(1.5 * -m_controller.getRightTriggerAxis() - 1.75 * m_controller.getLeftY());
     }
-    if(Math.abs(m_controller.getRightY()) > 0.04){
-      m_subsystem.RightDrive(m_controller.getRightTriggerAxis() + 0.8 * m_controller.getRightY());
+    if(Math.abs(m_controller.getRightY()) < 0.05){
+      m_subsystem.RightDrive(0);
+    } else{
+      m_subsystem.RightDrive(1.5 * m_controller.getRightTriggerAxis() + 1.75 * m_controller.getRightY());
     }
+    if(leftJoystickButton.get()){
+      m_subsystem.resetEncoders();
+      m_subsystem.arcadeDrive(0, 0);
+    }
+    m_subsystem.feedMotor();
   }
 
   // Called once the command ends or is interrupted.
