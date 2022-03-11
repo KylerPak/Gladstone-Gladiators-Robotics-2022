@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -25,6 +26,7 @@ import frc.robot.Constants;
 public class ShooterDirectionSubsystem extends SubsystemBase {
   private static final int deviceID = Constants.shooterDirectionCANID;
   private CANSparkMax shootDirection;
+  private RelativeEncoder m_encoder;
   private XboxController m_controller = new XboxController(0);
   private final double kP; //Proportional Constant
   private final double allowed_error; //minimum error
@@ -41,6 +43,7 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   public ShooterDirectionSubsystem(){
     shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
     shootDirection.restoreFactoryDefaults();
+    m_encoder = shootDirection.getEncoder();
     //variables for limeLight
     limeLightAngle = 13;
     limeLightHeightInches = 44.5;
@@ -96,12 +99,8 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     return distanceToGoal;
   }
 
-  public boolean isForwardEnabled(){
-    return shootDirection.isSoftLimitEnabled(SoftLimitDirection.kForward);
-  }
-
-  public boolean isReverseEnabled(){
-    return shootDirection.isSoftLimitEnabled(SoftLimitDirection.kReverse);
+  public double getVelocity(){
+    return m_encoder.getVelocity();
   }
 
   @Override
