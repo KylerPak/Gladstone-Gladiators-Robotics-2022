@@ -75,6 +75,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
     leftPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     rightPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
+    //Set Ramp Rate (Time till max speed)
+    setRampRate();
+    burnFlash();
 
   }
 
@@ -123,6 +126,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
       m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
       m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
     );
+  }
+
+  public void setRampRate(){
+    m_leftDriveBack.setClosedLoopRampRate(0.5);
+    m_leftDriveFront.setClosedLoopRampRate(0.5);
+    m_rightDriveBack.setClosedLoopRampRate(0.5);
+    m_rightDriveFront.setClosedLoopRampRate(0.5);
+  }
+
+  public void burnFlash(){
+    m_leftDriveBack.burnFlash();
+    m_leftDriveFront.burnFlash();
+    m_rightDriveBack.burnFlash();
+    m_rightDriveFront.burnFlash();
   }
 
   public DifferentialDriveKinematics getKinematics(){

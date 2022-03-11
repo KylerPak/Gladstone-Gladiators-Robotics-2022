@@ -34,7 +34,7 @@ public final class Constants {
     public static final double kaVoltSecondsSquaredPerMeter = 0.2; //subject to change
     public static final double kPDriveVel = 8.5; //subject to change
     public static final double kP = 3.38; //subject to change
-    public static final double kI = 0.0003; //subject to change
+    public static final double kI = 0.003; //subject to change
     public static final double kD = 0; //subject to change
 
     //DifferentialDriveKinematics
