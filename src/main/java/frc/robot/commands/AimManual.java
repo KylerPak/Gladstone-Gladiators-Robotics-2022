@@ -35,7 +35,10 @@ public class AimManual extends CommandBase {
     shooterDirection.aiming();
     if(shooterDirection.getVelocity() == 0){
       shooterDirection.aimingLeft();
-    }
+      if(shooterDirection.getVelocity() == 0){
+        isFinished = true;
+      }
+    } 
     if(shooterDirection.getHeading() == 0){
       isFinished = true;
     }
