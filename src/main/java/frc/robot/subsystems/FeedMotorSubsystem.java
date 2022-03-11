@@ -29,7 +29,7 @@ public class FeedMotorSubsystem extends SubsystemBase {
   }
 
   public void start() {
-    feedMotor.set(ControlMode.PercentOutput, 0.4);
+    feedMotor.set(ControlMode.PercentOutput, 0.2);
   }
 
   public void stop() {
@@ -38,11 +38,11 @@ public class FeedMotorSubsystem extends SubsystemBase {
   }
 
   public void ballFeed(){
-    ballFeed.set(-0.4);
+    ballFeed.set(-0.2);
   }
 
   public void reverse(){
-    feedMotor.set(-0.4);
+    feedMotor.set(ControlMode.PercentOutput, -0.2);
     ballFeed.set(0.4);
   }
 

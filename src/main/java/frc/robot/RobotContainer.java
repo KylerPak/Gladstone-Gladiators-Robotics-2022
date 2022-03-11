@@ -44,6 +44,7 @@ public class RobotContainer {
   private final FeedMotorReverseCommand m_feedmotorReverse;
   private final ShooterLeftCommand m_shooterLeft;
   private final ShooterNotLeftCommand m_shooterNotLeft;
+  private final ShootManualCommand m_shootManual;
   private final SequentialCommandGroup autoCommand;
   private final XboxController m_controller = new XboxController(0);
   //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
@@ -73,6 +74,7 @@ public class RobotContainer {
 
     m_Aim = new AimCommand(m_directionSubsystem);
     m_ballShoot = new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem, m_directionSubsystem);
+    m_shootManual = new ShootManualCommand(m_ballShooterSubsystem, m_feedSubsystem, m_directionSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedSubsystem);
@@ -101,7 +103,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     leftBumper.whenHeld(m_intakeManual);
-    rightBumper.whenHeld(m_ballShoot);
+    rightBumper.whenHeld(m_shootManual);
     leftMiddleButton.whenHeld(m_intakeReverse);
     rightMiddleButton.whenHeld(m_feedmotorReverse);
     xButton.whenPressed(m_Aim);
