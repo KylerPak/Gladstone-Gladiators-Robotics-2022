@@ -44,7 +44,4 @@ public class AimCommand extends CommandBase {
   public boolean isFinished() {
     return true;
   }
-
 }
-
- 

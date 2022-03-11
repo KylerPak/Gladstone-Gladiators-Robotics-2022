@@ -34,6 +34,9 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   private double isTarget;
   private double targetOffsetAngle_Vertical;
   private double heading_error;
+  private double angleToGoalDegrees;
+  private double angleToGoalRadians;
+  private double distanceToGoal;
   
   public ShooterDirectionSubsystem(){
     shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
@@ -50,6 +53,7 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Reverse Soft Limit Enabled", shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kReverse));                          
     SmartDashboard.putNumber("Forward Soft Limit", shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
     SmartDashboard.putNumber("Reverse Soft Limit", shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
+
   }
 
   public void enableSoftLimit(){
@@ -87,12 +91,12 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
 
   public double distanceToGoal(){
     if (heading_error < allowed_error && heading_error != 0){ //Aiming at the target, calculating distance
-      double angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
-      double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
-      double distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
+      angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
+      angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
+      distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
       SmartDashboard.putNumber("Distance", distanceToGoal);
     }
-    return distanceToGoal();
+    return distanceToGoal;
   }
 
   public boolean isForwardEnabled(){
@@ -114,8 +118,8 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     targetOffsetAngle_Vertical = ty.getDouble(0);
     heading_error = tx.getDouble(0);
     SmartDashboard.putNumber("Heading Error", heading_error);
-    SmartDashboard.putNumber("Target Offset", targetOffsetAngle_Vertical);
     SmartDashboard.putNumber("Target in Sight", isTarget);
+    SmartDashboard.putNumber("Target Offset", targetOffsetAngle_Vertical);
   }
 }
 
