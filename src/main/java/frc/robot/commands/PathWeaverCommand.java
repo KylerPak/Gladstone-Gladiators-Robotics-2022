@@ -20,25 +20,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
-import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.FeedMotorSubsystem;
-import frc.robot.subsystems.ShooterDirectionSubsystem;
 
-public class AutoCommand extends CommandBase{
+public class PathWeaverCommand extends CommandBase{
   private final DrivetrainSubsystem m_driveTrain;
-  private final BallShooterSubsystem m_ballSystem;
-  private final FeedMotorSubsystem m_feedSystem;
-  private final ShooterDirectionSubsystem m_shootDirection;
 
-
-
-  public AutoCommand(DrivetrainSubsystem driveTrain, BallShooterSubsystem ballShooter, FeedMotorSubsystem feedSystem, ShooterDirectionSubsystem shooterDirection) {
+  public PathWeaverCommand(DrivetrainSubsystem driveTrain) {
     m_driveTrain = driveTrain;
-    m_ballSystem = ballShooter;
-    m_feedSystem = feedSystem;
-    m_shootDirection = shooterDirection;
-    addRequirements(driveTrain, ballShooter, feedSystem, shooterDirection);
+   
+    addRequirements(driveTrain);
   }
 
   Trajectory pathtraj (){
@@ -86,6 +76,7 @@ public class AutoCommand extends CommandBase{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
   }
 
   // Called once the command ends or is interrupted.

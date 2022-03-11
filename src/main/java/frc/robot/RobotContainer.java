@@ -32,9 +32,10 @@ public class RobotContainer {
   private final ClimbSubsystem m_climbSubsystem;
   private final ShooterDirectionSubsystem m_directionSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
-  public final AimCommand m_Aim;
-  public final BallShooterCommand m_ballShoot;
-  public final SequentialCommandGroup autoCommand;
+  private final AimCommand m_Aim;
+  private final BallShooterCommand m_ballShoot;
+  private final PathWeaverCommand m_pathWeaver;
+  private final DoNothingCommand m_Nothing;
   private final ClimbCommand m_climbCommand;
   private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
@@ -42,6 +43,7 @@ public class RobotContainer {
   private final FeedMotorReverseCommand m_feedmotorReverse;
   private final ShooterLeftCommand m_shooterLeft;
   private final ShooterNotLeftCommand m_shooterNotLeft;
+  private final SequentialCommandGroup autoCommand;
   private final XboxController m_controller = new XboxController(0);
   //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
@@ -77,10 +79,13 @@ public class RobotContainer {
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedSubsystem);
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
+    m_Nothing = new DoNothingCommand();
+    m_pathWeaver = new PathWeaverCommand(m_driveTrainSubsystem);
 
-    autoCommand = new SequentialCommandGroup(m_Aim, m_ballShoot); 
+    autoCommand = new SequentialCommandGroup(m_intakeCommand, m_pathWeaver, m_Aim, m_ballShoot); 
     //SendableChooser
     m_chooser.setDefaultOption("Aim and Shoot", autoCommand);
+    m_chooser.addOption("Do Nothing", m_Nothing);
     SmartDashboard.putData(m_chooser);
     // Configure the button bindings
     configureButtonBindings();
