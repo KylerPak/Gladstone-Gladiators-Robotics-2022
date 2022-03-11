@@ -44,7 +44,7 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     shootDirection.restoreFactoryDefaults();
     m_encoder = shootDirection.getEncoder();
     //variables for limeLight
-    limeLightAngle = 13;
+    limeLightAngle = 22;
     limeLightHeightInches = 44.5;
     goalHeightInches = 104;
     kP = -0.2;
@@ -93,10 +93,14 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   }
 
   public double distanceToGoal(){
+    if(isTarget == 1){
     angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
     angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
     distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
     return distanceToGoal;
+    } else{
+      return 0;
+    }
   }
 
   public double getVelocity(){
@@ -117,7 +121,7 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Heading Error", heading_error);
     SmartDashboard.putNumber("Target in Sight", isTarget);
     SmartDashboard.putNumber("Target Offset", targetOffsetAngle_Vertical);
-    SmartDashboard.putNumber("Distance to Goal", distanceToGoal);
+    SmartDashboard.putNumber("Distance to Goal", distanceToGoal());
     SmartDashboard.updateValues();
   }
 }
