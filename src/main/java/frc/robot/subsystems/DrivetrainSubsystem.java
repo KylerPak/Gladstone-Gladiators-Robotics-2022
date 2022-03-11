@@ -133,10 +133,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightDriveFront.setClosedLoopRampRate(0.5);
   }
 
-  public DifferentialDriveKinematics getKinematics(){
-    return Constants.kDriveKinematics;
-  }
-
   public Rotation2d getHeading() {
     return Rotation2d.fromDegrees(-m_gyro.getAngle());
   }

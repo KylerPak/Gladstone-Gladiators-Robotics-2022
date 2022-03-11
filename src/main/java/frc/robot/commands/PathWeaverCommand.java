@@ -65,7 +65,7 @@ public class PathWeaverCommand extends CommandBase{
       pathtraj(), 
       m_driveTrain::getPose, 
       new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-      m_driveTrain.getFeedforward(), m_driveTrain.getKinematics(), m_driveTrain::getSpeeds,
+      m_driveTrain.getFeedforward(), Constants.kDriveKinematics, m_driveTrain::getSpeeds,
       m_driveTrain.getLeftPID(), m_driveTrain.getRightPID(), m_driveTrain::setOutput, m_driveTrain
     );
 
