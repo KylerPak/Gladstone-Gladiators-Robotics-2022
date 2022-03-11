@@ -77,8 +77,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     //Set Ramp Rate (Time till max speed)
     setRampRate();
-    burnFlash();
-
   }
 
   @Override
@@ -133,13 +131,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftDriveFront.setClosedLoopRampRate(0.5);
     m_rightDriveBack.setClosedLoopRampRate(0.5);
     m_rightDriveFront.setClosedLoopRampRate(0.5);
-  }
-
-  public void burnFlash(){
-    m_leftDriveBack.burnFlash();
-    m_leftDriveFront.burnFlash();
-    m_rightDriveBack.burnFlash();
-    m_rightDriveFront.burnFlash();
   }
 
   public DifferentialDriveKinematics getKinematics(){

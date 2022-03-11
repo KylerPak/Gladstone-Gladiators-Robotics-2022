@@ -59,11 +59,9 @@ public class ClimbSubsystem extends SubsystemBase {
 
     //Ratios and variables
     gearboxRatio = 16;
-
     climberRest = 40.28; //Resting position from ground, subject to change depending on where it's mounted
     topLimit = 52.82; //maximum height of the climber from the ground, subject to change depending on where it's mounted
     
-
     //set PID's
     m_leftClimbPID.setP(kP);
     m_rightClimbPID.setP(kP);
