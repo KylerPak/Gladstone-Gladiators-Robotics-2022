@@ -42,6 +42,7 @@ public class RobotContainer {
   private final IntakeCommand m_intakeCommand;
   private final IntakeManualCommand m_intakeManual;
   private final IntakeReverseCommand m_intakeReverse;
+  private final IntakeStop m_intakeStop;
   private final FeedMotorReverseCommand m_feedmotorReverse;
   private final ShooterLeftCommand m_shooterLeft;
   private final ShooterNotLeftCommand m_shooterNotLeft;
@@ -82,13 +83,14 @@ public class RobotContainer {
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
     m_intakeManual = new IntakeManualCommand(m_intakeSubsystem, m_feedSubsystem);
+    m_intakeStop = new IntakeStop(m_intakeSubsystem, m_feedSubsystem);
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedSubsystem);
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
     m_Nothing = new DoNothingCommand();
     m_pathWeaver = new PathWeaverCommand(m_driveTrainSubsystem);
 
-    autoCommand = new SequentialCommandGroup(m_intakeCommand, m_pathWeaver, m_Aim, m_ballShoot); 
+    autoCommand = new SequentialCommandGroup(m_intakeCommand, m_pathWeaver, m_intakeStop, m_Aim, m_ballShoot); 
     //SendableChooser
     m_chooser.setDefaultOption("Aim and Shoot", autoCommand);
     m_chooser.addOption("Do Nothing", m_Nothing);
