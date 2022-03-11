@@ -85,7 +85,20 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     } else{                             //target in sight, begin aiming
       power(kP * heading_error);
     }
-    if (heading_error < allowed_error && heading_error != 0){
+    if (heading_error < allowed_error && heading_error == 0){
+      m_controller.setRumble(RumbleType.kLeftRumble, 1);
+      Timer timer = new Timer();
+      timer.schedule(new RumbleStopper(m_controller), 500);
+    }
+  }
+
+  public void aimingLeft(){
+    if (isTarget < 0.5){                //target not in sight
+      notleft();
+    } else{                             //target in sight, begin aiming
+      power(kP * heading_error);
+    }
+    if (heading_error < allowed_error && heading_error == 0){
       m_controller.setRumble(RumbleType.kLeftRumble, 1);
       Timer timer = new Timer();
       timer.schedule(new RumbleStopper(m_controller), 500);

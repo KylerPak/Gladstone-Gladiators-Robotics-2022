@@ -32,7 +32,7 @@ public class AimManual extends CommandBase {
   public void execute() {   
     shooterDirection.aiming();
     if(shooterDirection.getVelocity() == 0){
-      shooterDirection.notleft();
+      shooterDirection.aimingLeft();
     } 
   }
 
