@@ -33,6 +33,7 @@ public class RobotContainer {
   private final ShooterDirectionSubsystem m_directionSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
   private final AimCommand m_Aim;
+  private final AimManual m_aimManual;
   private final BallShooterCommand m_ballShoot;
   private final PathWeaverCommand m_pathWeaver;
   private final DoNothingCommand m_Nothing;
@@ -73,6 +74,7 @@ public class RobotContainer {
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
 
     m_Aim = new AimCommand(m_directionSubsystem);
+    m_aimManual = new AimManual(m_directionSubsystem);
     m_ballShoot = new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem, m_directionSubsystem);
     m_shootManual = new ShootManualCommand(m_ballShooterSubsystem, m_feedSubsystem, m_directionSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
@@ -94,7 +96,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
   }
-  
+
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -106,7 +108,7 @@ public class RobotContainer {
     rightBumper.whenHeld(m_shootManual);
     leftMiddleButton.whenHeld(m_intakeReverse);
     rightMiddleButton.whenHeld(m_feedmotorReverse);
-    xButton.whenPressed(m_Aim);
+    xButton.whenPressed(m_aimManual);
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);
     dPad.left.whenHeld(m_shooterLeft);

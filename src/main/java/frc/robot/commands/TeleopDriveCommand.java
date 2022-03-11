@@ -55,7 +55,6 @@ public class TeleopDriveCommand extends CommandBase {
       m_subsystem.resetEncoders();
       m_subsystem.arcadeDrive(0, 0);
     }
-    m_subsystem.feedMotor();
   }
 
   // Called once the command ends or is interrupted.

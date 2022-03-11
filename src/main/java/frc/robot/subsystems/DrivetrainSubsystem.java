@@ -86,6 +86,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
       m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
       );
+    feedMotor();
   }
 
 

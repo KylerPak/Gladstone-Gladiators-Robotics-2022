@@ -59,18 +59,18 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   public void enableSoftLimit(){
     shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
     shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
-    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 250);
-    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -250);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 8);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -25);
   }
 
   public void left(){
-    shootDirection.set(0.2);
+    shootDirection.set(-0.2);
   }
   public void stop(){
     shootDirection.set(0);
   }
   public void notleft(){
-    shootDirection.set(-0.3);
+    shootDirection.set(0.3);
   }
 
   public void power(double power){
@@ -90,12 +90,9 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
   }
 
   public double distanceToGoal(){
-    if (heading_error < allowed_error && heading_error != 0){ //Aiming at the target, calculating distance
-      angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
-      angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
-      distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
-      SmartDashboard.putNumber("Distance", distanceToGoal);
-    }
+    angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
+    angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
+    distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
     return distanceToGoal;
   }
 
@@ -117,9 +114,12 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     isTarget = tv.getDouble(0);
     targetOffsetAngle_Vertical = ty.getDouble(0);
     heading_error = tx.getDouble(0);
+    distanceToGoal();
     SmartDashboard.putNumber("Heading Error", heading_error);
     SmartDashboard.putNumber("Target in Sight", isTarget);
     SmartDashboard.putNumber("Target Offset", targetOffsetAngle_Vertical);
+    SmartDashboard.putNumber("Distance to Goal", distanceToGoal);
+    SmartDashboard.updateValues();
   }
 }
 
