@@ -24,7 +24,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class PathWeaverCommand extends CommandBase{
   private final DrivetrainSubsystem m_driveTrain;
-
+  private boolean isFinished = false;
   public PathWeaverCommand(DrivetrainSubsystem driveTrain) {
     m_driveTrain = driveTrain;
    
@@ -71,6 +71,7 @@ public class PathWeaverCommand extends CommandBase{
 
     m_driveTrain.resetOdometry(pathtraj().getInitialPose()); //Cannot find Trajectory
     command.andThen(() -> m_driveTrain.setOutput(0, 0));
+    isFinished = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -88,6 +89,6 @@ public class PathWeaverCommand extends CommandBase{
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return isFinished;
   }
 }
