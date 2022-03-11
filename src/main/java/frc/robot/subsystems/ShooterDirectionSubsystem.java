@@ -96,7 +96,7 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     if(isTarget == 1){
     angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
     angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
-    distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(angleToGoalRadians);
+    distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(-angleToGoalRadians);
     return distanceToGoal;
     } else{
       return 0;
