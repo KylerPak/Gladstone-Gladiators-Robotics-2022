@@ -85,11 +85,6 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     } else{                             //target in sight, begin aiming
       power(kP * heading_error);
     }
-    if (heading_error < allowed_error && heading_error == 0){
-      m_controller.setRumble(RumbleType.kLeftRumble, 1);
-      Timer timer = new Timer();
-      timer.schedule(new RumbleStopper(m_controller), 500);
-    }
   }
 
   public void aimingLeft(){
@@ -97,11 +92,6 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
       notleft();
     } else{                             //target in sight, begin aiming
       power(kP * heading_error);
-    }
-    if (heading_error < allowed_error && heading_error == 0){
-      m_controller.setRumble(RumbleType.kLeftRumble, 1);
-      Timer timer = new Timer();
-      timer.schedule(new RumbleStopper(m_controller), 500);
     }
   }
 
@@ -113,6 +103,17 @@ public class ShooterDirectionSubsystem extends SubsystemBase {
     return distanceToGoal;
     } else{
       return 0;
+    }
+  }
+
+  public double getHeading(){
+    if(isTarget == 1 && heading_error <= allowed_error){
+      m_controller.setRumble(RumbleType.kLeftRumble, 1);
+      Timer timer = new Timer();
+      timer.schedule(new RumbleStopper(m_controller), 500);
+      return heading_error;
+    } else {
+      return 1; //Random value so it doesn't return 0
     }
   }
 

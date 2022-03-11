@@ -7,6 +7,8 @@
 
 package frc.robot.commands;
 
+import java.util.Timer;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.FeedMotorSubsystem;
@@ -19,6 +21,7 @@ public class BallShooterCommand extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
   private final FeedMotorSubsystem m_feedSubsystem;
   private final ShooterDirectionSubsystem m_shootDirection;
+  private boolean isFinished = false;
   /**
    * Creates a new AutonomousCommand.
    *
@@ -35,7 +38,7 @@ public class BallShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    isFinished = false;
   }
  
   // Called every time the scheduler runs while the command is scheduled.
@@ -44,7 +47,7 @@ public class BallShooterCommand extends CommandBase {
     if (m_shootDirection.distanceToGoal() > 20){
       m_ballSubsystem.shoot(m_shootDirection.distanceToGoal() * 0.00511 - 0.01711); //calculated from linear regression
       m_feedSubsystem.start();
-      if (m_feedSubsystem.ballSensor.getVoltage() > 1){
+      if (m_feedSubsystem.getVoltage() > 1){
         m_feedSubsystem.ballFeed();
       }
     }

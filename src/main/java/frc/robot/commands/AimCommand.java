@@ -12,6 +12,7 @@ import frc.robot.subsystems.ShooterDirectionSubsystem;
 
 public class AimCommand extends CommandBase {
   private final ShooterDirectionSubsystem shooterDirection;
+  private boolean isFinished;
 
   /**
    * Creates a new LimelightAimCommand.
@@ -25,6 +26,7 @@ public class AimCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    isFinished = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,6 +36,9 @@ public class AimCommand extends CommandBase {
     if(shooterDirection.getVelocity() == 0){
       shooterDirection.aimingLeft();
     } 
+    if(shooterDirection.getHeading() == 0){
+      isFinished = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +50,6 @@ public class AimCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return isFinished;
   }
 }
