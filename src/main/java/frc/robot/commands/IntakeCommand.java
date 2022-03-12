@@ -32,7 +32,7 @@ public class IntakeCommand extends CommandBase {
   public void execute() {
     m_intakeSubsystem.forward();
     m_feedMotorSubsystem.start();
-    if(m_feedMotorSubsystem.getVoltage() > 0.65){
+    if(m_feedMotorSubsystem.getVoltage() > 0.75){
       m_feedMotorSubsystem.stop();
       isFinished = true;
     }

@@ -35,25 +35,26 @@ public class TeleopDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_subsystem.setMaxOutput(7);
     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    if(Math.abs(m_controller.getLeftY()) < 0.05){
+    if(Math.abs(m_controller.getLeftY()) < 0.035){
       m_subsystem.LeftDrive(0);
     } else{
-      m_subsystem.LeftDrive(1.5 * -m_controller.getRightTriggerAxis() - 3 * m_controller.getLeftY());
+      m_subsystem.LeftDrive(1.25 * -m_controller.getRightTriggerAxis() - 2.5 * m_controller.getLeftY());
     }
-    if(Math.abs(m_controller.getRightY()) < 0.05){
+    if(Math.abs(m_controller.getRightY()) < 0.035){
       m_subsystem.RightDrive(0);
     } else{
-      m_subsystem.RightDrive(1.5 * m_controller.getRightTriggerAxis() + 3 * m_controller.getRightY());
+      m_subsystem.RightDrive(1.25 * m_controller.getRightTriggerAxis() + 2.5 * m_controller.getRightY());
     }
     if(leftJoystickButton.get()){
       m_subsystem.resetEncoders();
-      m_subsystem.arcadeDrive(0, 0);
+      m_subsystem.setOutput(0, 0);
     }
   }
 

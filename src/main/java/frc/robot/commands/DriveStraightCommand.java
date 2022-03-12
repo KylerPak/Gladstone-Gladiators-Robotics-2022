@@ -7,20 +7,20 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveStraightCommand extends CommandBase {
 	private DrivetrainSubsystem subsystem;
   private boolean isFinished;
-	private double kP = 1;
 
   /**
    * Creates a new LimelightAimCommand.
    */
   public DriveStraightCommand(DrivetrainSubsystem subsystem) {
 		this.subsystem = subsystem;
-    addRequirements(subsystem);
+ //   addRequirements(subsystem);
 }
 
   // Called when the command is initially scheduled.
@@ -33,7 +33,8 @@ public class DriveStraightCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double error = subsystem.getLeftPosition() - subsystem.getRightPosition();
+    subsystem.arcadeDrive(0.7, 0);
+    Timer.delay(2);
     isFinished = true;
   }
 

@@ -10,7 +10,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.FeedMotorSubsystem;
-import frc.robot.subsystems.ShooterDirectionSubsystem;
  
 /**
  * This command will drive the robot forward for a specified period of time
@@ -41,7 +40,7 @@ public class ShootAtDistance extends CommandBase {
   public void execute() {
     m_ballSubsystem.shoot(0.75); //calculated from linear regression
     m_feedSubsystem.start();
-    if (m_feedSubsystem.ballSensor.getVoltage() > 0.65){
+    if (m_feedSubsystem.ballSensor.getVoltage() > 0.75){
         m_feedSubsystem.ballFeed();
       }
   }
