@@ -14,6 +14,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeCommand extends CommandBase {
   private final IntakeSubsystem m_intakeSubsystem;
   private final FeedMotorSubsystem m_feedMotorSubsystem;
+  private Boolean isFinished;
   public IntakeCommand(IntakeSubsystem intakesystem, FeedMotorSubsystem feedsystem) {
     m_intakeSubsystem = intakesystem;
     m_feedMotorSubsystem = feedsystem;
@@ -23,7 +24,7 @@ public class IntakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    isFinished = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,8 +32,9 @@ public class IntakeCommand extends CommandBase {
   public void execute() {
     m_intakeSubsystem.forward();
     m_feedMotorSubsystem.start();
-    if(m_feedMotorSubsystem.getVoltage() > 1){
+    if(m_feedMotorSubsystem.getVoltage() > 0.65){
       m_feedMotorSubsystem.stop();
+      isFinished = true;
     }
   }
 
@@ -46,6 +48,6 @@ public class IntakeCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return isFinished;
   }
 }

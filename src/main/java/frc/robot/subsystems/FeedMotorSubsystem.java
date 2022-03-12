@@ -38,12 +38,12 @@ public class FeedMotorSubsystem extends SubsystemBase {
   }
 
   public void ballFeed(){
-    ballFeed.set(-0.2);
+    ballFeed.set(0.4);
   }
 
   public void reverse(){
-    feedMotor.set(ControlMode.PercentOutput, -0.35);
-    ballFeed.set(0.4);
+    feedMotor.set(ControlMode.PercentOutput, -0.15);
+    ballFeed.set(-0.15);
   }
 
   public double getVoltage(){

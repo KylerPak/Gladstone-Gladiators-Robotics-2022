@@ -44,12 +44,12 @@ public class TeleopDriveCommand extends CommandBase {
     if(Math.abs(m_controller.getLeftY()) < 0.05){
       m_subsystem.LeftDrive(0);
     } else{
-      m_subsystem.LeftDrive(1.5 * -m_controller.getRightTriggerAxis() - 1.75 * m_controller.getLeftY());
+      m_subsystem.LeftDrive(1.5 * -m_controller.getRightTriggerAxis() - 3 * m_controller.getLeftY());
     }
     if(Math.abs(m_controller.getRightY()) < 0.05){
       m_subsystem.RightDrive(0);
     } else{
-      m_subsystem.RightDrive(1.5 * m_controller.getRightTriggerAxis() + 1.75 * m_controller.getRightY());
+      m_subsystem.RightDrive(1.5 * m_controller.getRightTriggerAxis() + 3 * m_controller.getRightY());
     }
     if(leftJoystickButton.get()){
       m_subsystem.resetEncoders();
