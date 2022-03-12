@@ -48,6 +48,7 @@ public class RobotContainer {
   private final ShooterNotLeftCommand m_shooterNotLeft;
   private final ShootManualCommand m_shootManual;
   private final ShootAtDistance m_atDistance;
+  private final DriveStraightCommand m_straight;
   private final SequentialCommandGroup autoCommand;
   private final XboxController m_controller = new XboxController(0);
   private final JoystickButton aButton = new JoystickButton(m_controller, 1);
@@ -90,12 +91,14 @@ public class RobotContainer {
     m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
     m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
     m_Nothing = new DoNothingCommand();
+    m_straight = new DriveStraightCommand(m_driveTrainSubsystem);
     m_pathWeaver = new PathWeaverCommand(m_driveTrainSubsystem);
 
     autoCommand = new SequentialCommandGroup(m_intakeCommand, m_pathWeaver, m_intakeStop, m_Aim, m_ballShoot); 
     //SendableChooser
     m_chooser.setDefaultOption("Aim and Shoot", autoCommand);
     m_chooser.addOption("Do Nothing", m_Nothing);
+    m_chooser.addOption("Drive Striaght", m_straight);
     SmartDashboard.putData(m_chooser);
     // Configure the button bindings
     configureButtonBindings();

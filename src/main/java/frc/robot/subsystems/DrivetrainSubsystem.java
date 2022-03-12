@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -67,6 +68,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //Encoders
     m_leftEncoder = m_leftDriveFront.getEncoder();
     m_rightEncoder = m_rightDriveFront.getEncoder();
+    positionConversion(1 / 10.71 * 2 * Math.PI * Units.inchesToMeters(2));
     //Odomety
     m_odometry = new DifferentialDriveOdometry(getHeading());
     //Feedforward and PID
@@ -81,12 +83,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block and updates the pose
+    SmartDashboard.putNumber("leftEncoder", getLeftPosition());
+    SmartDashboard.putNumber("rightEncoder", getRightPosition());
     pose = m_odometry.update(
       m_gyro.getRotation2d(), 
       m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
       m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
       );
-    feedMotor();
+    m_drive.feed();
+    SmartDashboard.updateValues();
   }
 
 
@@ -151,6 +156,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightEncoder.setPosition(0);
   }
 
+  public double getLeftPosition(){
+    return m_leftEncoder.getPosition();
+  }
+
+  public double getRightPosition(){
+    return m_rightEncoder.getPosition();
+  }
+    
+  public void positionConversion(double convFactor){
+    m_leftEncoder.setPositionConversionFactor(convFactor);
+    m_rightEncoder.setPositionConversionFactor(convFactor);
+  }
+
   public SimpleMotorFeedforward getFeedforward(){
     return m_feedforward;
   }
@@ -185,9 +203,5 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return pose;
-  }
-
-  public void feedMotor(){
-    m_drive.feed();
   }
 }
