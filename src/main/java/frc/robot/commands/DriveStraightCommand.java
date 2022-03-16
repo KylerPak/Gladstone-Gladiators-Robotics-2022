@@ -13,7 +13,8 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveStraightCommand extends CommandBase {
 	private DrivetrainSubsystem subsystem;
-  private boolean isFinished;
+  private boolean isFinished = false; 
+  private Timer timer = new Timer();
 
   /**
    * Creates a new LimelightAimCommand.
@@ -27,27 +28,26 @@ public class DriveStraightCommand extends CommandBase {
   @Override
   public void initialize() {
 		subsystem.resetEncoders();
-    isFinished = false;
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    subsystem.arcadeDrive(0.7, 0);
-    Timer.delay(2);
-    isFinished = true;
+    subsystem.tankDrive(0.7, -0.7);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    subsystem.tankDrive(0.0, 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return isFinished;
+    return timer.hasElapsed(2.0);
   }
 
 }

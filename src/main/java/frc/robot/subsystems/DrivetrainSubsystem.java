@@ -65,6 +65,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightDriveFront.restoreFactoryDefaults();
     m_leftDriveBack.restoreFactoryDefaults();
     m_rightDriveBack.restoreFactoryDefaults();
+    //Disable safety features
+    m_drive.setSafetyEnabled(false);
     //Encoders
     m_leftEncoder = m_leftDriveFront.getEncoder();
     m_rightEncoder = m_rightDriveFront.getEncoder();
@@ -76,8 +78,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
     leftPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     rightPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
-    //Set Ramp Rate (Time till max speed)
-    setRampRate();
   }
 
   @Override
@@ -90,7 +90,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
       m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
       m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
       );
-    m_drive.feed();
     SmartDashboard.updateValues();
   }
 
@@ -101,8 +100,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param speed the commanded forward movement
    * @param rotation the commanded rotation
    */
-  public void arcadeDrive(double speed, double rotation) {
-    m_drive.arcadeDrive(speed, rotation);
+  public void tankDrive(double leftPower, double rightPower) {
+    m_drive.tankDrive(leftPower, rightPower);
   }
 
   /**
@@ -128,13 +127,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
       m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
       m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
     );
-  }
-
-  public void setRampRate(){
-    m_leftDriveBack.setClosedLoopRampRate(0.5);
-    m_leftDriveFront.setClosedLoopRampRate(0.5);
-    m_rightDriveBack.setClosedLoopRampRate(0.5);
-    m_rightDriveFront.setClosedLoopRampRate(0.5);
   }
 
   public Rotation2d getHeading() {
