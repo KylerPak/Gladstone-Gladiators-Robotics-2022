@@ -97,8 +97,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param speed the commanded forward movement
    * @param rotation the commanded rotation
    */
-  public void arcadeDrive(double speed, double rotation) {
-    m_drive.arcadeDrive(speed, rotation);
+  public void tankDrive(double leftPower, double rightPower) {
+    m_drive.tankDrive(leftPower, rightPower);
   }
 
   /**
@@ -107,6 +107,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param leftVolts the commanded left output
    * @param rightVolts the commanded right output
    */
+  /*
   public void LeftDrive(double leftVelocitySetpoint) {
     m_leftDriveFront.setVoltage(m_feedforward.calculate(leftVelocitySetpoint)
       + leftPID.calculate(m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, 
@@ -118,6 +119,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     + rightPID.calculate(m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60,
     rightVelocitySetpoint)); 
   }
+  */
+
 
   public DifferentialDriveWheelSpeeds getSpeeds(){
     return new DifferentialDriveWheelSpeeds(

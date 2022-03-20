@@ -41,19 +41,25 @@ public class TeleopDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    if(Math.abs(m_controller.getLeftY()) < 0.05){
-      m_subsystem.LeftDrive(0);
+    double leftY = m_controller.getLeftY();
+    double rightY = m_controller.getRightY();
+    double leftSpeed = leftY * leftY * leftY; //for easier control at lower speeds
+    double rightSpeed = rightY * rightY * rightY;
+
+    if(Math.abs(m_controller.getLeftY()) < 0.035){
+      m_subsystem.tankDrive(0, rightSpeed);
     } else{
-      m_subsystem.LeftDrive(1.5 * -m_controller.getRightTriggerAxis() - 1.75 * m_controller.getLeftY());
+      m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * m_controller.getRightTriggerAxis(), 0.75 * rightSpeed + 0.25 * m_controller.getRightTriggerAxis());
     }
-    if(Math.abs(m_controller.getRightY()) < 0.05){
-      m_subsystem.RightDrive(0);
+    if(Math.abs(m_controller.getRightY()) < 0.035){
+      m_subsystem.tankDrive(leftSpeed, 0);
     } else{
-      m_subsystem.RightDrive(1.5 * m_controller.getRightTriggerAxis() + 1.75 * m_controller.getRightY());
+      m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * m_controller.getRightTriggerAxis(), 0.75 * rightSpeed + 0.25 * m_controller.getRightTriggerAxis());
     }
+
     if(leftJoystickButton.get()){
-      m_subsystem.resetEncoders();
-      m_subsystem.arcadeDrive(0, 0);
+    m_subsystem.resetEncoders();
+    m_subsystem.tankDrive(0, 0);
     }
   }
 

@@ -8,18 +8,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterDirectionSubsystem;
+import frc.robot.subsystems.BallShooterSubsystem;
 
 public class AimCommand extends CommandBase {
-  private final ShooterDirectionSubsystem shooterDirection;
+  private final BallShooterSubsystem m_ballSubsystem;
 
   /**
    * Creates a new LimelightAimCommand.
    */
-  public AimCommand(ShooterDirectionSubsystem shootDirection) {
-    this.shooterDirection = shootDirection;
+  public AimCommand(BallShooterSubsystem subsystem) {
+    m_ballSubsystem = subsystem;
 
-    addRequirements(shootDirection);
+    addRequirements(subsystem);
 }
 
   // Called when the command is initially scheduled.
@@ -30,16 +30,13 @@ public class AimCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {   
-    shooterDirection.aiming();
-    if(shooterDirection.getVelocity() == 0){
-      shooterDirection.notleft();
-    } 
+    m_ballSubsystem.aiming();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterDirection.stop();
+    m_ballSubsystem.stopRotate();
   }
 
   // Returns true when the command should end.

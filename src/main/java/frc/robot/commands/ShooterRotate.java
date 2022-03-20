@@ -8,21 +8,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterDirectionSubsystem;
+import frc.robot.subsystems.BallShooterSubsystem;
  
 /**
  * This command will drive the robot forward for a specified period of time
  */
-public class ShooterLeftCommand extends CommandBase {
-  private final ShooterDirectionSubsystem m_directionSubsystem;
+public class ShooterRotate extends CommandBase {
+  private final BallShooterSubsystem m_shooterSubsystem;
 
   /**
    * Creates a new AutonomousCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShooterLeftCommand(ShooterDirectionSubsystem subsystem) {
-    m_directionSubsystem = subsystem;
+  public ShooterRotate(BallShooterSubsystem subsystem) {
+    m_shooterSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -36,13 +36,13 @@ public class ShooterLeftCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_directionSubsystem.left();
+    m_shooterSubsystem.rotateLeft();
   }
  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_directionSubsystem.stop();
+    m_shooterSubsystem.stopRotate();
   }
  
   // Returns true when the command should end.

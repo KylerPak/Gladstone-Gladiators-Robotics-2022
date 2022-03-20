@@ -30,7 +30,6 @@ public class RobotContainer {
   private final FeedMotorSubsystem m_feedSubsystem;
   private final BallShooterSubsystem m_ballShooterSubsystem;
   private final ClimbSubsystem m_climbSubsystem;
-  private final ShooterDirectionSubsystem m_directionSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
   private final AimCommand m_Aim;
   private final AimManual m_aimManual;
@@ -43,8 +42,8 @@ public class RobotContainer {
   private final IntakeManualCommand m_intakeManual;
   private final IntakeReverseCommand m_intakeReverse;
   private final FeedMotorReverseCommand m_feedmotorReverse;
-  private final ShooterLeftCommand m_shooterLeft;
-  private final ShooterNotLeftCommand m_shooterNotLeft;
+  private final ShooterRotate m_shooterLeft;
+  //private final ShooterNotLeftCommand m_shooterNotLeft;
   private final ShootManualCommand m_shootManual;
   private final SequentialCommandGroup autoCommand;
   private final XboxController m_controller = new XboxController(0);
@@ -67,24 +66,22 @@ public class RobotContainer {
     m_driveTrainSubsystem = new DrivetrainSubsystem();
     m_feedSubsystem = new FeedMotorSubsystem();
     m_ballShooterSubsystem = new BallShooterSubsystem();
-    m_directionSubsystem = new ShooterDirectionSubsystem();
     m_climbSubsystem = new ClimbSubsystem();
     m_intakeSubsystem = new IntakeSubsystem();
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
 
-    m_Aim = new AimCommand(m_directionSubsystem);
-    m_aimManual = new AimManual(m_directionSubsystem);
-    m_ballShoot = new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem, m_directionSubsystem);
-    m_shootManual = new ShootManualCommand(m_ballShooterSubsystem, m_feedSubsystem, m_directionSubsystem);
+    m_Aim = new AimCommand(m_ballShooterSubsystem);
+    m_aimManual = new AimManual(m_ballShooterSubsystem);
+    m_ballShoot = new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem);
+    m_shootManual = new ShootManualCommand(m_ballShooterSubsystem, m_feedSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
     m_intakeManual = new IntakeManualCommand(m_intakeSubsystem, m_feedSubsystem);
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedSubsystem);
-    m_shooterLeft = new ShooterLeftCommand(m_directionSubsystem);
-    m_shooterNotLeft = new ShooterNotLeftCommand(m_directionSubsystem);
+    m_shooterLeft = new ShooterRotate(m_ballShooterSubsystem);
     m_Nothing = new DoNothingCommand();
     m_pathWeaver = new PathWeaverCommand(m_driveTrainSubsystem);
 
@@ -112,7 +109,6 @@ public class RobotContainer {
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);
     dPad.left.whenHeld(m_shooterLeft);
-    dPad.right.whenHeld(m_shooterNotLeft);
   }
 
 public Command getAutonomousCommand() {
