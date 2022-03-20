@@ -57,7 +57,6 @@ public class TeleopDriveCommand extends CommandBase {
     } else{
       m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * m_controller.getRightTriggerAxis(), 0.75 * rightSpeed + 0.25 * m_controller.getRightTriggerAxis());
     }
-
     if(leftJoystickButton.get()){
     m_subsystem.resetEncoders();
     m_subsystem.tankDrive(0, 0);

@@ -43,7 +43,6 @@ public class RobotContainer {
   private final IntakeReverseCommand m_intakeReverse;
   private final IntakeStop m_intakeStop;
   private final FeedMotorReverseCommand m_feedmotorReverse;
-  private final ShooterRotate m_shooterLeft;
   //private final ShooterNotLeftCommand m_shooterNotLeft;
   private final ShootManualCommand m_shootManual;
   private final ShootAtDistance m_atDistance;
@@ -73,6 +72,7 @@ public class RobotContainer {
     m_intakeSubsystem = new IntakeSubsystem();
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
+    m_ballShooterSubsystem.setDefaultCommand(new ShooterRotate(m_ballShooterSubsystem));
 
     m_Aim = new AimCommand(m_ballShooterSubsystem);
     m_aimManual = new AimManual(m_ballShooterSubsystem);
@@ -86,11 +86,9 @@ public class RobotContainer {
     m_intakeManual = new IntakeManualCommand(m_intakeSubsystem, m_feedSubsystem);
     m_intakeStop = new IntakeStop(m_intakeSubsystem, m_feedSubsystem);
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedSubsystem);
-    m_shooterLeft = new ShooterRotate(m_ballShooterSubsystem);
     m_Nothing = new DoNothingCommand();
     m_straight = new DriveStraightCommand(m_driveTrainSubsystem);
     m_pathWeaver = new PathWeaverCommand(m_driveTrainSubsystem);
-
     autoCommand = new SequentialCommandGroup(m_intakeCommand, m_pathWeaver, m_intakeStop, m_Aim, m_ballShoot); 
     //SendableChooser
     m_chooser.setDefaultOption("Aim and Shoot", autoCommand);
@@ -116,7 +114,6 @@ public class RobotContainer {
     xButton.whenPressed(m_aimManual);
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);
-    dPad.left.whenHeld(m_shooterLeft);
   }
 
 public Command getAutonomousCommand() {

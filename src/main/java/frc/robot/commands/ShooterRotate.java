@@ -7,7 +7,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.DirectionalPad;
 import frc.robot.subsystems.BallShooterSubsystem;
  
 /**
@@ -15,6 +17,8 @@ import frc.robot.subsystems.BallShooterSubsystem;
  */
 public class ShooterRotate extends CommandBase {
   private final BallShooterSubsystem m_shooterSubsystem;
+  private XboxController m_controller = new XboxController(0);
+  private DirectionalPad dPad = new DirectionalPad(m_controller);
 
   /**
    * Creates a new AutonomousCommand.
@@ -23,6 +27,7 @@ public class ShooterRotate extends CommandBase {
    */
   public ShooterRotate(BallShooterSubsystem subsystem) {
     m_shooterSubsystem = subsystem;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -36,7 +41,12 @@ public class ShooterRotate extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.rotateLeft();
+    if(dPad.left.get()){
+      m_shooterSubsystem.rotateLeft();
+    }
+    if(dPad.right.get()){
+      m_shooterSubsystem.rotateNotleft();
+    }
   }
  
   // Called once the command ends or is interrupted.
