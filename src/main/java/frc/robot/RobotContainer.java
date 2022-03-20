@@ -41,13 +41,16 @@ public class RobotContainer {
   private final IntakeCommand m_intakeCommand;
   private final IntakeManualCommand m_intakeManual;
   private final IntakeReverseCommand m_intakeReverse;
+  private final IntakeStop m_intakeStop;
   private final FeedMotorReverseCommand m_feedmotorReverse;
   private final ShooterRotate m_shooterLeft;
   //private final ShooterNotLeftCommand m_shooterNotLeft;
   private final ShootManualCommand m_shootManual;
+  private final ShootAtDistance m_atDistance;
+  private final DriveStraightCommand m_straight;
   private final SequentialCommandGroup autoCommand;
   private final XboxController m_controller = new XboxController(0);
-  //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
+  private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
   private final JoystickButton xButton = new JoystickButton(m_controller, 3);
   //private final JoystickButton yButton = new JoystickButton(m_controller, 4);
@@ -75,20 +78,24 @@ public class RobotContainer {
     m_aimManual = new AimManual(m_ballShooterSubsystem);
     m_ballShoot = new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem);
     m_shootManual = new ShootManualCommand(m_ballShooterSubsystem, m_feedSubsystem);
+    m_atDistance = new ShootAtDistance(m_ballShooterSubsystem, m_feedSubsystem);
     m_climbCommand = new ClimbCommand(m_climbSubsystem);
     m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
     m_intakeManual = new IntakeManualCommand(m_intakeSubsystem, m_feedSubsystem);
+    m_intakeStop = new IntakeStop(m_intakeSubsystem, m_feedSubsystem);
     m_feedmotorReverse = new FeedMotorReverseCommand(m_feedSubsystem);
     m_shooterLeft = new ShooterRotate(m_ballShooterSubsystem);
     m_Nothing = new DoNothingCommand();
+    m_straight = new DriveStraightCommand(m_driveTrainSubsystem);
     m_pathWeaver = new PathWeaverCommand(m_driveTrainSubsystem);
 
-    autoCommand = new SequentialCommandGroup(m_intakeCommand, m_pathWeaver, m_Aim, m_ballShoot); 
+    autoCommand = new SequentialCommandGroup(m_intakeCommand, m_pathWeaver, m_intakeStop, m_Aim, m_ballShoot); 
     //SendableChooser
     m_chooser.setDefaultOption("Aim and Shoot", autoCommand);
     m_chooser.addOption("Do Nothing", m_Nothing);
+    m_chooser.addOption("Drive Striaght", m_straight);
     SmartDashboard.putData(m_chooser);
     // Configure the button bindings
     configureButtonBindings();
@@ -102,9 +109,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     leftBumper.whenHeld(m_intakeManual);
-    rightBumper.whenHeld(m_shootManual);
+    rightBumper.whenHeld(m_atDistance);
     leftMiddleButton.whenHeld(m_intakeReverse);
     rightMiddleButton.whenHeld(m_feedmotorReverse);
+    aButton.whenHeld(m_shootManual);
     xButton.whenPressed(m_aimManual);
     dPad.up.whenHeld(m_climbCommand);
     dPad.down.whenHeld(m_climbReverse);

@@ -12,19 +12,20 @@ import frc.robot.subsystems.BallShooterSubsystem;
 
 public class AimManual extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
+  private boolean isFinished;
 
   /**
    * Creates a new LimelightAimCommand.
    */
   public AimManual(BallShooterSubsystem subsystem) {
     m_ballSubsystem = subsystem;
-
     addRequirements(subsystem);
 }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    isFinished = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,6 +43,6 @@ public class AimManual extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return isFinished;
   }
 }

@@ -24,7 +24,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class PathWeaverCommand extends CommandBase{
   private final DrivetrainSubsystem m_driveTrain;
-
+  private boolean isFinished = false;
   public PathWeaverCommand(DrivetrainSubsystem driveTrain) {
     m_driveTrain = driveTrain;
    
@@ -65,12 +65,13 @@ public class PathWeaverCommand extends CommandBase{
       pathtraj(), 
       m_driveTrain::getPose, 
       new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-      m_driveTrain.getFeedforward(), m_driveTrain.getKinematics(), m_driveTrain::getSpeeds,
+      m_driveTrain.getFeedforward(), Constants.kDriveKinematics, m_driveTrain::getSpeeds,
       m_driveTrain.getLeftPID(), m_driveTrain.getRightPID(), m_driveTrain::setOutput, m_driveTrain
     );
 
     m_driveTrain.resetOdometry(pathtraj().getInitialPose()); //Cannot find Trajectory
     command.andThen(() -> m_driveTrain.setOutput(0, 0));
+    isFinished = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -88,6 +89,6 @@ public class PathWeaverCommand extends CommandBase{
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return isFinished;
   }
 }

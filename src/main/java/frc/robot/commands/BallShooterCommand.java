@@ -41,7 +41,7 @@ public class BallShooterCommand extends CommandBase {
     if (m_ballSubsystem.distanceToGoal() > 20){
       m_ballSubsystem.shoot(m_ballSubsystem.distanceToGoal() * 0.00511 - 0.01711); //calculated from linear regression
       m_feedSubsystem.start();
-      if (m_feedSubsystem.ballSensor.getVoltage() > 1){
+      if (m_feedSubsystem.ballSensor.getVoltage() > 0.75){
         m_feedSubsystem.ballFeed();
       }
     }

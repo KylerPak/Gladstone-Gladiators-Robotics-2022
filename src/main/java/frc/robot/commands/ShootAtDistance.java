@@ -14,7 +14,7 @@ import frc.robot.subsystems.FeedMotorSubsystem;
 /**
  * This command will drive the robot forward for a specified period of time
  */
-public class ShootManualCommand extends CommandBase {
+public class ShootAtDistance extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
   private final FeedMotorSubsystem m_feedSubsystem;
   /**
@@ -22,7 +22,7 @@ public class ShootManualCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShootManualCommand(BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem) {
+  public ShootAtDistance(BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem) {
     m_ballSubsystem = ballSystem;
     m_feedSubsystem = feedSystem;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -38,13 +38,11 @@ public class ShootManualCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_ballSubsystem.distanceToGoal() > 20){
-      m_ballSubsystem.shoot(m_ballSubsystem.distanceToGoal() * 0.00511 - 0.01711); //calculated from linear regression
-      m_feedSubsystem.start();
-      if (m_feedSubsystem.ballSensor.getVoltage() > 0.75){
+    m_ballSubsystem.shoot(0.75); //calculated from linear regression
+    m_feedSubsystem.start();
+    if (m_feedSubsystem.ballSensor.getVoltage() > 0.75){
         m_feedSubsystem.ballFeed();
       }
-    }
   }
 
   // Called once the command ends or is interrupted.

@@ -11,14 +11,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FeedMotorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeCommand extends CommandBase {
-  private final IntakeSubsystem m_intakeSubsystem;
-  private final FeedMotorSubsystem m_feedMotorSubsystem;
-  private Boolean isFinished;
-  public IntakeCommand(IntakeSubsystem intakesystem, FeedMotorSubsystem feedsystem) {
-    m_intakeSubsystem = intakesystem;
-    m_feedMotorSubsystem = feedsystem;
-    addRequirements(intakesystem, feedsystem);
+public class IntakeStop extends CommandBase {
+  private final IntakeSubsystem subsystem;
+  private final FeedMotorSubsystem feedSystem;
+  private boolean isFinished;
+
+  public IntakeStop(IntakeSubsystem subsystem, FeedMotorSubsystem feedSystem) {
+    this.subsystem = subsystem;
+    this.feedSystem = feedSystem;
+    addRequirements(subsystem, feedSystem);
   }
 
   // Called when the command is initially scheduled.
@@ -30,19 +31,15 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intakeSubsystem.forward();
-    m_feedMotorSubsystem.start();
-    if(m_feedMotorSubsystem.getVoltage() > 0.75){
-      m_feedMotorSubsystem.stop();
-      isFinished = true;
-    }
+    subsystem.stop();
+    feedSystem.stop();
+    isFinished = true;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intakeSubsystem.stop();
-    m_feedMotorSubsystem.stop();
+
   }
 
   // Returns true when the command should end.

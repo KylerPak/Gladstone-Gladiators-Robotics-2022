@@ -7,47 +7,49 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.FeedMotorSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class IntakeCommand extends CommandBase {
-  private final IntakeSubsystem m_intakeSubsystem;
-  private final FeedMotorSubsystem m_feedMotorSubsystem;
-  private Boolean isFinished;
-  public IntakeCommand(IntakeSubsystem intakesystem, FeedMotorSubsystem feedsystem) {
-    m_intakeSubsystem = intakesystem;
-    m_feedMotorSubsystem = feedsystem;
-    addRequirements(intakesystem, feedsystem);
-  }
+public class DriveStraightCommand extends CommandBase {
+	private DrivetrainSubsystem subsystem;
+  private boolean isFinished = false; 
+  private Timer timer = new Timer();
+
+  /**
+   * Creates a new LimelightAimCommand.
+   */
+  public DriveStraightCommand(DrivetrainSubsystem subsystem) {
+		this.subsystem = subsystem;
+ //   addRequirements(subsystem);
+}
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    isFinished = false;
+		subsystem.resetEncoders();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intakeSubsystem.forward();
-    m_feedMotorSubsystem.start();
-    if(m_feedMotorSubsystem.getVoltage() > 0.75){
-      m_feedMotorSubsystem.stop();
-      isFinished = true;
-    }
+    subsystem.tankDrive(0.7, -0.7);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intakeSubsystem.stop();
-    m_feedMotorSubsystem.stop();
+    subsystem.tankDrive(0.0, 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return isFinished;
+    return timer.hasElapsed(2.0);
   }
+
 }
+
+ 

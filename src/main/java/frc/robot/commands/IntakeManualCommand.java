@@ -31,7 +31,7 @@ public class IntakeManualCommand extends CommandBase {
   public void execute() {
     m_intakeSubsystem.forward();
     m_feedMotorSubsystem.start();
-    if(m_feedMotorSubsystem.getVoltage() > 1){
+    if(m_feedMotorSubsystem.getVoltage() > 0.75){
       m_feedMotorSubsystem.stop();
     }
   }

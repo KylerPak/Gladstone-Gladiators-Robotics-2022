@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -16,6 +15,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -65,9 +65,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightDriveFront.restoreFactoryDefaults();
     m_leftDriveBack.restoreFactoryDefaults();
     m_rightDriveBack.restoreFactoryDefaults();
+    //Disable safety features
+    m_drive.setSafetyEnabled(false);
     //Encoders
     m_leftEncoder = m_leftDriveFront.getEncoder();
     m_rightEncoder = m_rightDriveFront.getEncoder();
+    positionConversion(0.2925);
     //Odomety
     m_odometry = new DifferentialDriveOdometry(getHeading());
     //Feedforward and PID
@@ -75,19 +78,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
     leftPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     rightPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
-    //Set Ramp Rate (Time till max speed)
-    setRampRate();
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block and updates the pose
+    SmartDashboard.putNumber("leftEncoder", getLeftPosition());
+    SmartDashboard.putNumber("rightEncoder", getRightPosition());
     pose = m_odometry.update(
       m_gyro.getRotation2d(), 
       m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
       m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
       );
-    feedMotor();
+    SmartDashboard.updateValues();
   }
 
 
@@ -129,17 +132,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
   }
 
-  public void setRampRate(){
-    m_leftDriveBack.setClosedLoopRampRate(0.5);
-    m_leftDriveFront.setClosedLoopRampRate(0.5);
-    m_rightDriveBack.setClosedLoopRampRate(0.5);
-    m_rightDriveFront.setClosedLoopRampRate(0.5);
-  }
-
-  public DifferentialDriveKinematics getKinematics(){
-    return Constants.kDriveKinematics;
-  }
-
   public Rotation2d getHeading() {
     return Rotation2d.fromDegrees(-m_gyro.getAngle());
   }
@@ -157,6 +149,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void resetEncoders(){
     m_leftEncoder.setPosition(0);
     m_rightEncoder.setPosition(0);
+  }
+
+  public double getLeftPosition(){
+    return m_leftEncoder.getPosition();
+  }
+
+  public double getRightPosition(){
+    return m_rightEncoder.getPosition();
+  }
+    
+  public void positionConversion(double convFactor){
+    m_leftEncoder.setPositionConversionFactor(convFactor);
+    m_rightEncoder.setPositionConversionFactor(convFactor);
   }
 
   public SimpleMotorFeedforward getFeedforward(){
@@ -193,9 +198,5 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return pose;
-  }
-
-  public void feedMotor(){
-    m_drive.feed();
   }
 }
