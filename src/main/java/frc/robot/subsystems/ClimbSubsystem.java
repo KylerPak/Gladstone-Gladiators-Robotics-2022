@@ -30,6 +30,8 @@ public class ClimbSubsystem extends ProfiledPIDSubsystem {
             0,
             // The motion profile constraints
             new TrapezoidProfile.Constraints(1.75, 0.75)));
+    m_rightClimb.follow(m_leftClimb);
+    m_ClimbEncoder.setPositionConversionFactor(0.2343); //inches per rotation
   }
 
   @Override
@@ -38,12 +40,11 @@ public class ClimbSubsystem extends ProfiledPIDSubsystem {
 
     // Use the output (and optionally the setpoint) here
     m_leftClimb.setVoltage(output + feedForward);
-    m_rightClimb.setVoltage(output + feedForward);
   }
 
   @Override
   public double getMeasurement() {
     // Return the process variable measurement here
-    return m_ClimbEncoder.getPosition() / 16;
+    return m_ClimbEncoder.getPosition(); //In inches
   }
 }
