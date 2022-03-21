@@ -70,7 +70,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //Encoders
     m_leftEncoder = m_leftDriveFront.getEncoder();
     m_rightEncoder = m_rightDriveFront.getEncoder();
-    positionConversion(0.2925);
     //Odomety
     m_odometry = new DifferentialDriveOdometry(getHeading());
     //Feedforward and PID

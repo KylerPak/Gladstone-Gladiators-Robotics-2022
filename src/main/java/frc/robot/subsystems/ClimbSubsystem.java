@@ -23,30 +23,25 @@ public class ClimbSubsystem extends SubsystemBase {
   private CANSparkMax leftClimb;
   private CANSparkMax rightClimb;
   //Encoders
-  private RelativeEncoder m_leftClimbEncoder;
-  private RelativeEncoder m_rightClimbEncoder;
+  private RelativeEncoder m_ClimbEncoder;
   //PID Controllers
-  private SparkMaxPIDController m_leftClimbPID;
-  private SparkMaxPIDController m_rightClimbPID;
+  private SparkMaxPIDController m_ClimbPID;
   //Constants...  Constants everywhere...
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, gearboxRatio, topLimit, climberRest, motorRotationInches;
+  public double kP, maxRPM, maxVel, minVel, maxAcc, allowedErrkP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, gearboxRatio, topLimit, climberRest, motorRotationInches;
 
   public ClimbSubsystem() {
-    //Create Motors
+    //Initialize Motors
     leftClimb = new CANSparkMax(leftClimbID, MotorType.kBrushless);
     rightClimb = new CANSparkMax(rightClimbID, MotorType.kBrushless);
+    rightClimb.follow(leftClimb);
 
     //Restore factory defaults
     leftClimb.restoreFactoryDefaults();
     rightClimb.restoreFactoryDefaults();
 
-    //Create Encoders
-    m_leftClimbEncoder = leftClimb.getEncoder();
-    m_rightClimbEncoder = rightClimb.getEncoder();
-
-    //Create PID Controllers
-    m_leftClimbPID = leftClimb.getPIDController();
-    m_rightClimbPID = rightClimb.getPIDController();
+    //Initalize PID Controller and Encoders 
+    m_ClimbPID = leftClimb.getPIDController();
+    m_ClimbEncoder = leftClimb.getEncoder();
 
     //PID Coefficients
     kP = 0.0001; //subject to change
@@ -57,24 +52,40 @@ public class ClimbSubsystem extends SubsystemBase {
     kMinOutput = -1;
     kMaxOutput = 1;
 
+    //Smart Motion Variables
+    maxVel = 2000; // rpm
+    maxAcc = 1500;
+
     //Ratios and variables
     gearboxRatio = 16;
     climberRest = 40.28; //Resting position from ground, subject to change depending on where it's mounted
     topLimit = 52.82; //maximum height of the climber from the ground, subject to change depending on where it's mounted
     
     //set PID's
-    m_leftClimbPID.setP(kP);
-    m_rightClimbPID.setP(kP);
-    m_leftClimbPID.setI(kI);
-    m_rightClimbPID.setI(kI);
-    m_leftClimbPID.setD(kD);
-    m_rightClimbPID.setD(kD);
-    m_leftClimbPID.setIZone(kIz);
-    m_rightClimbPID.setIZone(kIz);
-    m_leftClimbPID.setFF(kFF);
-    m_rightClimbPID.setFF(kFF);
-    m_leftClimbPID.setOutputRange(kMinOutput, kMaxOutput);
-    m_rightClimbPID.setOutputRange(kMinOutput, kMaxOutput);
+    m_ClimbPID.setP(kP);
+    m_ClimbPID.setP(kP);
+    m_ClimbPID.setI(kI);
+    m_ClimbPID.setI(kI);
+    m_ClimbPID.setD(kD);
+    m_ClimbPID.setD(kD);
+    m_ClimbPID.setIZone(kIz);
+    m_ClimbPID.setIZone(kIz);
+    m_ClimbPID.setFF(kFF);
+    m_ClimbPID.setFF(kFF);
+    m_ClimbPID.setOutputRange(kMinOutput, kMaxOutput);
+    m_ClimbPID.setOutputRange(kMinOutput, kMaxOutput);
+
+    //SmartMotion
+    int smartMotionSlot = 0;
+    m_ClimbPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
+    m_ClimbPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
+    m_ClimbPID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
+    m_ClimbPID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+    m_ClimbPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
+    m_ClimbPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
+    m_ClimbPID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
+    m_ClimbPID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+
     //Save variables on SparkMax
     leftClimb.burnFlash();
     rightClimb.burnFlash();
