@@ -36,8 +36,6 @@ public class RobotContainer {
   private final BallShooterCommand m_ballShoot;
   private final PathWeaverCommand m_pathWeaver;
   private final DoNothingCommand m_Nothing;
-  private final ClimbCommand m_climbCommand;
-  private final ClimbReverseCommand m_climbReverse;
   private final IntakeCommand m_intakeCommand;
   private final IntakeManualCommand m_intakeManual;
   private final IntakeReverseCommand m_intakeReverse;
@@ -79,8 +77,6 @@ public class RobotContainer {
     m_ballShoot = new BallShooterCommand(m_ballShooterSubsystem, m_feedSubsystem);
     m_shootManual = new ShootManualCommand(m_ballShooterSubsystem, m_feedSubsystem);
     m_atDistance = new ShootAtDistance(m_ballShooterSubsystem, m_feedSubsystem);
-    m_climbCommand = new ClimbCommand(m_climbSubsystem);
-    m_climbReverse = new ClimbReverseCommand(m_climbSubsystem);
     m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_feedSubsystem);
     m_intakeReverse = new IntakeReverseCommand(m_intakeSubsystem);
     m_intakeManual = new IntakeManualCommand(m_intakeSubsystem, m_feedSubsystem);
@@ -112,8 +108,6 @@ public class RobotContainer {
     rightMiddleButton.whenHeld(m_feedmotorReverse);
     aButton.whenHeld(m_shootManual);
     xButton.whenPressed(m_aimManual);
-    dPad.up.whenHeld(m_climbCommand);
-    dPad.down.whenHeld(m_climbReverse);
   }
 
 public Command getAutonomousCommand() {

@@ -49,7 +49,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DrivetrainSubsystem() {
-    //Create the motors
+    //Initialize the Motors
     m_leftDriveBack = new CANSparkMax(leftDriveBackID, MotorType.kBrushless);
     m_leftDriveFront = new CANSparkMax(leftDriveFrontID, MotorType.kBrushless);
     m_rightDriveBack = new CANSparkMax(rightDriveBackID, MotorType.kBrushless);
