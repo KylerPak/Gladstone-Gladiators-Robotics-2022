@@ -11,45 +11,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-/**
- * Before Running:
- * Open shuffleBoard, select File->Load Layout and select the 
- * shuffleboard.json that is in the root directory of this example
- */
-
-/**
- * REV Smart Motion Guide
- * 
- * The SPARK MAX includes a new control mode, REV Smart Motion which is used to 
- * control the position of the motor, and includes a max velocity and max 
- * acceleration parameter to ensure the motor moves in a smooth and predictable 
- * way. This is done by generating a motion profile on the fly in SPARK MAX and 
- * controlling the velocity of the motor to follow this profile.
- * 
- * Since REV Smart Motion uses the velocity to track a profile, there are only 
- * two steps required to configure this mode:
- *    1) Tune a velocity PID loop for the mechanism
- *    2) Configure the smart motion parameters
- * 
- * Tuning the Velocity PID Loop
- * 
- * The most important part of tuning any closed loop control such as the velocity 
- * PID, is to graph the inputs and outputs to understand exactly what is happening. 
- * For tuning the Velocity PID loop, at a minimum we recommend graphing:
- *
- *    1) The velocity of the mechanism (‘Process variable’)
- *    2) The commanded velocity value (‘Setpoint’)
- *    3) The applied output
- *
- * This example will use ShuffleBoard to graph the above parameters. Make sure to
- * load the shuffleboard.json file in the root of this directory to get the full
- * effect of the GUI layout.
- */
 public class ClimbSubsystem extends SubsystemBase {
   private static final int leftClimbID = Constants.leftClimbMotorCANID;
   private static final int rightClimbID = Constants.rightClimbMotorCANID;
