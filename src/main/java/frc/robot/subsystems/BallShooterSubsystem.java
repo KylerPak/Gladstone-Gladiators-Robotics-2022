@@ -13,12 +13,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,23 +46,23 @@ public class BallShooterSubsystem extends SubsystemBase {
 
   public BallShooterSubsystem() {
     shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
+    ballShooter = new WPI_TalonFX(ballShooterID);
     shootDirection.restoreFactoryDefaults();
+    shootDirection.setIdleMode(IdleMode.kBrake);
     m_encoder = shootDirection.getEncoder();
+
     //variables for limeLight
     limeLightAngle = 22;
     limeLightHeightInches = 44.5;
     goalHeightInches = 104;
     kP = -0.2;
     allowed_error = 0.001;
+
     //Soft Limits
-    enableSoftLimit();
-    SmartDashboard.putBoolean("Forward Soft Limit Enabled", shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kForward));
-    SmartDashboard.putBoolean("Reverse Soft Limit Enabled", shootDirection.isSoftLimitEnabled(CANSparkMax.SoftLimitDirection.kReverse));                          
+    enableSoftLimit();                      
     SmartDashboard.putNumber("Forward Soft Limit", shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
     SmartDashboard.putNumber("Reverse Soft Limit", shootDirection.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse));
     shootDirection.burnFlash();
-    ballShooter = new WPI_TalonFX(ballShooterID);
-    SendableRegistry.setName(ballShooter, "ballShooter");
   }
 
   public void enableSoftLimit(){
@@ -86,12 +86,15 @@ public class BallShooterSubsystem extends SubsystemBase {
     shootDirection.set(power);
   }
   public void aiming(){
-    if (isTarget < 0.5){                //target not in sight
+    if (isTarget < 0.5){  //target not in sight
       rotateLeft();
-    } else{                             //target in sight, begin aiming
+      if(m_encoder.getVelocity() == 0){
+        rotateNotleft();
+      }
+    } else{     //target in sight, begin aiming
       power(kP * heading_error);
     }
-    if (heading_error < allowed_error){
+    if (heading_error <= allowed_error){
       m_controller.setRumble(RumbleType.kLeftRumble, 1);
       Timer timer = new Timer();
       timer.schedule(new RumbleStopper(m_controller), 500);
@@ -107,10 +110,6 @@ public class BallShooterSubsystem extends SubsystemBase {
     } else{
       return 0;
     }
-  }
-
-  public double getVelocity(){
-    return m_encoder.getVelocity();
   }
 
   public void shoot(double power) {
@@ -136,7 +135,6 @@ public class BallShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Target in Sight", isTarget);
     SmartDashboard.putNumber("Target Offset", targetOffsetAngle_Vertical);
     SmartDashboard.putNumber("Distance to Goal", distanceToGoal());
-    SmartDashboard.updateValues();
   }
 }
 

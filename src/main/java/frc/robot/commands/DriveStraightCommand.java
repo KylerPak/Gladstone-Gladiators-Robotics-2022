@@ -13,7 +13,6 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveStraightCommand extends CommandBase {
 	private DrivetrainSubsystem subsystem;
-  private boolean isFinished = false; 
   private Timer timer = new Timer();
 
   /**

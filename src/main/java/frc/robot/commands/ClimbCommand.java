@@ -43,12 +43,10 @@ public class ClimbCommand extends CommandBase {
   @Override
   public void execute() {
     if(dPad.up.get()){
-      m_climbSubsystem.setGoal(3);
-      m_climbSubsystem.enable();
+      m_climbSubsystem.Climb();
     }
     if(dPad.down.get()){
-      m_climbSubsystem.setGoal(0);
-      m_climbSubsystem.enable();
+      m_climbSubsystem.Retract();
     }
   }
  

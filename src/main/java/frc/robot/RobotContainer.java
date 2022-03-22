@@ -55,7 +55,7 @@ public class RobotContainer {
   private final JoystickButton rightBumper = new JoystickButton(m_controller, 6);
   private final JoystickButton leftMiddleButton = new JoystickButton(m_controller, 7);
   private final JoystickButton rightMiddleButton = new JoystickButton(m_controller, 8);
-  private DirectionalPad dPad = new DirectionalPad(m_controller);
+  //private DirectionalPad dPad = new DirectionalPad(m_controller);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /**
