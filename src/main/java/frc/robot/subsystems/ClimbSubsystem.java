@@ -32,6 +32,7 @@ public class ClimbSubsystem extends ProfiledPIDSubsystem {
             new TrapezoidProfile.Constraints(1.75, 0.75)));
     m_rightClimb.follow(m_leftClimb);
     m_ClimbEncoder.setPositionConversionFactor(0.2343); //inches per rotation
+    setGoal(0);
   }
 
   @Override

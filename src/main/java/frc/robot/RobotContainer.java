@@ -71,6 +71,7 @@ public class RobotContainer {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
     m_ballShooterSubsystem.setDefaultCommand(new ShooterRotate(m_ballShooterSubsystem));
+    m_climbSubsystem.setDefaultCommand(new ClimbCommand(m_climbSubsystem));
 
     m_Aim = new AimCommand(m_ballShooterSubsystem);
     m_aimManual = new AimManual(m_ballShooterSubsystem);
