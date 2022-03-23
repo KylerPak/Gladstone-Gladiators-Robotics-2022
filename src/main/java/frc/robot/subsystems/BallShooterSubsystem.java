@@ -34,15 +34,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   private RelativeEncoder m_encoder;
   private final double kP; //Proportional Constant
   private final double allowed_error; //minimum error
-  private double limeLightAngle;
-  private double limeLightHeightInches;
-  private double goalHeightInches;
-  private double isTarget;
-  private double targetOffsetAngle_Vertical;
-  private double heading_error;
-  private double angleToGoalDegrees;
-  private double angleToGoalRadians;
-  private double distanceToGoal;
+  private double limeLightAngle, limeLightHeightInches, goalHeightInches, isTarget, targetOffsetAngle_Vertical, heading_error, angleToGoalDegrees, angleToGoalRadians, distanceToGoal;
 
   public BallShooterSubsystem() {
     shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
@@ -91,7 +83,7 @@ public class BallShooterSubsystem extends SubsystemBase {
       if(m_encoder.getVelocity() == 0){
         rotateNotleft();
       }
-    } else{     //target in sight, begin aiming
+    } else{   //target in sight, begin aiming
       power(kP * heading_error);
     }
     if (heading_error <= allowed_error){

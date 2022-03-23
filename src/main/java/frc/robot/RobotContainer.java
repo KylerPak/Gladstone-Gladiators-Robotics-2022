@@ -31,6 +31,7 @@ public class RobotContainer {
   private final BallShooterSubsystem m_ballShooterSubsystem;
   private final ClimbSubsystem m_climbSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
+  private final ArmSubsystem m_armSubsystem;
   private final AimCommand m_Aim;
   private final AimManual m_aimManual;
   private final BallShooterCommand m_ballShoot;
@@ -68,10 +69,12 @@ public class RobotContainer {
     m_ballShooterSubsystem = new BallShooterSubsystem();
     m_climbSubsystem = new ClimbSubsystem();
     m_intakeSubsystem = new IntakeSubsystem();
+    m_armSubsystem = new ArmSubsystem();
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
     m_ballShooterSubsystem.setDefaultCommand(new ShooterRotate(m_ballShooterSubsystem));
     m_climbSubsystem.setDefaultCommand(new ClimbCommand(m_climbSubsystem));
+    m_armSubsystem.setDefaultCommand(new ArmControl(m_armSubsystem));
 
     m_Aim = new AimCommand(m_ballShooterSubsystem);
     m_aimManual = new AimManual(m_ballShooterSubsystem);

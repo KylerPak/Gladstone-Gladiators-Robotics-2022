@@ -66,8 +66,7 @@ public class PathWeaverCommand extends CommandBase{
       m_driveTrain::getPose, 
       new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
       m_driveTrain.getFeedforward(), Constants.kDriveKinematics, m_driveTrain::getSpeeds,
-      m_driveTrain.getLeftPID(), m_driveTrain.getRightPID(), m_driveTrain::setOutput, m_driveTrain
-    );
+      m_driveTrain.getLeftPID(), m_driveTrain.getRightPID(), m_driveTrain::setOutput, m_driveTrain);
 
     m_driveTrain.resetOdometry(pathtraj().getInitialPose()); //Cannot find Trajectory
     command.andThen(() -> m_driveTrain.setOutput(0, 0));

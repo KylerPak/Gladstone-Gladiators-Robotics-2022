@@ -44,18 +44,19 @@ public class TeleopDriveCommand extends CommandBase {
   public void execute() { 
     double leftY = m_controller.getLeftY();
     double rightY = m_controller.getRightY();
+    double throttle = m_controller.getRightTriggerAxis();
     double leftSpeed = leftY * leftY * leftY; //for easier control at lower speeds
     double rightSpeed = rightY * rightY * rightY;
 
     if(Math.abs(m_controller.getLeftY()) < 0.035){
       m_subsystem.tankDrive(0, rightSpeed);
     } else{
-      m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * m_controller.getRightTriggerAxis(), 0.75 * rightSpeed + 0.25 * m_controller.getRightTriggerAxis());
+      m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * throttle * throttle, 0.75 * rightSpeed + 0.25 * throttle * throttle);
     }
     if(Math.abs(m_controller.getRightY()) < 0.035){
       m_subsystem.tankDrive(leftSpeed, 0);
     } else{
-      m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * m_controller.getRightTriggerAxis(), 0.75 * rightSpeed + 0.25 * m_controller.getRightTriggerAxis());
+      m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * throttle * throttle, 0.75 * rightSpeed + 0.25 * throttle * throttle);
     }
     if(leftJoystickButton.get()){
     m_subsystem.resetEncoders();
