@@ -71,26 +71,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftEncoder = m_leftDriveFront.getEncoder();
     m_rightEncoder = m_rightDriveFront.getEncoder();
     //Odomety
-    m_odometry = new DifferentialDriveOdometry(getHeading());
+    m_odometry = new DifferentialDriveOdometry(this.getGyroRotation());
     //Feedforward and PID
     m_feedforward = new SimpleMotorFeedforward(Constants.ksVolts, 
     Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
     leftPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     rightPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
   }
-
-  @Override
-  public void periodic() {
-    // Update the odometry in the periodic block and updates the pose
-    SmartDashboard.putNumber("leftEncoder", getLeftPosition());
-    SmartDashboard.putNumber("rightEncoder", getRightPosition());
-    pose = m_odometry.update(
-      m_gyro.getRotation2d(), 
-      m_leftEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
-      -m_rightEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
-      );
-  }
-
 
     /**
    * Drives the robot using arcade controls.
@@ -130,7 +117,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
   }
 
-  public Rotation2d getHeading() {
+  public Rotation2d getGyroRotation() {
     return Rotation2d.fromDegrees(-m_gyro.getAngle());
   }
 
@@ -141,7 +128,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+    m_odometry.resetPosition(pose, this.getGyroRotation());
   }
 
   public void resetEncoders(){
@@ -196,5 +183,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return pose;
+  }
+
+  @Override
+  public void periodic() {
+    // Update the odometry in the periodic block and updates the pose
+    SmartDashboard.putNumber("leftEncoder", getLeftPosition());
+    SmartDashboard.putNumber("rightEncoder", getRightPosition());
+    SmartDashboard.putNumber("pose", getPose().getRotation().getDegrees());
+    pose = m_odometry.update(
+      this.getGyroRotation(), 
+      m_leftEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
+      -m_rightEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
+      );
   }
 }

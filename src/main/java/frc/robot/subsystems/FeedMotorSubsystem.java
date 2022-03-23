@@ -28,6 +28,13 @@ public class FeedMotorSubsystem extends SubsystemBase {
     ballSensor = new AnalogInput(0);
   }
 
+  public void intakeFeed(){
+    feedMotor.set(ControlMode.PercentOutput, 0.35);
+    if(getVoltage() > 0.75){
+      stop();
+    }
+  }
+
   public void start() {
     feedMotor.set(ControlMode.PercentOutput, 0.35);
   }

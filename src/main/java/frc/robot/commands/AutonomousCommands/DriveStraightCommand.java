@@ -5,39 +5,50 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.AutonomousCommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class IntakeReverseCommand extends CommandBase {
-  private final IntakeSubsystem subsystem;
-  public IntakeReverseCommand(IntakeSubsystem subsystem) {
-    this.subsystem = subsystem;
-    addRequirements(subsystem);
-  }
+public class DriveStraightCommand extends CommandBase {
+	private DrivetrainSubsystem subsystem;
+  private Timer timer = new Timer();
+
+  /**
+   * Creates a new LimelightAimCommand.
+   */
+  public DriveStraightCommand(DrivetrainSubsystem subsystem) {
+		this.subsystem = subsystem;
+ //   addRequirements(subsystem);
+}
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+		subsystem.resetEncoders();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    subsystem.reverse();
+    subsystem.tankDrive(0.7, -0.7);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    subsystem.stop();
+    subsystem.tankDrive(0.0, 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return timer.hasElapsed(2.0);
   }
+
 }
+
+ 

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.AutonomousCommands;
 
 import java.util.Arrays;
 
@@ -16,10 +16,19 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.commands.AimCommand;
+import frc.robot.commands.BallShooterCommand;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.FeedMotorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -27,7 +36,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class Autonomous extends SequentialCommandGroup {
   
   /** Creates a new Autonomous. */
-  public Autonomous(DrivetrainSubsystem m_driveTrain) {
+  public Autonomous(DrivetrainSubsystem m_driveTrain, ArmSubsystem m_armSubsystem, IntakeSubsystem m_intakeSubsystem, BallShooterSubsystem m_shooterSubsystem, FeedMotorSubsystem m_feedSystem) {
     //set Constraints
     var autoVoltageConstraint = 
       new DifferentialDriveVoltageConstraint(m_driveTrain.getFeedforward(),
@@ -50,7 +59,7 @@ public class Autonomous extends SequentialCommandGroup {
     //Ball1 to Shoot
     PathPlannerTrajectory ball1ToShootPath = PathPlanner.loadPath("Ball1ToShoot", Constants.kMaxSpeedMetersPerSecond, Constants.kMaxAccelerationMetersPerSecondSquared);
 
-    RamseteCommand Ball1ToShoot = new RamseteCommand(ball1ToShootPath, m_driveTrain::getPose, 
+    RamseteCommand ball1ToShoot = new RamseteCommand(ball1ToShootPath, m_driveTrain::getPose, 
     new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
     m_driveTrain.getFeedforward(), Constants.kDriveKinematics, m_driveTrain::getSpeeds, 
     m_driveTrain.getLeftPID(), m_driveTrain.getRightPID(), m_driveTrain::setOutput, m_driveTrain);
@@ -86,7 +95,42 @@ public class Autonomous extends SequentialCommandGroup {
     m_driveTrain.getLeftPID(), m_driveTrain.getRightPID(), m_driveTrain::setOutput, m_driveTrain);
 
     addCommands(
-      //Insert Commands here
+
+      //reset Odometry
+      new InstantCommand(()->m_driveTrain.resetOdometry(new Pose2d(6.74, 2.59, new Rotation2d(Math.toRadians(-153.43)))), m_driveTrain),
+
+      //Move intake down
+      new InstantCommand(m_armSubsystem::armExtend, m_armSubsystem),
+
+      //Start intake and restToBall
+      new ParallelCommandGroup(
+        restToBall1,
+        new RunCommand(m_intakeSubsystem::forward, m_intakeSubsystem).withTimeout(3)
+      ),
+
+      //ball1ToShoot
+      ball1ToShoot,
+
+      //Shoot and Aim
+      new ParallelCommandGroup(
+        new AimCommand(m_shooterSubsystem).withTimeout(1.5),
+        new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2)
+      ),
+
+      //Turn on Intake, shootToBall2
+      new ParallelCommandGroup(
+        shootToBall2,
+        new RunCommand(m_intakeSubsystem::forward, m_intakeSubsystem).withTimeout(3)
+      ),
+
+      //reorientate and shootToBall2
+      reorientate,
+      ball2ToShoot,
+
+      //Aim and Shoot
+      new AimCommand(m_shooterSubsystem).withTimeout(1.5),
+      new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2)
+
     );
   }
 }
