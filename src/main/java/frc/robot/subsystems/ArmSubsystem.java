@@ -18,7 +18,7 @@ public class ArmSubsystem extends SubsystemBase {
   private CANSparkMax m_armMotor;
   private RelativeEncoder m_encoder;
   private SparkMaxPIDController m_armPID;
-  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
+  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxVel, minVel, maxAcc, allowedErr;
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -42,7 +42,6 @@ public class ArmSubsystem extends SubsystemBase {
     kMinOutput = -1;
 
     //Smart Motion Coefficients
-    maxRPM = 5700;
     maxVel = 1500;
     minVel = 200;
     maxAcc = 1000;

@@ -26,7 +26,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private SparkMaxPIDController m_rightPID;
   private RelativeEncoder m_leftEncoder;
   private RelativeEncoder m_rightEncoder;
-  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, setPoint, processVariable;
+  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxVel, minVel, maxAcc, allowedErr;
 
   public ClimbSubsystem() {
     // initialize motor
@@ -56,7 +56,6 @@ public class ClimbSubsystem extends SubsystemBase {
     kFF = 0.000156; 
     kMaxOutput = 1; 
     kMinOutput = -1;
-    maxRPM = 5700;
 
     // Smart Motion Coefficients
     maxVel = 2000; // rpm

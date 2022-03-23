@@ -32,7 +32,7 @@ public class PathWeaverCommand extends CommandBase{
   }
 
   Trajectory pathtraj (){
-    String trajectoryJSON = "PathWeaver/pathweaver.wpilib.json";
+    String trajectoryJSON = "paths/CollectAndShoot.wpilib.json";
     Trajectory trajectory = new Trajectory();
 
     try {
@@ -44,7 +44,6 @@ public class PathWeaverCommand extends CommandBase{
       SmartDashboard.putBoolean("Has path been found", false);
       }
    return trajectory;
-
   }
 
   // Called when the command is initially scheduled.
