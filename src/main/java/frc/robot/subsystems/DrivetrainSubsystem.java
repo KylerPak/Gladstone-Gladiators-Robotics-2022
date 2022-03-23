@@ -86,8 +86,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("rightEncoder", getRightPosition());
     pose = m_odometry.update(
       m_gyro.getRotation2d(), 
-      m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
-      m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
+      m_leftEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
+      -m_rightEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
       );
   }
 
@@ -125,8 +125,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DifferentialDriveWheelSpeeds getSpeeds(){
     return new DifferentialDriveWheelSpeeds(
-      m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, //speed of leftwheels in meters per second 
-      m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60 //speed of rightwheels in meters per second
+      m_leftEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
+      -m_rightEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
     );
   }
 

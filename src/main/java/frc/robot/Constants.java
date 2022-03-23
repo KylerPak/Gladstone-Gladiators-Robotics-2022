@@ -44,8 +44,8 @@ public final class Constants {
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
     //MaxSpeed and Accelleration
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxSpeedMetersPerSecond = 5;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3.14;
 
     //Ramsette Perameters
     public static final double kRamseteB = 2; //subject to change
