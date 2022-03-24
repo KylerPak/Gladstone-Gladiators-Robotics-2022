@@ -35,6 +35,13 @@ public class FeedMotorSubsystem extends SubsystemBase {
     }
   }
 
+  public void feedBall(){
+    feedMotor.set(ControlMode.PercentOutput, 0.35);
+    if(getVoltage() > 0.75){
+      ballFeed();
+    }
+  }
+
   public void start() {
     feedMotor.set(ControlMode.PercentOutput, 0.35);
   }
@@ -44,13 +51,13 @@ public class FeedMotorSubsystem extends SubsystemBase {
     ballFeed.set(0);
   }
 
-  public void ballFeed(){
-    ballFeed.set(0.3);
-  }
-
   public void reverse(){
     feedMotor.set(ControlMode.PercentOutput, -0.2);
     ballFeed.set(-0.2);
+  }
+
+  public void ballFeed(){
+    ballFeed.set(0.3);
   }
 
   public double getVoltage(){

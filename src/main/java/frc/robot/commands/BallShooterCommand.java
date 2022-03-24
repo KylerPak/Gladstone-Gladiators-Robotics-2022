@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.FeedMotorSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
  
 /**
  * This command will drive the robot forward for a specified period of time
@@ -17,40 +18,44 @@ import frc.robot.subsystems.FeedMotorSubsystem;
 public class BallShooterCommand extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
   private final FeedMotorSubsystem m_feedSubsystem;
+  private final LimelightSubsystem m_limelight;
+
+  private int feedSystemTimer;
   /**
    * Creates a new AutonomousCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public BallShooterCommand(BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem) {
+  public BallShooterCommand(LimelightSubsystem limelight, BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem) {
     m_ballSubsystem = ballSystem;
     m_feedSubsystem = feedSystem;
+    m_limelight = limelight;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_ballSubsystem, m_feedSubsystem);
+    addRequirements(limelight, ballSystem, feedSystem);
   }
  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    feedSystemTimer = 0;
   }
  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_ballSubsystem.distanceToGoal() > 20){
-      m_ballSubsystem.shoot(m_ballSubsystem.distanceToGoal() * 0.00511 - 0.01711); //calculated from linear regression
-      m_feedSubsystem.start();
-      if (m_feedSubsystem.ballSensor.getVoltage() > 0.75){
-        m_feedSubsystem.ballFeed();
-      }
+    m_ballSubsystem.shoot(m_limelight.getDistance() * 0.00511 - 0.01711); //calculated from linear regression
+    feedSystemTimer++;
+
+    if(feedSystemTimer > 50){
+      m_feedSubsystem.feedBall();
     }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ballSubsystem.stop();
+    m_ballSubsystem.shootStop();
     m_feedSubsystem.stop();
   }
  
