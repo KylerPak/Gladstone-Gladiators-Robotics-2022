@@ -12,15 +12,12 @@ import java.util.TimerTask;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -32,9 +29,6 @@ public class BallShooterSubsystem extends SubsystemBase {
   private WPI_TalonFX ballShooter;
   private XboxController m_controller = new XboxController(0);
   private RelativeEncoder m_encoder;
-  private final double kP; //Proportional Constant
-  private final double allowed_error; //minimum error
-  private double limeLightAngle, limeLightHeightInches, goalHeightInches, isTarget, targetOffsetAngle_Vertical, heading_error, angleToGoalDegrees, angleToGoalRadians, distanceToGoal;
 
   public BallShooterSubsystem() {
     shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
@@ -42,13 +36,6 @@ public class BallShooterSubsystem extends SubsystemBase {
     shootDirection.restoreFactoryDefaults();
     shootDirection.setIdleMode(IdleMode.kBrake);
     m_encoder = shootDirection.getEncoder();
-
-    //variables for limeLight
-    limeLightAngle = 22;
-    limeLightHeightInches = 44.5;
-    goalHeightInches = 104;
-    kP = -0.2;
-    allowed_error = 0.001;
 
     //Soft Limits
     enableSoftLimit();                      
@@ -74,59 +61,31 @@ public class BallShooterSubsystem extends SubsystemBase {
     shootDirection.set(0.3);
   }
 
-  public void power(double power){
+  public void rotatePower(double power){
     shootDirection.set(power);
-  }
-  public void aiming(){
-    if (isTarget < 0.5){  //target not in sight
-      rotateLeft();
-      if(m_encoder.getVelocity() == 0){
-        rotateNotleft();
-      }
-    } else{   //target in sight, begin aiming
-      power(kP * heading_error);
-    }
-    if (heading_error <= allowed_error){
-      m_controller.setRumble(RumbleType.kLeftRumble, 1);
-      Timer timer = new Timer();
-      timer.schedule(new RumbleStopper(m_controller), 500);
-    }
-  }
-
-  public double distanceToGoal(){
-    if(isTarget == 1){
-    angleToGoalDegrees = limeLightAngle + targetOffsetAngle_Vertical;
-    angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180);
-    distanceToGoal = (goalHeightInches - limeLightHeightInches)/Math.tan(-angleToGoalRadians);
-    return distanceToGoal;
-    } else{
-      return 0;
-    }
   }
 
   public void shoot(double power) {
     ballShooter.set(ControlMode.PercentOutput, power);
   }
 
-  public void stop() {
+  public double getVelocity(){
+    return m_encoder.getVelocity();
+  }
+
+  public void contRumble(){
+    m_controller.setRumble(RumbleType.kLeftRumble, 1);
+    Timer timer = new Timer();
+    timer.schedule(new RumbleStopper(m_controller), 500);
+  }
+
+  public void shootStop() {
     ballShooter.set(ControlMode.PercentOutput, 0);
   }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-ghs");
-    NetworkTableEntry tv = table.getEntry("tv");
-    NetworkTableEntry ty = table.getEntry("ty");
-    NetworkTableEntry tx = table.getEntry("tx");
-    isTarget = tv.getDouble(0);
-    targetOffsetAngle_Vertical = ty.getDouble(0);
-    heading_error = tx.getDouble(0);
-    distanceToGoal();
-    SmartDashboard.putNumber("Heading Error", heading_error);
-    SmartDashboard.putNumber("Target in Sight", isTarget);
-    SmartDashboard.putNumber("Target Offset", targetOffsetAngle_Vertical);
-    SmartDashboard.putNumber("Distance to Goal", distanceToGoal());
   }
 }
 

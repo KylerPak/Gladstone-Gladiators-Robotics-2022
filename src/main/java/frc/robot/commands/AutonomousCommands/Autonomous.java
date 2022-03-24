@@ -22,13 +22,14 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.AimCommand;
+import frc.robot.commands.AimAuto;
 import frc.robot.commands.BallShooterCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.FeedMotorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -36,7 +37,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class Autonomous extends SequentialCommandGroup {
   
   /** Creates a new Autonomous. */
-  public Autonomous(DrivetrainSubsystem m_driveTrain, ArmSubsystem m_armSubsystem, IntakeSubsystem m_intakeSubsystem, BallShooterSubsystem m_shooterSubsystem, FeedMotorSubsystem m_feedSystem) {
+  public Autonomous(LimelightSubsystem m_limelight, DrivetrainSubsystem m_driveTrain, ArmSubsystem m_armSubsystem, IntakeSubsystem m_intakeSubsystem, BallShooterSubsystem m_shooterSubsystem, FeedMotorSubsystem m_feedSystem) {
     //set Constraints
     var autoVoltageConstraint = 
       new DifferentialDriveVoltageConstraint(m_driveTrain.getFeedforward(),
@@ -113,7 +114,7 @@ public class Autonomous extends SequentialCommandGroup {
 
       //Shoot and Aim
       new ParallelCommandGroup(
-        new AimCommand(m_shooterSubsystem).withTimeout(1.5),
+        new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(1.5),
         new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2)
       ),
 
@@ -128,7 +129,7 @@ public class Autonomous extends SequentialCommandGroup {
       ball2ToShoot,
 
       //Aim and Shoot
-      new AimCommand(m_shooterSubsystem).withTimeout(1.5),
+      new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(1.5),
       new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2)
 
     );

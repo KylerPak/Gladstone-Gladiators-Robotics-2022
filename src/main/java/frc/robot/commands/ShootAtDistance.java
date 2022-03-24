@@ -48,7 +48,7 @@ public class ShootAtDistance extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ballSubsystem.stop();
+    m_ballSubsystem.shootStop();
     m_feedSubsystem.stop();
   }
  

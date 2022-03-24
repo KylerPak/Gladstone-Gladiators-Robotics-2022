@@ -36,7 +36,8 @@ public class RobotContainer {
   private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
-  private final Autonomous m_auto = new Autonomous(m_driveTrainSubsystem, m_armSubsystem, m_intakeSubsystem, m_ballShooterSubsystem, m_feedSubsystem);
+  private final LimelightSubsystem m_limelight = new LimelightSubsystem();
+  private final Autonomous m_auto = new Autonomous(m_limelight, m_driveTrainSubsystem, m_armSubsystem, m_intakeSubsystem, m_ballShooterSubsystem, m_feedSubsystem);
   private final DoNothingCommand m_Nothing = new DoNothingCommand();
   private final DriveStraightCommand m_straight = new DriveStraightCommand(m_driveTrainSubsystem);
   private final XboxController m_controller = new XboxController(0);
@@ -89,7 +90,7 @@ public class RobotContainer {
       new ShootAtDistance(m_ballShooterSubsystem, m_feedSubsystem));
     rightBumper.whenReleased(
       new ParallelCommandGroup(
-        new RunCommand(m_ballShooterSubsystem::stop, m_ballShooterSubsystem),
+        new RunCommand(m_ballShooterSubsystem::shootStop, m_ballShooterSubsystem),
         new RunCommand(m_feedSubsystem::stop, m_feedSubsystem)));
     //Intake Reverse
     leftMiddleButton.whileHeld(
@@ -106,7 +107,7 @@ public class RobotContainer {
     rightMiddleButton.whenReleased(
       new RunCommand(m_feedSubsystem::stop, m_feedSubsystem));
     //Limelight
-    xButton.whenHeld(new AimCommand(m_ballShooterSubsystem));
+    xButton.whenHeld(new AimAuto(m_limelight, m_ballShooterSubsystem));
     //Climber
     dPad.up.whenPressed(
       new RunCommand(m_climbSubsystem::Climb, m_climbSubsystem));
