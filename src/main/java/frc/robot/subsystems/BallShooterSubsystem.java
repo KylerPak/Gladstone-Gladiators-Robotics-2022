@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.linearInterpolator;
  
 public class BallShooterSubsystem extends SubsystemBase {
   private static final int deviceID = Constants.shooterDirectionCANID;
@@ -35,6 +36,10 @@ public class BallShooterSubsystem extends SubsystemBase {
   private XboxController m_controller = new XboxController(0);
   private RelativeEncoder m_rotationEncoder;
 
+  private double shootSetPoint = 15; //Default value for default shooting
+  private double shootPower = 0;
+
+
   private final BangBangController shootController;
   private final SimpleMotorFeedforward shootFeedForward;
 
@@ -42,8 +47,16 @@ public class BallShooterSubsystem extends SubsystemBase {
   private double kV = 1;
   private double kA = 1;
 
-  private final int kFalconUnitsPerRev = 2048; //Falcon 500 integrated sensor rate
   private final NeutralMode kBrakeDuringNeutral = NeutralMode.Coast;
+
+  private double [][] shooterData = {
+    {5.0, 15},
+    {8.0, 20},
+    {11.0, 25},
+    {14.0, 30}
+  };
+
+  private final linearInterpolator shootInterpolator = new linearInterpolator(shooterData);
 
   public BallShooterSubsystem() {
     shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);  
@@ -56,6 +69,8 @@ public class BallShooterSubsystem extends SubsystemBase {
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     ballShooter.configAllSettings(configs);
+
+    SmartDashboard.putNumber("Shoot Target Speed", shootSetPoint);
 
     shootController = new BangBangController();
     shootFeedForward = new SimpleMotorFeedforward(kS, kV, kA);
@@ -88,8 +103,20 @@ public class BallShooterSubsystem extends SubsystemBase {
     shootDirection.set(power);
   }
 
-  public void shoot(double power) {
-    ballShooter.set(ControlMode.PercentOutput, power);
+  public void shoot(){
+
+    shootSetPoint = SmartDashboard.getNumber("Shoot Target Speed", shootSetPoint);
+
+    double bangPower = shootController.calculate(shootSetPoint);
+    double velPerSecond = getShootSpeed() * 10; //speed of shooterWheels per 1 second
+    double feedForwardPower = 0.9 * shootFeedForward.calculate(velPerSecond, velPerSecond*2);
+
+    shootPower = bangPower + feedForwardPower;
+    ballShooter.set(ControlMode.PercentOutput, shootPower);
+  }
+
+  public void shootAtDistance() {
+    ballShooter.set(ControlMode.PercentOutput, shootSetPoint);
   }
 
   public double getVelocity(){
@@ -110,11 +137,27 @@ public class BallShooterSubsystem extends SubsystemBase {
     ballShooter.set(ControlMode.PercentOutput, 0);
   }
   
+  public void setSetPoints(double s){
+    shootSetPoint = s;
+  }
+
+  public void setPointsFromDistance(double distance){
+    double distanceinFeet = distance / 12;
+    double shooterSpeed = shootInterpolator.getInterpolatedValue(distanceinFeet);
+
+    setSetPoints(shooterSpeed);
+  }
+
+  public boolean atTargetVelocity(){
+    return getShootSpeed() > shootSetPoint;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    getShootSpeed();
-    SmartDashboard.putNumber("Shooter Speed", getShootSpeed());
+    double shootSpeed = getShootSpeed();
+    SmartDashboard.putNumber("Shooter Speed", shootSpeed);
+
   }
 }
 

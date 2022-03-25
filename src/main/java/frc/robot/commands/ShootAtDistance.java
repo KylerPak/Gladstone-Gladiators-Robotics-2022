@@ -38,7 +38,7 @@ public class ShootAtDistance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ballSubsystem.shoot(0.75);
+    m_ballSubsystem.shootAtDistance();
     m_feedSubsystem.start();
     if (m_feedSubsystem.ballSensor.getVoltage() > 0.75){
         m_feedSubsystem.ballFeed();

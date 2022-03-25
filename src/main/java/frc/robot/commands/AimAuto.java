@@ -44,6 +44,7 @@ public class AimAuto extends CommandBase {
 
       double distance = m_limelightSubsystem.getDistance();
       SmartDashboard.putNumber("Distance", distance);
+      m_ballSubsystem.setPointsFromDistance(distance);
     } else {
       m_ballSubsystem.rotateLeft();
       if(m_ballSubsystem.getVelocity() == 0){

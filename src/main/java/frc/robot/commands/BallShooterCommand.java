@@ -43,10 +43,10 @@ public class BallShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ballSubsystem.shoot(m_limelight.getDistance() * 0.00511 - 0.01711); //calculated from linear regression
+    m_ballSubsystem.shoot(); //calculated from linear regression
     feedSystemTimer++;
 
-    if(feedSystemTimer > 50){
+    if(m_ballSubsystem.atTargetVelocity() && feedSystemTimer > 50){
       m_feedSubsystem.feedBall();
     }
 
