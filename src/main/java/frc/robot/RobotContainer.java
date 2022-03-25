@@ -58,7 +58,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
-    m_armSubsystem.setDefaultCommand(new ArmControl(m_armSubsystem));
+    //m_armSubsystem.setDefaultCommand(new ArmControl(m_armSubsystem));
 
     //SendableChooser
     m_chooser.setDefaultOption("3 Ball Auto", m_auto);
@@ -86,12 +86,8 @@ public class RobotContainer {
         new RunCommand(m_intakeSubsystem::stop, m_intakeSubsystem),
         new RunCommand(m_feedSubsystem::stop, m_feedSubsystem)));
     //Shooting
-    rightBumper.whileHeld(
+    rightBumper.whenHeld(
       new ShootAtDistance(m_ballShooterSubsystem, m_feedSubsystem));
-    rightBumper.whenReleased(
-      new ParallelCommandGroup(
-        new RunCommand(m_ballShooterSubsystem::shootStop, m_ballShooterSubsystem),
-        new RunCommand(m_feedSubsystem::stop, m_feedSubsystem)));
     //Intake Reverse
     leftMiddleButton.whileHeld(
       new ParallelCommandGroup(

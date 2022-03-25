@@ -190,7 +190,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Update the odometry in the periodic block and updates the pose
     SmartDashboard.putNumber("leftEncoder", getLeftPosition());
     SmartDashboard.putNumber("rightEncoder", getRightPosition());
-    SmartDashboard.putNumber("pose", getPose().getRotation().getDegrees());
     pose = m_odometry.update(
       this.getGyroRotation(), 
       m_leftEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 

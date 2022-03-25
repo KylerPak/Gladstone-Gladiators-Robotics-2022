@@ -26,7 +26,7 @@ public class ArmControl extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_arm.getPosition() < 2.45 && m_arm.getPosition() > 2.55){ //Added some deadband for give
+    if(m_arm.getPosition() < 2.05 && m_arm.getPosition() > 2.15){ //Added some deadband for give
       m_arm.armExtend();
     }
   }
