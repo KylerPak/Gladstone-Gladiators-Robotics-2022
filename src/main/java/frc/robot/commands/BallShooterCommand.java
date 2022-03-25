@@ -46,7 +46,6 @@ public class BallShooterCommand extends CommandBase {
     if(m_ballSubsystem.atTargetVelocity() && feedSystemTimer > 50){
       m_feedSubsystem.feedBall();
     }
-
   }
 
   // Called once the command ends or is interrupted.

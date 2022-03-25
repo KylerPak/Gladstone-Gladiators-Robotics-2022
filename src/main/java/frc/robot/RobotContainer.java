@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
@@ -39,10 +40,10 @@ public class RobotContainer {
   private final LimelightSubsystem m_limelight = new LimelightSubsystem();
   private final Autonomous m_auto = new Autonomous(m_limelight, m_driveTrainSubsystem, m_armSubsystem, m_intakeSubsystem, m_ballShooterSubsystem, m_feedSubsystem);
   private final DoNothingCommand m_Nothing = new DoNothingCommand();
-  private final DriveStraightCommand m_straight = new DriveStraightCommand(m_driveTrainSubsystem);
+  private final DriveStraightCommand m_straight = new DriveStraightCommand(m_driveTrainSubsystem, m_armSubsystem, m_limelight, m_ballShooterSubsystem, m_feedSubsystem);
   private final XboxController m_controller = new XboxController(0);
   //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
-  //private final JoystickButton bButton = new JoystickButton(m_controller, 2);
+  private final JoystickButton bButton = new JoystickButton(m_controller, 2);
   private final JoystickButton xButton = new JoystickButton(m_controller, 3);
   //private final JoystickButton yButton = new JoystickButton(m_controller, 4);
   private final JoystickButton leftBumper = new JoystickButton(m_controller, 5);
@@ -58,7 +59,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
-    //m_armSubsystem.setDefaultCommand(new ArmControl(m_armSubsystem));
+    m_armSubsystem.setDefaultCommand(new ArmControl(m_armSubsystem));
 
     //SendableChooser
     m_chooser.setDefaultOption("3 Ball Auto", m_auto);
@@ -86,8 +87,12 @@ public class RobotContainer {
         new RunCommand(m_intakeSubsystem::stop, m_intakeSubsystem),
         new RunCommand(m_feedSubsystem::stop, m_feedSubsystem)));
     //Shooting
-    rightBumper.whenHeld(
+    rightBumper.whileHeld(
       new ShootAtDistance(m_ballShooterSubsystem, m_feedSubsystem));
+    rightBumper.whenReleased(
+      new ParallelCommandGroup(
+        new RunCommand(m_intakeSubsystem::stop, m_intakeSubsystem),
+        new RunCommand(m_feedSubsystem::stop, m_feedSubsystem)));
     //Intake Reverse
     leftMiddleButton.whileHeld(
       new ParallelCommandGroup(
@@ -105,10 +110,8 @@ public class RobotContainer {
     //Limelight
     xButton.whenHeld(new AimAuto(m_limelight, m_ballShooterSubsystem));
     //Climber
-    dPad.up.whenPressed(
-      new RunCommand(m_climbSubsystem::Climb, m_climbSubsystem));
-    dPad.down.whenPressed(
-      new RunCommand(m_climbSubsystem::Retract, m_climbSubsystem));
+    dPad.up.whenPressed(new ClimbExtend(m_climbSubsystem));
+    dPad.down.whenPressed(new ClimbRetract(m_climbSubsystem));
     //Turret Rotate
     dPad.left.whileHeld(
       new RunCommand(m_ballShooterSubsystem::rotateLeft, m_ballShooterSubsystem));
@@ -118,6 +121,7 @@ public class RobotContainer {
       new RunCommand(m_ballShooterSubsystem::rotateNotleft, m_ballShooterSubsystem));
     dPad.right.whenReleased(
       new RunCommand(m_ballShooterSubsystem::stopRotate, m_ballShooterSubsystem));
+    bButton.whenPressed(new ArmRetract(m_armSubsystem));
   }
 
 public Command getAutonomousCommand() {

@@ -56,7 +56,7 @@ public class TeleopDriveCommand extends CommandBase {
     if(Math.abs(m_controller.getRightY()) < 0.035){
       m_subsystem.tankDrive(leftSpeed, 0);
     } else{
-      m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * throttle * throttle, 0.75 * rightSpeed + 0.25 * throttle * throttle);
+      m_subsystem.tankDrive(0.75 * leftSpeed + 0.25 * throttle * throttle, 0.75 * rightSpeed + 0.25 * throttle * throttle);
     }
     if(leftJoystickButton.get()){
     m_subsystem.resetEncoders();

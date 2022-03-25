@@ -17,6 +17,8 @@ import frc.robot.subsystems.FeedMotorSubsystem;
 public class ShootAtDistance extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
   private final FeedMotorSubsystem m_feedSubsystem;
+
+  private int feedSystemTimer;
   /**
    * Creates a new AutonomousCommand.
    *
@@ -26,23 +28,24 @@ public class ShootAtDistance extends CommandBase {
     m_ballSubsystem = ballSystem;
     m_feedSubsystem = feedSystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_ballSubsystem, m_feedSubsystem);
+    addRequirements(ballSystem, feedSystem);
   }
  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    feedSystemTimer = 0;
   }
  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ballSubsystem.shootAtDistance();
-    m_feedSubsystem.start();
-    if (m_feedSubsystem.ballSensor.getVoltage() > 0.75){
-        m_feedSubsystem.ballFeed();
-      }
+    m_ballSubsystem.shootAtDistance(); //calculated from linear regression
+    feedSystemTimer++;
+
+    if(m_ballSubsystem.atTargetVelocity() && feedSystemTimer > 50){
+      m_feedSubsystem.feedBall();
+    }
   }
 
   // Called once the command ends or is interrupted.

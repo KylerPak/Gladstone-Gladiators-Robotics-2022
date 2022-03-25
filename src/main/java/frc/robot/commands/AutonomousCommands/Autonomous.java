@@ -73,20 +73,6 @@ public class Autonomous extends SequentialCommandGroup {
     m_driveTrain.getFeedforward(), Constants.kDriveKinematics, m_driveTrain::getSpeeds, 
     m_driveTrain.getLeftPID(), m_driveTrain.getRightPID(), m_driveTrain::setOutput, m_driveTrain);
 
-    //Reorientate to right Direction
-    /*Trajectory reorientatePath = TrajectoryGenerator.generateTrajectory(
-      Arrays.asList(
-        new Pose2d(1.66, 1.55, new Rotation2d(Math.toRadians(-145.01))),
-        new Pose2d(1.66, 1.55, new Rotation2d(Math.toRadians(36.37)))
-      ),
-      config
-    );
-
-    RamseteCommand reorientate = new RamseteCommand(reorientatePath, m_driveTrain::getPose, 
-    new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-    m_driveTrain.getFeedforward(), Constants.kDriveKinematics, m_driveTrain::getSpeeds, 
-    m_driveTrain.getLeftPID(), m_driveTrain.getRightPID(), m_driveTrain::setOutput, m_driveTrain);
-    */
     //Ball2 To Shoot
     PathPlannerTrajectory ball2ToShootPath = PathPlanner.loadPath("Ball2ToShoot", Constants.kMaxSpeedMetersPerSecond, Constants.kMaxAccelerationMetersPerSecondSquared);
 
@@ -123,14 +109,12 @@ public class Autonomous extends SequentialCommandGroup {
         new RunCommand(m_intakeSubsystem::forward, m_intakeSubsystem).withTimeout(3)
       ),
 
-      //reorientate and shootToBall2
-      //reorientate,
+      //ball2ToShoot
       ball2ToShoot,
 
       //Aim and Shoot
       new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(1.5),
       new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2)
-
     );
   }
 }

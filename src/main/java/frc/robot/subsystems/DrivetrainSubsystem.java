@@ -53,13 +53,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftDriveBack = new CANSparkMax(leftDriveBackID, MotorType.kBrushless);
     m_leftDriveFront = new CANSparkMax(leftDriveFrontID, MotorType.kBrushless);
     m_rightDriveBack = new CANSparkMax(rightDriveBackID, MotorType.kBrushless);
-    m_rightDriveFront = new CANSparkMax(rightDriveFrontID, MotorType.kBrushless);  
-    m_leftDriveFront.setInverted(true);
+    m_rightDriveFront = new CANSparkMax(rightDriveFrontID, MotorType.kBrushless);
     //Back follow front motors
-    m_leftDriveBack.follow(m_leftDriveFront, false);
+    m_leftDriveBack.follow(m_leftDriveFront);
     m_rightDriveBack.follow(m_rightDriveFront);
     //DifferentialDrive
     m_drive = new DifferentialDrive(m_leftDriveFront, m_rightDriveFront);
+    setRampRate();
     //Restore motor defaults
     m_leftDriveFront.restoreFactoryDefaults();
     m_rightDriveFront.restoreFactoryDefaults();
@@ -86,7 +86,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param rotation the commanded rotation
    */
   public void tankDrive(double leftPower, double rightPower) {
-    m_drive.tankDrive(leftPower, rightPower);
+    m_drive.tankDrive(-leftPower, rightPower);
   }
 
   /**
@@ -98,13 +98,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   /*
   public void LeftDrive(double leftVelocitySetpoint) {
     m_leftDriveFront.setVoltage(m_feedforward.calculate(leftVelocitySetpoint)
-      + leftPID.calculate(m_leftEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60, 
+      + leftPID.calculate(m_leftEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(2) / 60, 
       leftVelocitySetpoint));
   }
 
   public void RightDrive(double rightVelocitySetpoint){
     m_rightDriveFront.setVoltage(m_feedforward.calculate(rightVelocitySetpoint)
-    + rightPID.calculate(m_rightEncoder.getVelocity() / 10.71 * 2 * Math.PI * Units.inchesToMeters(2) / 60,
+    + rightPID.calculate(m_rightEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(2) / 60,
     rightVelocitySetpoint)); 
   }
   */
@@ -112,9 +112,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DifferentialDriveWheelSpeeds getSpeeds(){
     return new DifferentialDriveWheelSpeeds(
-      m_leftEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
-      -m_rightEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
+      m_leftEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
+      -m_rightEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
     );
+  }
+
+  public void setRampRate(){
+    m_leftDriveBack.setOpenLoopRampRate(0.5);
+    m_rightDriveBack.setOpenLoopRampRate(0.5);
+    m_leftDriveFront.setOpenLoopRampRate(0.5);
+    m_rightDriveFront.setOpenLoopRampRate(0.5);
   }
 
   public Rotation2d getGyroRotation() {

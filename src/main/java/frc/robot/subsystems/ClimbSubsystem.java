@@ -49,7 +49,7 @@ public class ClimbSubsystem extends SubsystemBase {
     m_rightEncoder.setPositionConversionFactor(0.2343);
 
     // PID coefficients
-    kP = 5e-5; 
+    kP = 0.0125; 
     kI = 1e-6;
     kD = 0; 
     kIz = 0; 
@@ -58,8 +58,9 @@ public class ClimbSubsystem extends SubsystemBase {
     kMinOutput = -1;
 
     // Smart Motion Coefficients
-    maxVel = 2000; // rpm
-    maxAcc = 1500;
+    minVel = 300; //rpm
+    maxVel = 4000; // rpm
+    maxAcc = 3000;
 
     // set PID coefficients
     m_leftPID.setP(kP);
@@ -112,8 +113,8 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void Climb(){
-    m_leftPID.setReference(49.25, ControlType.kSmartMotion);
-    m_rightPID.setReference(49.25, ControlType.kSmartMotion);
+    m_leftPID.setReference(45, ControlType.kSmartMotion);
+    m_rightPID.setReference(45, ControlType.kSmartMotion);
   }
 
   public void Retract(){
