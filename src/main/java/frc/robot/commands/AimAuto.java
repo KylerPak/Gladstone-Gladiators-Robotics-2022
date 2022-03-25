@@ -51,8 +51,6 @@ public class AimAuto extends CommandBase {
         m_ballSubsystem.rotateNotleft();
       }
     }
-
-
   }
 
   // Called once the command ends or is interrupted.
@@ -60,7 +58,6 @@ public class AimAuto extends CommandBase {
   public void end(boolean interrupted) {
     m_ballSubsystem.stopRotate();
     m_limelightSubsystem.setupDriveMode();
-    m_ballSubsystem.contRumble();
   }
 
   // Returns true when the command should end.

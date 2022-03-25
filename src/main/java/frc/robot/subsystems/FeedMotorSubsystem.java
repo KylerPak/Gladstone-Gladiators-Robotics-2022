@@ -26,7 +26,7 @@ public class FeedMotorSubsystem extends SubsystemBase {
   public FeedMotorSubsystem() {
     feedMotor = new WPI_TalonFX(feedMotorID);
     ballFeed = new CANSparkMax(ballFeedID, MotorType.kBrushless);  
-    ballSensor = new AnalogInput(0);
+    ballSensor = new AnalogInput(3);
   }
 
   public void intakeFeed(){

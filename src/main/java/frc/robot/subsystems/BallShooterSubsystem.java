@@ -6,9 +6,6 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -19,10 +16,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -33,7 +28,6 @@ public class BallShooterSubsystem extends SubsystemBase {
   private static final int ballShooterID = Constants.shooterCANID;
   private CANSparkMax shootDirection;
   private WPI_TalonFX ballShooter;
-  private XboxController m_controller = new XboxController(0);
   private RelativeEncoder m_rotationEncoder;
 
   private double shootSetPoint = 15; //Default value for default shooting
@@ -104,7 +98,6 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public void shoot(){
-
     shootSetPoint = SmartDashboard.getNumber("Shoot Target Speed", shootSetPoint);
 
     double bangPower = shootController.calculate(shootSetPoint);
@@ -125,12 +118,6 @@ public class BallShooterSubsystem extends SubsystemBase {
 
   public double getShootSpeed(){
     return ballShooter.getSelectedSensorVelocity(0) / 2048 * 1.5; //speed of shooterWheels per 100ms
-  }
-
-  public void contRumble(){
-    m_controller.setRumble(RumbleType.kLeftRumble, 1);
-    Timer timer = new Timer();
-    timer.schedule(new RumbleStopper(m_controller), 500);
   }
 
   public void shootStop() {
@@ -157,16 +144,5 @@ public class BallShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     double shootSpeed = getShootSpeed();
     SmartDashboard.putNumber("Shooter Speed", shootSpeed);
-  }
-}
-
-class RumbleStopper extends TimerTask{
-  private final XboxController controller;
-  public RumbleStopper(XboxController controller){
-    this.controller = controller;
-  }
-  @Override
-  public void run() {
-    controller.setRumble(RumbleType.kLeftRumble, 0);
   }
 }
