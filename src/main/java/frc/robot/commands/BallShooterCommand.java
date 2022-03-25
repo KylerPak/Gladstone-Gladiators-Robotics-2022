@@ -10,7 +10,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.FeedMotorSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
  
 /**
  * This command will drive the robot forward for a specified period of time
@@ -18,7 +17,6 @@ import frc.robot.subsystems.LimelightSubsystem;
 public class BallShooterCommand extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
   private final FeedMotorSubsystem m_feedSubsystem;
-  private final LimelightSubsystem m_limelight;
 
   private int feedSystemTimer;
   /**
@@ -26,12 +24,11 @@ public class BallShooterCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public BallShooterCommand(LimelightSubsystem limelight, BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem) {
+  public BallShooterCommand(BallShooterSubsystem ballSystem, FeedMotorSubsystem feedSystem) {
     m_ballSubsystem = ballSystem;
     m_feedSubsystem = feedSystem;
-    m_limelight = limelight;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(limelight, ballSystem, feedSystem);
+    addRequirements(ballSystem, feedSystem);
   }
  
   // Called when the command is initially scheduled.

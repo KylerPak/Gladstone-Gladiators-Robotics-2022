@@ -157,7 +157,6 @@ public class BallShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     double shootSpeed = getShootSpeed();
     SmartDashboard.putNumber("Shooter Speed", shootSpeed);
-
   }
 }
 

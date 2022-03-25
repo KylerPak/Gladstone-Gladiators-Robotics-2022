@@ -115,7 +115,7 @@ public class Autonomous extends SequentialCommandGroup {
       //Shoot and Aim
       new ParallelCommandGroup(
         new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(1.5),
-        new BallShooterCommand(m_limelight, m_shooterSubsystem, m_feedSystem).withTimeout(2)
+        new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2)
       ),
 
       //Turn on Intake, shootToBall2
@@ -130,7 +130,7 @@ public class Autonomous extends SequentialCommandGroup {
 
       //Aim and Shoot
       new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(1.5),
-      new BallShooterCommand(m_limelight, m_shooterSubsystem, m_feedSystem).withTimeout(2)
+      new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2)
 
     );
   }
