@@ -10,6 +10,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -17,6 +20,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.math.controller.BangBangController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,14 +33,32 @@ public class BallShooterSubsystem extends SubsystemBase {
   private CANSparkMax shootDirection;
   private WPI_TalonFX ballShooter;
   private XboxController m_controller = new XboxController(0);
-  private RelativeEncoder m_encoder;
+  private RelativeEncoder m_rotationEncoder;
+
+  private final BangBangController shootController;
+  private final SimpleMotorFeedforward shootFeedForward;
+
+  private double kS = 1;
+  private double kV = 1;
+  private double kA = 1;
+
+  private final int kFalconUnitsPerRev = 2048; //Falcon 500 integrated sensor rate
+  private final NeutralMode kBrakeDuringNeutral = NeutralMode.Coast;
 
   public BallShooterSubsystem() {
-    shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);
-    ballShooter = new WPI_TalonFX(ballShooterID);
+    shootDirection = new CANSparkMax(deviceID, MotorType.kBrushless);  
     shootDirection.restoreFactoryDefaults();
     shootDirection.setIdleMode(IdleMode.kBrake);
-    m_encoder = shootDirection.getEncoder();
+    m_rotationEncoder = shootDirection.getEncoder();
+
+    ballShooter = new WPI_TalonFX(ballShooterID);
+    ballShooter.setNeutralMode(kBrakeDuringNeutral);
+    TalonFXConfiguration configs = new TalonFXConfiguration();
+    configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+    ballShooter.configAllSettings(configs);
+
+    shootController = new BangBangController();
+    shootFeedForward = new SimpleMotorFeedforward(kS, kV, kA);
 
     //Soft Limits
     enableSoftLimit();                      
@@ -47,8 +70,8 @@ public class BallShooterSubsystem extends SubsystemBase {
   public void enableSoftLimit(){
     shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
     shootDirection.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
-    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 8);
-    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -25);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 15);
+    shootDirection.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -15);
   }
 
   public void rotateLeft(){
@@ -70,7 +93,11 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public double getVelocity(){
-    return m_encoder.getVelocity();
+    return m_rotationEncoder.getVelocity();
+  }
+
+  public double getShootSpeed(){
+    return ballShooter.getSelectedSensorVelocity(0) / 2048 * 1.5; //speed of shooterWheels per 100ms
   }
 
   public void contRumble(){
@@ -86,6 +113,8 @@ public class BallShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    getShootSpeed();
+    SmartDashboard.putNumber("Shooter Speed", getShootSpeed());
   }
 }
 

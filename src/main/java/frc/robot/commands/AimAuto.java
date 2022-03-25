@@ -25,7 +25,7 @@ public class AimAuto extends CommandBase {
   public AimAuto(LimelightSubsystem l, BallShooterSubsystem b) {
     this.m_limelightSubsystem = l;
     this.m_ballSubsystem = b;
-    addRequirements(l);
+    addRequirements(l, b);
 }
 
   // Called when the command is initially scheduled.
