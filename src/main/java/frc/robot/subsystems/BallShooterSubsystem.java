@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -41,7 +42,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   private double kV = 1;
   private double kA = 1;
 
-  private final NeutralMode kBrakeDuringNeutral = NeutralMode.Coast;
+  private final NeutralMode kCoastDuringNeutral = NeutralMode.Coast;
 
   private double [][] shooterData = {
     {5.0, 15},
@@ -59,9 +60,11 @@ public class BallShooterSubsystem extends SubsystemBase {
     m_rotationEncoder = shootDirection.getEncoder();
 
     ballShooter = new WPI_TalonFX(ballShooterID);
-    ballShooter.setNeutralMode(kBrakeDuringNeutral);
+    ballShooter.setNeutralMode(kCoastDuringNeutral);
+    ballShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 19, 0.5));
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+    //supplyCurrLimit.currentLimit
     ballShooter.configAllSettings(configs);
 
     SmartDashboard.putNumber("Shoot Target Speed", shootSetPoint);

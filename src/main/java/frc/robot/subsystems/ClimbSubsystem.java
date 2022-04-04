@@ -35,7 +35,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_leftClimb.restoreFactoryDefaults();
     m_rightClimb.restoreFactoryDefaults();
-
     m_rightClimb.follow(m_leftClimb);
 
     // initialze PID controller and encoder objects
@@ -47,6 +46,9 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_leftEncoder.setPositionConversionFactor(0.2343);
     m_rightEncoder.setPositionConversionFactor(0.2343);
+
+    m_leftClimb.setSmartCurrentLimit(50);
+    m_rightClimb.setSmartCurrentLimit(50);
 
     // PID coefficients
     kP = 0.0125; 
@@ -112,6 +114,13 @@ public class ClimbSubsystem extends SubsystemBase {
     m_rightEncoder.setPosition(0);
   }
 
+  public void enableSoftLimit(){
+    m_leftClimb.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
+    m_rightClimb.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
+    m_leftClimb.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 45);
+    m_rightClimb.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 45);
+  }
+
   public void Climb(){
     m_leftPID.setReference(45, ControlType.kSmartMotion);
     m_rightPID.setReference(45, ControlType.kSmartMotion);
@@ -122,6 +131,20 @@ public class ClimbSubsystem extends SubsystemBase {
     m_rightPID.setReference(0, ControlType.kSmartMotion);
   }
 
+  public void stopClimb(){
+    m_leftClimb.set(0);
+    m_rightClimb.set(0);
+  }
+
+  public void climbPower(){
+    m_leftClimb.set(0.35);
+    m_rightClimb.set(0.3);
+  }
+
+  public void climbPowerReverse(){
+    m_leftClimb.set(-0.5);
+    m_rightClimb.set(-0.5);
+  }
 
   @Override
   public void periodic() {

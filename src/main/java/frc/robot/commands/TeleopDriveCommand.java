@@ -36,7 +36,6 @@ public class TeleopDriveCommand extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.setMaxOutput(6.5);
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,16 +47,17 @@ public class TeleopDriveCommand extends CommandBase {
     double leftSpeed = leftY * leftY * leftY; //for easier control at lower speeds
     double rightSpeed = rightY * rightY * rightY;
 
-    if(Math.abs(m_controller.getLeftY()) < 0.035){
+    if(Math.abs(m_controller.getLeftY()) < 0.02){
       m_subsystem.tankDrive(0, rightSpeed);
     } else{
       m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * throttle * throttle, 0.75 * rightSpeed + 0.25 * throttle * throttle);
     }
-    if(Math.abs(m_controller.getRightY()) < 0.035){
-      m_subsystem.tankDrive(leftSpeed, 0);
+    if(Math.abs(m_controller.getRightY()) < 0.02){
+      m_subsystem.tankDrive(leftSpeed, 0);         xdr4
     } else{
-      m_subsystem.tankDrive(0.75 * leftSpeed + 0.25 * throttle * throttle, 0.75 * rightSpeed + 0.25 * throttle * throttle);
+      m_subsystem.tankDrive(0.75 * -leftSpeed - 0.25 * throttle * throttle, 0.75 * rightSpeed + 0.25 * throttle * throttle);
     }
+
     if(leftJoystickButton.get()){
     m_subsystem.resetEncoders();
     m_subsystem.tankDrive(0, 0);

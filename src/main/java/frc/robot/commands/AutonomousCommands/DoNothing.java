@@ -9,13 +9,13 @@ package frc.robot.commands.AutonomousCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DoNothingCommand extends CommandBase {
+public class DoNothing extends CommandBase {
   private boolean isFinished;
 
   /**
    * Creates a new LimelightAimCommand.
    */
-  public DoNothingCommand() {
+  public DoNothing() {
 
     addRequirements();
 }

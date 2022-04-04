@@ -4,17 +4,13 @@
 
 package frc.robot.commands.AutonomousCommands;
 
-import java.util.Arrays;
-
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -102,7 +98,6 @@ public class Autonomous extends SequentialCommandGroup {
       new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(1.5),
       new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2),
       
-
       //Turn on Intake, shootToBall2
       new ParallelCommandGroup(
         shootToBall2,

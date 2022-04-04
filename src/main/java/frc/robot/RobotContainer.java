@@ -9,13 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 import frc.robot.commands.AutonomousCommands.Autonomous;
-import frc.robot.commands.AutonomousCommands.DoNothingCommand;
-import frc.robot.commands.AutonomousCommands.DriveStraightCommand;
+import frc.robot.commands.AutonomousCommands.DoNothing;
+import frc.robot.commands.AutonomousCommands.DriveStraight;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -39,8 +38,8 @@ public class RobotContainer {
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final LimelightSubsystem m_limelight = new LimelightSubsystem();
   private final Autonomous m_auto = new Autonomous(m_limelight, m_driveTrainSubsystem, m_armSubsystem, m_intakeSubsystem, m_ballShooterSubsystem, m_feedSubsystem);
-  private final DoNothingCommand m_Nothing = new DoNothingCommand();
-  private final DriveStraightCommand m_straight = new DriveStraightCommand(m_driveTrainSubsystem, m_armSubsystem, m_limelight, m_ballShooterSubsystem, m_feedSubsystem);
+  private final DoNothing m_Nothing = new DoNothing();
+  private final DriveStraight m_straight = new DriveStraight(m_driveTrainSubsystem, m_armSubsystem, m_limelight, m_ballShooterSubsystem, m_feedSubsystem);
   private final XboxController m_controller = new XboxController(0);
   //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   private final JoystickButton bButton = new JoystickButton(m_controller, 2);
@@ -60,11 +59,13 @@ public class RobotContainer {
 
     m_driveTrainSubsystem.setDefaultCommand(new TeleopDriveCommand(m_driveTrainSubsystem, m_controller));
     m_armSubsystem.setDefaultCommand(new ArmControl(m_armSubsystem));
+    //m_climbSubsystem.setDefaultCommand(
+      //new RunCommand(m_climbSubsystem::climbPowerReverse, m_climbSubsystem));
 
     //SendableChooser
-    m_chooser.setDefaultOption("3 Ball Auto", m_auto);
+    m_chooser.addOption("3 Ball Auto", m_auto);
     m_chooser.addOption("Do Nothing", m_Nothing);
-    m_chooser.addOption("Drive Striaght", m_straight);
+    m_chooser.setDefaultOption("Drive Striaght", m_straight);
     SmartDashboard.putData(m_chooser);
     // Configure the button bindings
     configureButtonBindings();
@@ -108,10 +109,16 @@ public class RobotContainer {
     rightMiddleButton.whenReleased(
       new RunCommand(m_feedSubsystem::stop, m_feedSubsystem));
     //Limelight
-    xButton.whenHeld(new AimAuto(m_limelight, m_ballShooterSubsystem));
+    //xButton.whenHeld(new AimAuto(m_limelight, m_ballShooterSubsystem));
     //Climber
-    dPad.up.whenPressed(new ClimbExtend(m_climbSubsystem));
-    dPad.down.whenPressed(new ClimbRetract(m_climbSubsystem));
+    dPad.up.whileHeld(
+      new RunCommand(m_climbSubsystem::climbPower, m_climbSubsystem));
+    dPad.up.whenReleased(
+      new RunCommand(m_climbSubsystem::stopClimb, m_climbSubsystem));
+    dPad.down.whileHeld(
+      new RunCommand(m_climbSubsystem::climbPowerReverse, m_climbSubsystem));
+    dPad.down.whenReleased(
+      new RunCommand(m_climbSubsystem::stopClimb, m_climbSubsystem));
     //Turret Rotate
     dPad.left.whileHeld(
       new RunCommand(m_ballShooterSubsystem::rotateLeft, m_ballShooterSubsystem));

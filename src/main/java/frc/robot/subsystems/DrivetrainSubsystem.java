@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,7 +35,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private RelativeEncoder m_rightEncoder;
   //Odometry and Gyro
   private DifferentialDriveOdometry m_odometry;
-  private Gyro m_gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
+  private Gyro m_gyro = new ADXRS450_Gyro();
   //Feedforward and PID Controller
   private SimpleMotorFeedforward m_feedforward; 
   private PIDController leftPID;

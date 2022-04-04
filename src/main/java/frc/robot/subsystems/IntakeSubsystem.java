@@ -7,8 +7,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
  
@@ -18,7 +19,9 @@ public class IntakeSubsystem extends SubsystemBase {
   
   public IntakeSubsystem() {
     intakeMotor = new WPI_TalonFX(intakeMotorID);
-    SendableRegistry.setName(intakeMotor, "intakeMotor");
+    intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 19, 0.5));
+    TalonFXConfiguration configs = new TalonFXConfiguration();
+    intakeMotor.configAllSettings(configs);
   }
 
   public void forward() {

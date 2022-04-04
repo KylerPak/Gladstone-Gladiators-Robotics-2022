@@ -42,10 +42,10 @@ public class ArmSubsystem extends SubsystemBase {
     kMinOutput = -1;
 
     //Smart Motion Coefficients
-    maxVel = 150;
-    minVel = 80;
-    maxAcc = 60;
-    allowedErr = 0.05;
+    maxVel = 90;
+    minVel = 30;
+    maxAcc = 45;
+    allowedErr = 0.02;
     
     //Initalize PID
     m_armPID.setP(kP);
