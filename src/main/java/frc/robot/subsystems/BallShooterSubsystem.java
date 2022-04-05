@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -16,7 +17,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -61,10 +61,10 @@ public class BallShooterSubsystem extends SubsystemBase {
 
     ballShooter = new WPI_TalonFX(ballShooterID);
     ballShooter.setNeutralMode(kCoastDuringNeutral);
-    ballShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 19, 0.5));
+    ballShooter.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 50, 1));
+    ballShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 25, 0.5));
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-    //supplyCurrLimit.currentLimit
     ballShooter.configAllSettings(configs);
 
     SmartDashboard.putNumber("Shoot Target Speed", shootSetPoint);
@@ -145,7 +145,11 @@ public class BallShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    double OutPutCurrent = ballShooter.getStatorCurrent();
+    double SupplyCurrent = ballShooter.getSupplyCurrent();
     double shootSpeed = getShootSpeed();
     SmartDashboard.putNumber("Shooter Speed", shootSpeed);
+    SmartDashboard.putNumber("Output Current", OutPutCurrent);
+    SmartDashboard.putNumber("Supply Current", SupplyCurrent);
   }
 }

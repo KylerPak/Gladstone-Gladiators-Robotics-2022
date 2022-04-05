@@ -16,9 +16,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.AimAuto;
-import frc.robot.commands.BallShooterCommand;
-import frc.robot.commands.ShootAtDistance;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -57,14 +54,8 @@ public class DriveStraight extends SequentialCommandGroup {
       //reset Odometry
       new InstantCommand(()->m_driveTrain.resetOdometry(new Pose2d(6.09, 3.93, new Rotation2d(Math.toRadians(-174.52)))), m_driveTrain),
 
-      //Move intake down
-      //new InstantCommand(m_armSubsystem::armExtend, m_armSubsystem),
-
       driveBackwards
 
-      //Shoot and Aim
-      //new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(2),
-      //new ShootAtDistance(m_shooterSubsystem, m_feedSystem).withTimeout(3.5)
     );
   }
 }

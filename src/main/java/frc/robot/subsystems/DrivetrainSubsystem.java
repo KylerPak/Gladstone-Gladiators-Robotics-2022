@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -14,6 +16,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -28,7 +31,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private CANSparkMax m_rightDriveBack;
   private CANSparkMax m_leftDriveFront;
   private CANSparkMax m_rightDriveFront;
-  //Differential Drive and Kinematics
+  private MotorControllerGroup leftGroup;
+  private MotorControllerGroup rightGroup;
+  //Differential Drive
   private DifferentialDrive m_drive;
   //Encoders
   private RelativeEncoder m_leftEncoder;
@@ -42,8 +47,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private PIDController rightPID;
   //Variables needed
   public Pose2d pose;
-  public double speed;
-  public double rotation;
 
 
   /** Creates a new DriveSubsystem. */
@@ -54,21 +57,35 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightDriveBack = new CANSparkMax(rightDriveBackID, MotorType.kBrushless);
     m_rightDriveFront = new CANSparkMax(rightDriveFrontID, MotorType.kBrushless);
     //Back follow front motors
-    m_leftDriveBack.follow(m_leftDriveFront);
-    m_rightDriveBack.follow(m_rightDriveFront);
+    leftGroup = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
+    rightGroup = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
     //DifferentialDrive
-    m_drive = new DifferentialDrive(m_leftDriveFront, m_rightDriveFront);
+    leftGroup.setInverted(true);
+    m_drive = new DifferentialDrive(leftGroup, rightGroup);
     setRampRate();
+    setPeriodFrame();
     //Restore motor defaults
     m_leftDriveFront.restoreFactoryDefaults();
     m_rightDriveFront.restoreFactoryDefaults();
     m_leftDriveBack.restoreFactoryDefaults();
     m_rightDriveBack.restoreFactoryDefaults();
+
+    m_leftDriveFront.setSmartCurrentLimit(90);
+    m_leftDriveBack.setSmartCurrentLimit(90);
+    m_rightDriveFront.setSmartCurrentLimit(90);
+    m_rightDriveBack.setSmartCurrentLimit(90);
+
+    m_leftDriveBack.setIdleMode(IdleMode.kBrake);
+    m_leftDriveFront.setIdleMode(IdleMode.kBrake);
+    m_rightDriveBack.setIdleMode(IdleMode.kBrake);
+    m_rightDriveFront.setIdleMode(IdleMode.kBrake);
+
     //Disable safety features
     m_drive.setSafetyEnabled(false);
     //Encoders
     m_leftEncoder = m_leftDriveFront.getEncoder();
     m_rightEncoder = m_rightDriveFront.getEncoder();
+    resetEncoders(); 
     //Odomety
     m_odometry = new DifferentialDriveOdometry(this.getGyroRotation());
     //Feedforward and PID
@@ -78,49 +95,31 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightPID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
   }
 
-    /**
-   * Drives the robot using arcade controls.
-   *
-   * @param speed the commanded forward movement
-   * @param rotation the commanded rotation
-   */
   public void tankDrive(double leftPower, double rightPower) {
-    m_drive.tankDrive(-leftPower, rightPower);
+    m_drive.tankDrive(leftPower, rightPower);
   }
 
-  /**
-   * Controls the left and right sides of the drive directly with voltages.
-   *
-   * @param leftVolts the commanded left output
-   * @param rightVolts the commanded right output
-   */
-  /*
-  public void LeftDrive(double leftVelocitySetpoint) {
+  public void PIDDrive(double leftVelocitySetpoint, double rightVelocitySetpoint) {
     m_leftDriveFront.setVoltage(m_feedforward.calculate(leftVelocitySetpoint)
       + leftPID.calculate(m_leftEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(2) / 60, 
       leftVelocitySetpoint));
-  }
-
-  public void RightDrive(double rightVelocitySetpoint){
-    m_rightDriveFront.setVoltage(m_feedforward.calculate(rightVelocitySetpoint)
+     m_rightDriveFront.setVoltage(m_feedforward.calculate(rightVelocitySetpoint)
     + rightPID.calculate(m_rightEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(2) / 60,
     rightVelocitySetpoint)); 
   }
-  */
-
 
   public DifferentialDriveWheelSpeeds getSpeeds(){
     return new DifferentialDriveWheelSpeeds(
       m_leftEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
-      -m_rightEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
+      m_rightEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
     );
   }
 
   public void setRampRate(){
-    m_leftDriveBack.setOpenLoopRampRate(0.5);
-    m_rightDriveBack.setOpenLoopRampRate(0.5);
-    m_leftDriveFront.setOpenLoopRampRate(0.5);
-    m_rightDriveFront.setOpenLoopRampRate(0.5);
+    m_leftDriveBack.setOpenLoopRampRate(1);
+    m_rightDriveBack.setOpenLoopRampRate(1);
+    m_leftDriveFront.setOpenLoopRampRate(1);
+    m_rightDriveFront.setOpenLoopRampRate(1);
   }
 
   public Rotation2d getGyroRotation() {
@@ -191,15 +190,36 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return pose;
   }
 
+  public void setPeriodFrame(){
+    m_leftDriveFront.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+    m_leftDriveBack.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+    m_rightDriveFront.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+    m_rightDriveBack.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+    m_leftDriveFront.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+    m_leftDriveBack.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+    m_rightDriveFront.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+    m_rightDriveBack.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+  }
+
   @Override
   public void periodic() {
     // Update the odometry in the periodic block and updates the pose
+    double leftBackTemp = m_leftDriveBack.getMotorTemperature();
+    double leftFrontTemp = m_leftDriveFront.getMotorTemperature();
+    double rightBackTemp = m_rightDriveBack.getMotorTemperature();
+    double rightFrontTemp = m_rightDriveFront.getMotorTemperature();
+
+    SmartDashboard.putNumber("Left Front Temp", leftFrontTemp);
+    SmartDashboard.putNumber("Left Back Temp", leftBackTemp);
+    SmartDashboard.putNumber("Right Back Temp", rightBackTemp);
+    SmartDashboard.putNumber("Right Front Temp", rightFrontTemp);
+    
     SmartDashboard.putNumber("leftEncoder", getLeftPosition());
-    SmartDashboard.putNumber("rightEncoder", getRightPosition());
+    SmartDashboard.putNumber("rightEncoder", -getRightPosition());
     pose = m_odometry.update(
       this.getGyroRotation(), 
       m_leftEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
-      -m_rightEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
-      );
+      m_rightEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
+    );
   }
 }

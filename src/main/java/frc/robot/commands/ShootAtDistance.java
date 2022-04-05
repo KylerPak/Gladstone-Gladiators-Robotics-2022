@@ -43,7 +43,7 @@ public class ShootAtDistance extends CommandBase {
     m_ballSubsystem.shootAtDistance(); //calculated from linear regression
     feedSystemTimer++;
 
-    if(m_ballSubsystem.atTargetVelocity() && feedSystemTimer > 50){
+    if(feedSystemTimer > 50){
       m_feedSubsystem.feedBall();
     }
   }
