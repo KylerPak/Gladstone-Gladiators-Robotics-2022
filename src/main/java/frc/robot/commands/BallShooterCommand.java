@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.FeedMotorSubsystem;
@@ -17,6 +18,7 @@ import frc.robot.subsystems.FeedMotorSubsystem;
 public class BallShooterCommand extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
   private final FeedMotorSubsystem m_feedSubsystem;
+  private boolean feedBall = false;
 
   private int feedSystemTimer;
   /**
@@ -35,17 +37,20 @@ public class BallShooterCommand extends CommandBase {
   @Override
   public void initialize() {
     feedSystemTimer = 0;
+    feedBall = false;
   }
  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ballSubsystem.shoot(); //calculated from linear regression
-    feedSystemTimer++;
+    m_ballSubsystem.shootAtDistance();
 
-    if(m_ballSubsystem.atTargetVelocity() && feedSystemTimer > 50){
+    if((m_ballSubsystem.atTargetVelocity() || feedSystemTimer > 50) && feedBall == false){
       m_feedSubsystem.feedBall();
-    }
+      feedBall = true;
+    } else feedSystemTimer++;
+    feedSystemTimer++;
+    SmartDashboard.putNumber("Shoot Speed", m_ballSubsystem.getShootSpeed());
   }
 
   // Called once the command ends or is interrupted.

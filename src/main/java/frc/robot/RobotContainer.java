@@ -109,7 +109,7 @@ public class RobotContainer {
     rightMiddleButton.whenReleased(
       new RunCommand(m_feedSubsystem::stop, m_feedSubsystem));
     //Limelight
-    //xButton.whenHeld(new AimAuto(m_limelight, m_ballShooterSubsystem));
+    xButton.whenHeld(new Aim(m_limelight, m_ballShooterSubsystem));
     //Climber
     dPad.up.whileHeld(
       new RunCommand(m_climbSubsystem::climbPower, m_climbSubsystem));

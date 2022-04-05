@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.AimAuto;
+import frc.robot.commands.Aim;
 import frc.robot.commands.BallShooterCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BallShooterSubsystem;
@@ -95,7 +95,7 @@ public class Autonomous extends SequentialCommandGroup {
       ball1ToShoot,
 
       //Shoot and Aim
-      new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(1.5),
+      new Aim(m_limelight, m_shooterSubsystem).withTimeout(1.5),
       new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2),
       
       //Turn on Intake, shootToBall2
@@ -108,7 +108,7 @@ public class Autonomous extends SequentialCommandGroup {
       ball2ToShoot,
 
       //Aim and Shoot
-      new AimAuto(m_limelight, m_shooterSubsystem).withTimeout(1.5),
+      new Aim(m_limelight, m_shooterSubsystem).withTimeout(1.5),
       new BallShooterCommand(m_shooterSubsystem, m_feedSystem).withTimeout(2)
     );
   }

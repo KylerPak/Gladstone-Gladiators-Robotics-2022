@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
-public class AimAuto extends CommandBase {
+public class Aim extends CommandBase {
   private final BallShooterSubsystem m_ballSubsystem;
   private final LimelightSubsystem m_limelightSubsystem;
   private double turnKp = 0.2;
@@ -22,7 +22,7 @@ public class AimAuto extends CommandBase {
   /**
    * Creates a new LimelightAimCommand.
    */
-  public AimAuto(LimelightSubsystem l, BallShooterSubsystem b) {
+  public Aim(LimelightSubsystem l, BallShooterSubsystem b) {
     this.m_limelightSubsystem = l;
     this.m_ballSubsystem = b;
     addRequirements(l, b);

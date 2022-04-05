@@ -147,8 +147,6 @@ public class BallShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     double OutPutCurrent = ballShooter.getStatorCurrent();
     double SupplyCurrent = ballShooter.getSupplyCurrent();
-    double shootSpeed = getShootSpeed();
-    SmartDashboard.putNumber("Shooter Speed", shootSpeed);
     SmartDashboard.putNumber("Output Current", OutPutCurrent);
     SmartDashboard.putNumber("Supply Current", SupplyCurrent);
   }
