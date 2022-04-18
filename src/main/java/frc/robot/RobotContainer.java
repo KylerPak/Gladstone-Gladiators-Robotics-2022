@@ -41,7 +41,7 @@ public class RobotContainer {
   private final DoNothing m_Nothing = new DoNothing();
   private final DriveStraight m_straight = new DriveStraight(m_driveTrainSubsystem, m_armSubsystem, m_limelight, m_ballShooterSubsystem, m_feedSubsystem);
   private final XboxController m_controller = new XboxController(0);
-  //private final JoystickButton aButton = new JoystickButton(m_controller, 1);
+  private final JoystickButton aButton = new JoystickButton(m_controller, 1);
   private final JoystickButton bButton = new JoystickButton(m_controller, 2);
   private final JoystickButton xButton = new JoystickButton(m_controller, 3);
   //private final JoystickButton yButton = new JoystickButton(m_controller, 4);
@@ -81,12 +81,12 @@ public class RobotContainer {
     //Intake
     leftBumper.whileHeld(
       new ParallelCommandGroup(
-        new RunCommand(m_intakeSubsystem::forward, m_intakeSubsystem),
-        new RunCommand(m_feedSubsystem::intakeFeed, m_feedSubsystem)));
+        new RunCommand(m_intakeSubsystem::forward, m_intakeSubsystem)
+        /*new RunCommand(m_feedSubsystem::intakeFeed, m_feedSubsystem)*/));
     leftBumper.whenReleased(
       new ParallelCommandGroup(
-        new RunCommand(m_intakeSubsystem::stop, m_intakeSubsystem),
-        new RunCommand(m_feedSubsystem::stop, m_feedSubsystem)));
+        new RunCommand(m_intakeSubsystem::stop, m_intakeSubsystem)
+        /*new RunCommand(m_feedSubsystem::stop, m_feedSubsystem)*/));
     //Shooting
     rightBumper.whileHeld(
       new ShootAtDistance(m_ballShooterSubsystem, m_feedSubsystem));
@@ -129,6 +129,10 @@ public class RobotContainer {
     dPad.right.whenReleased(
       new RunCommand(m_ballShooterSubsystem::stopRotate, m_ballShooterSubsystem));
     bButton.whenPressed(new ArmRetract(m_armSubsystem));
+    aButton.whenHeld(
+      new RunCommand(m_feedSubsystem::ballFeed, m_feedSubsystem));
+    aButton.whenReleased(
+      new RunCommand(m_feedSubsystem::ballFeedStop, m_feedSubsystem));
   }
 
 public Command getAutonomousCommand() {

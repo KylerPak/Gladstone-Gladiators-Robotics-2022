@@ -142,6 +142,10 @@ public class BallShooterSubsystem extends SubsystemBase {
     return getShootSpeed() > shootSetPoint;
   }
 
+  public void shootDistance(){
+    ballShooter.set(ControlMode.PercentOutput, 0.65);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

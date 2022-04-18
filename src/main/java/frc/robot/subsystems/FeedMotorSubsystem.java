@@ -31,14 +31,14 @@ public class FeedMotorSubsystem extends SubsystemBase {
 
   public void intakeFeed(){
     feedMotor.set(ControlMode.PercentOutput, 0.25);
-    ballFeed.set(0.2);
-    if(getVoltage() > 0.75){
+    //ballFeed.set(0.2);
+    /*if(getVoltage() > 2){
       stop();
-    }
+    }*/
   }
 
   public void feedBall(){
-    feedMotor.set(ControlMode.PercentOutput, 0.25);
+    feedMotor.set(ControlMode.PercentOutput, 0.3);
     ballFeed();
   }
 
@@ -57,7 +57,11 @@ public class FeedMotorSubsystem extends SubsystemBase {
   }
 
   public void ballFeed(){
-    ballFeed.set(0.2);
+    ballFeed.set(0.4);
+  }
+
+  public void ballFeedStop(){
+    ballFeed.set(0);
   }
 
   public double getVoltage(){

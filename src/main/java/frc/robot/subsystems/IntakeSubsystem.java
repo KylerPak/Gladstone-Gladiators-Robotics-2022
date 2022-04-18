@@ -25,7 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void forward() {
-    intakeMotor.set(ControlMode.PercentOutput, 0.35);
+    intakeMotor.set(ControlMode.PercentOutput, -0.35);
   }
 
   public void stop() {
@@ -33,7 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void reverse(){
-    intakeMotor.set(ControlMode.PercentOutput, -0.35);
+    intakeMotor.set(ControlMode.PercentOutput, 0.35);
   }
 
   @Override

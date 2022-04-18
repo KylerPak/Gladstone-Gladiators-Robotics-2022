@@ -41,7 +41,7 @@ public class TeleopDriveCommand extends CommandBase {
   public void execute() { 
     double throttle = m_controller.getRightTriggerAxis();
 
-    m_subsystem.tankDrive(0.6 * leftDeadband() + 0.4 * throttle, 0.55 * rightDeadband() + 0.4 * throttle);
+    m_subsystem.tankDrive(0.8 * leftDeadband(), 0.78 * rightDeadband());
   }
 
   // Called once the command ends or is interrupted.
