@@ -38,9 +38,9 @@ public class BallShooterSubsystem extends SubsystemBase {
   private final BangBangController shootController;
   private final SimpleMotorFeedforward shootFeedForward;
 
-  private double kS = 1;
-  private double kV = 1;
-  private double kA = 1;
+  private double kS = 0.95696;
+  private double kV = 0.016912;
+  private double kA = 0.0045713;
 
   private final NeutralMode kCoastDuringNeutral = NeutralMode.Coast;
 

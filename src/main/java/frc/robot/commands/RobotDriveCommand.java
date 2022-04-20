@@ -33,6 +33,8 @@ public class RobotDriveCommand extends CommandBase {
     double rightDrive = m_controller.getRightY();
     leftDrive = Deadband(leftDrive);
     rightDrive = Deadband(rightDrive);
+
+    m_drive.drive(leftDrive * leftDrive * leftDrive, rightDrive * rightDrive * rightDrive);
   }
 
   // Called once the command ends or is interrupted.

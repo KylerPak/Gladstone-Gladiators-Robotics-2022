@@ -29,7 +29,7 @@ public class RobotDriveSubsystem extends SubsystemBase {
   private RelativeEncoder m_right;
   private SparkMaxPIDController m_rightPIDController;
   private SparkMaxPIDController m_leftPIDController;
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, rightSetPoint, leftSetPoint;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
   public RobotDriveSubsystem() {
     //Left motors of the driveTrain
     m_leftDriveBack = new CANSparkMax(leftDriveBackID, MotorType.kBrushless);
@@ -74,13 +74,13 @@ public class RobotDriveSubsystem extends SubsystemBase {
     m_leftPIDController.setFF(kFF);
     m_leftPIDController.setOutputRange(-1, 1);
   }
-
-  public double rightSetPoint(){
-    return rightSetPoint;
-  }  
   
-  public double leftSetPoint(){
-    return leftSetPoint;
+  public void drive(double leftSetPoint, double rightSetPoint) {
+    m_rightPIDController.setReference(rightSetPoint, ControlType.kVelocity);
+    m_rightDriveBack.follow(m_rightDriveFront);
+
+    m_leftPIDController.setReference(leftSetPoint, ControlType.kVelocity);
+    m_leftDriveBack.follow(m_leftDriveFront);
   }
 
   @Override
@@ -97,10 +97,5 @@ public class RobotDriveSubsystem extends SubsystemBase {
     if((d != kD)) { m_rightPIDController.setD(d); kD = d; }
     if((iz != kIz)) { m_rightPIDController.setIZone(iz); kIz = iz; }
     if((ff != kFF)) { m_rightPIDController.setFF(ff); kFF = ff; }
-
-    m_rightPIDController.setReference(rightSetPoint(), ControlType.kVelocity);
-    m_rightDriveBack.follow(m_rightDriveFront);
-
-
   }
 }
