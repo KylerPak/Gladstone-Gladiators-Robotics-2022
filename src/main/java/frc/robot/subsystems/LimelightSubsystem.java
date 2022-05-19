@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightSubsystem extends SubsystemBase {
@@ -60,5 +61,11 @@ public class LimelightSubsystem extends SubsystemBase {
 
   public double getDistance(){
     return (104 - 25) / Math.tan(Math.toRadians(22 + getTx()));
+  }
+
+  @Override
+  public void periodic() {
+    double distance = getDistance();
+    SmartDashboard.putNumber("Distance from target", distance);
   }
 }

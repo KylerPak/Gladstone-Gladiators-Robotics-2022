@@ -29,7 +29,7 @@ public class RobotDriveSubsystem extends SubsystemBase {
   private RelativeEncoder m_right;
   private SparkMaxPIDController m_rightPIDController;
   private SparkMaxPIDController m_leftPIDController;
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
   public RobotDriveSubsystem() {
     //Left motors of the driveTrain
     m_leftDriveBack = new CANSparkMax(leftDriveBackID, MotorType.kBrushless);
@@ -60,25 +60,30 @@ public class RobotDriveSubsystem extends SubsystemBase {
     kD = Constants.kD;
     kIz = 300;
     kFF = 1E-5;
+    kMaxOutput = 1;
+    kMinOutput = -1;
+    maxRPM = 5600;
     //PID Configuration
     m_rightPIDController.setP(kP);
     m_rightPIDController.setI(kI);
     m_rightPIDController.setD(kD);
     m_rightPIDController.setIZone(kIz);
     m_rightPIDController.setFF(kFF);
-    m_rightPIDController.setOutputRange(-1, 1);
+    m_rightPIDController.setOutputRange(kMaxOutput, kMinOutput);
     m_leftPIDController.setP(kP);
     m_leftPIDController.setI(kI);
     m_leftPIDController.setD(kD);
     m_leftPIDController.setIZone(kIz);
     m_leftPIDController.setFF(kFF);
-    m_leftPIDController.setOutputRange(-1, 1);
+    m_leftPIDController.setOutputRange(kMaxOutput, kMinOutput);
   }
   
   public void drive(double leftSetPoint, double rightSetPoint) {
+    rightSetPoint = rightSetPoint * maxRPM;
     m_rightPIDController.setReference(rightSetPoint, ControlType.kVelocity);
     m_rightDriveBack.follow(m_rightDriveFront);
-
+    
+    leftSetPoint = leftSetPoint * maxRPM;
     m_leftPIDController.setReference(leftSetPoint, ControlType.kVelocity);
     m_leftDriveBack.follow(m_leftDriveFront);
   }
@@ -92,10 +97,10 @@ public class RobotDriveSubsystem extends SubsystemBase {
     double iz = SmartDashboard.getNumber("I Zone", 0);
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
 
-    if((p != kP)) { m_rightPIDController.setP(p); kP = p; }
-    if((i != kI)) { m_rightPIDController.setI(i); kI = i; }
-    if((d != kD)) { m_rightPIDController.setD(d); kD = d; }
-    if((iz != kIz)) { m_rightPIDController.setIZone(iz); kIz = iz; }
-    if((ff != kFF)) { m_rightPIDController.setFF(ff); kFF = ff; }
+    if((p != kP)) { m_rightPIDController.setP(p); m_leftPIDController.setP(p); kP = p; }
+    if((i != kI)) { m_rightPIDController.setI(i); m_leftPIDController.setI(i);kI = i; }
+    if((d != kD)) { m_rightPIDController.setD(d); m_leftPIDController.setD(d);kD = d; }
+    if((iz != kIz)) { m_rightPIDController.setIZone(iz); m_leftPIDController.setIZone(iz);kIz = iz; }
+    if((ff != kFF)) { m_rightPIDController.setFF(ff); m_leftPIDController.setFF(ff); kFF = ff; }
   }
 }

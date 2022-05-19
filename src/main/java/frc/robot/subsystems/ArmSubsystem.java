@@ -74,10 +74,5 @@ public class ArmSubsystem extends SubsystemBase {
   public void armRetract(){
     m_armPID.setReference(0, ControlType.kSmartMotion);
   }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
 }
 

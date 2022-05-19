@@ -31,7 +31,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   private WPI_TalonFX ballShooter;
   private RelativeEncoder m_rotationEncoder;
 
-  private double shootSetPoint = 15; //Default value for default shooting
+  private double shootSetPoint = 5; //Default value for default shooting
   private double shootPower = 0;
 
 

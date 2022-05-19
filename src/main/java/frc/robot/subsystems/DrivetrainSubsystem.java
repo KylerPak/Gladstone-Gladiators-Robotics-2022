@@ -62,18 +62,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //DifferentialDrive
     leftGroup.setInverted(true);
     m_drive = new DifferentialDrive(leftGroup, rightGroup);
-    setRampRate();
-    setPeriodFrame();
+    //setRampRate();
+    //setPeriodFrame();
     //Restore motor defaults
     m_leftDriveFront.restoreFactoryDefaults();
     m_rightDriveFront.restoreFactoryDefaults();
     m_leftDriveBack.restoreFactoryDefaults();
     m_rightDriveBack.restoreFactoryDefaults();
 
-    m_leftDriveFront.setSmartCurrentLimit(90);
-    m_leftDriveBack.setSmartCurrentLimit(90);
-    m_rightDriveFront.setSmartCurrentLimit(90);
-    m_rightDriveBack.setSmartCurrentLimit(90);
+    m_leftDriveFront.setSmartCurrentLimit(30);
+    m_leftDriveBack.setSmartCurrentLimit(30);
+    m_rightDriveFront.setSmartCurrentLimit(30);
+    m_rightDriveBack.setSmartCurrentLimit(30);
 
     m_leftDriveBack.setIdleMode(IdleMode.kBrake);
     m_leftDriveFront.setIdleMode(IdleMode.kBrake);
@@ -99,14 +99,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drive.tankDrive(leftPower, rightPower);
   }
 
-  public void PIDDrive(double leftVelocitySetpoint, double rightVelocitySetpoint) {
+  /*public void PIDDrive(double leftVelocitySetpoint, double rightVelocitySetpoint) {
     m_leftDriveFront.setVoltage(m_feedforward.calculate(leftVelocitySetpoint)
       + leftPID.calculate(m_leftEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(2) / 60, 
       leftVelocitySetpoint));
      m_rightDriveFront.setVoltage(m_feedforward.calculate(rightVelocitySetpoint)
     + rightPID.calculate(m_rightEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(2) / 60,
     rightVelocitySetpoint)); 
-  }
+  }*/
 
   public DifferentialDriveWheelSpeeds getSpeeds(){
     return new DifferentialDriveWheelSpeeds(
@@ -115,12 +115,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
   }
 
-  public void setRampRate(){
+  /*public void setRampRate(){
     m_leftDriveBack.setOpenLoopRampRate(1);
     m_rightDriveBack.setOpenLoopRampRate(1);
     m_leftDriveFront.setOpenLoopRampRate(1);
     m_rightDriveFront.setOpenLoopRampRate(1);
-  }
+  }*/
 
   public Rotation2d getGyroRotation() {
     return Rotation2d.fromDegrees(-m_gyro.getAngle());
@@ -190,7 +190,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return pose;
   }
 
-  public void setPeriodFrame(){
+  /*public void setPeriodFrame(){
     m_leftDriveFront.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
     m_leftDriveBack.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
     m_rightDriveFront.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
@@ -199,7 +199,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftDriveBack.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
     m_rightDriveFront.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
     m_rightDriveBack.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
-  }
+  }*/
 
   @Override
   public void periodic() {
@@ -208,18 +208,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
     double leftFrontTemp = m_leftDriveFront.getMotorTemperature();
     double rightBackTemp = m_rightDriveBack.getMotorTemperature();
     double rightFrontTemp = m_rightDriveFront.getMotorTemperature();
+    double leftBackIsOn = m_leftDriveBack.get();
 
     SmartDashboard.putNumber("Left Front Temp", leftFrontTemp);
     SmartDashboard.putNumber("Left Back Temp", leftBackTemp);
     SmartDashboard.putNumber("Right Back Temp", rightBackTemp);
     SmartDashboard.putNumber("Right Front Temp", rightFrontTemp);
+    SmartDashboard.putNumber("Left Back Value", leftBackIsOn);
     
     SmartDashboard.putNumber("leftEncoder", getLeftPosition());
     SmartDashboard.putNumber("rightEncoder", -getRightPosition());
     pose = m_odometry.update(
       this.getGyroRotation(), 
-      m_leftEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
-      m_rightEncoder.getVelocity() / 5.95 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
+      m_leftEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(3) / 60, //speed of leftwheels in meters per second 
+      m_rightEncoder.getVelocity() / 10.75 * 2 * Math.PI * Units.inchesToMeters(3) / 60 //speed of rightwheels in meters per second
     );
   }
 }
